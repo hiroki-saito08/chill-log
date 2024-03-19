@@ -10,8 +10,16 @@ use App\Http\Controllers\ChillControllers\ReviewController;
 use App\Http\Controllers\ChillControllers\FavoriteController;
 use App\Http\Controllers\ChillControllers\ImageController;
 
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('ChillPages/Index', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -19,14 +27,14 @@ Route::get('/', function () {
     ]);
 });
 // Route::resource('/', IndexController::class);
-Route::resource('post', PostController::class)->middleware(['auth', 'verified']);
-Route::resource('review', ReviewController::class)->middleware(['auth', 'verified']);
-Route::resource('favorite', FavoriteController::class)->middleware(['auth', 'verified']);
-Route::resource('image', ImageController::class)->middleware(['auth', 'verified']);
+// Route::resource('post', PostController::class)->middleware(['auth', 'verified']);
+// Route::resource('review', ReviewController::class)->middleware(['auth', 'verified']);
+// Route::resource('favorite', FavoriteController::class)->middleware(['auth', 'verified']);
+// Route::resource('image', ImageController::class)->middleware(['auth', 'verified']);
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return Inertia::render('Dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
