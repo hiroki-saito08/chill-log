@@ -15,7 +15,7 @@ defineProps({
 
 <template>
   <Head title="top画面" />
-  <header class="text-gray-600 body-font">
+  <header class="text-white text-lg font-bold body-font">
     <div class="container mx-auto flex flex-wrap flex-col md:flex-row items-center">
       <NavLink href="/" :active="route().current('/')">
         <ApplicationLogo class="block w-20" />
