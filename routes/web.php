@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ChillControllers\ProfileController;
 use App\Http\Controllers\ChillControllers\IndexController;
 use App\Http\Controllers\ChillControllers\PostController;
 use App\Http\Controllers\ChillControllers\ReviewController;
@@ -27,10 +27,6 @@ Route::get('/', function () {
     ]);
 });
 // Route::resource('/', IndexController::class);
-// Route::resource('post', PostController::class)->middleware(['auth', 'verified']);
-// Route::resource('review', ReviewController::class)->middleware(['auth', 'verified']);
-// Route::resource('favorite', FavoriteController::class)->middleware(['auth', 'verified']);
-// Route::resource('image', ImageController::class)->middleware(['auth', 'verified']);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -41,6 +37,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile-edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile-update', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile-destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::resource('post', PostController::class)->middleware(['auth', 'verified']);
+    Route::resource('review', ReviewController::class)->middleware(['auth', 'verified']);
+    Route::resource('favorite', FavoriteController::class)->middleware(['auth', 'verified']);
+    Route::resource('image', ImageController::class)->middleware(['auth', 'verified']);
 });
 
 require __DIR__ . '/auth.php';

@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ChillControllers;
 
-use App\Http\Requests\StorefavoriteRequest;
-use App\Http\Requests\UpdatefavoriteRequest;
-use App\Models\favorite;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreimageRequest;
+use App\Http\Requests\UpdateimageRequest;
+use App\Models\image;
 
-class FavoriteController extends Controller
+class ImageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,10 +32,10 @@ class FavoriteController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StorefavoriteRequest  $request
+     * @param  \App\Http\Requests\StoreimageRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorefavoriteRequest $request)
+    public function store(StoreimageRequest $request)
     {
         //
     }
@@ -42,10 +43,10 @@ class FavoriteController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\favorite  $favorite
+     * @param  \App\Models\image  $image
      * @return \Illuminate\Http\Response
      */
-    public function show(favorite $favorite)
+    public function show(image $image)
     {
         //
     }
@@ -53,10 +54,10 @@ class FavoriteController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\favorite  $favorite
+     * @param  \App\Models\image  $image
      * @return \Illuminate\Http\Response
      */
-    public function edit(favorite $favorite)
+    public function edit(image $image)
     {
         //
     }
@@ -64,11 +65,11 @@ class FavoriteController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdatefavoriteRequest  $request
-     * @param  \App\Models\favorite  $favorite
+     * @param  \App\Http\Requests\UpdateimageRequest  $request
+     * @param  \App\Models\image  $image
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatefavoriteRequest $request, favorite $favorite)
+    public function update(UpdateimageRequest $request, image $image)
     {
         //
     }
@@ -76,10 +77,10 @@ class FavoriteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\favorite  $favorite
+     * @param  \App\Models\image  $image
      * @return \Illuminate\Http\Response
      */
-    public function destroy(favorite $favorite)
+    public function destroy(image $image)
     {
         //
     }

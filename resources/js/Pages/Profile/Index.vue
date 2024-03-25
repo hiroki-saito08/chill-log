@@ -1,39 +1,31 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
+import { reactive, nextTick, ref } from 'vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
 import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { useForm } from '@inertiajs/vue3';
-import { nextTick, ref } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps({
-  canLogin: Boolean,
-  canRegister: Boolean,
-  laravelVersion: String,
-  phpVersion: String,
+  user: Array,
+  errors: Object
 });
 
 const modalState = ref(false);
-const titleInput = ref(null);
 const form = useForm({
-  title: '',
+  user_id: props.user.id,
+  status: 0,
+  title: null,
+  content: null,
+  image_id: null
 });
 
-const createPost = () => {
-  console.log("投稿しました");
+const storePost = () => {
+  Inertia.post(route('post.store'), form);
   closeModal();
-    // form.delete(route('profile.destroy'), {
-    //     preserveScroll: true,
-    //     onSuccess: () => closeModal(),
-    //     onError: () => titleInput.value.focus(),
-    //     onFinish: () => form.reset(),
-    // });
-};
+}
 const closeModal = () => {
   modalState.value = false;
 
@@ -41,70 +33,56 @@ const closeModal = () => {
 };
 const openModal = () => {
   modalState.value = true;
-
-  nextTick(() => titleInput.value.focus());
 }
 </script>
 
 <template>
   <Head title="profile" />
+  <Header :authProps=props></Header>
   <div class="m-5">
     <button @click="openModal" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5">記事を投稿する</button>
     <div>
       <p class="m-5">ここにログインユーザーのプロフィールデータを表示する。</p>
       <ul>
-        <li class="m-5">プロフィール画像</li>
-        <li class="m-5">ID</li>
-        <li class="m-5">名前</li>
-        <li class="m-5">メアド</li>
-        <li class="m-5">電話番号</li>
-        <li class="m-5">住所</li>
-        <li class="m-5">誕生日</li>
-        <li class="m-5">性別</li>
+        <li class="m-5">画像: {{props.user.img}}</li>
+        <li class="m-5">ID: {{props.user.id}}</li>
+        <li class="m-5">名前: {{props.user.name}}</li>
+        <li class="m-5">メールアドレス: {{props.user.email}}</li>
+        <li class="m-5">電話番号: {{props.user.phone}}</li>
+        <li class="m-5">住所: {{props.user.address}}</li>
+        <li class="m-5">誕生日: {{props.user.birthday}}</li>
+        <li class="m-5">性別: {{props.user.gender}}</li>
       </ul>
     </div>
     <Link :href="route('profile.edit')" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5">プロフィールの修正画面</Link>
   </div>
-  <!-- モーダルウィンドウ -->
+
+  <!-- モーダルウィンドウ できれば機能切り出す -->
   <Modal :show="modalState" @close="closeModal">
-      <div class="p-6">
-          <h2 class="text-lg font-medium text-gray-900">
-              記事を投稿する
-          </h2>
+    <form @submit.prevent="storePost">
+      <div class="container mx-auto flex">
+        <div class="bg-white rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 relative z-10 shadow-md">
+          <h2 class="text-lg font-medium text-gray-900 mb-4">記事を投稿する</h2>
+          <div class="relative mb-4">
+            <label for="title" value="title" class="leading-7 text-sm text-gray-600">Title</label>
+            <input id="title" v-model="form.title" type="text" placeholder="title" @keyup.enter=false name="title" required class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+          </div>
 
-          <p class="mt-1 text-sm text-gray-600">
-
-          </p>
-
-          <div class="mt-6">
-              <InputLabel for="title" value="title" class="sr-only" />
-
-              <TextInput
-                  id="title"
-                  ref="titleInput"
-                  v-model="form.title"
-                  type="text"
-                  class="mt-1 block w-3/4"
-                  placeholder="title"
-                  @keyup.enter=false
-              />
-
-              <InputError :message="form.errors.title" class="mt-2" />
+          <div class="relative mb-4">
+            <label for="content" value="content" class="leading-7 text-sm text-gray-600">content</label>
+            <textarea id="content" v-model="form.content" type="textarea" placeholder="content" @keyup.enter=false name="content" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
           </div>
 
           <div class="mt-6 flex justify-end">
-              <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+            <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
 
-              <PrimaryButton
-                  class="ml-3"
-                  :class="{ 'opacity-25': form.processing }"
-                  :disabled="form.processing"
-                  @click="createPost"
-              >
-                  create Post
-              </PrimaryButton>
+            <PrimaryButton class="ml-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+              投稿する
+            </PrimaryButton>
           </div>
+        </div>
       </div>
+    </form>
   </Modal>
 </template>
 

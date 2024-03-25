@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ChillControllers;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StorepostRequest;
 use App\Http\Requests\UpdatepostRequest;
 use App\Models\post;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -36,7 +38,15 @@ class PostController extends Controller
      */
     public function store(StorepostRequest $request)
     {
-        //
+        $postData = Post::create([
+            'user_id' => $request->user_id,
+            'status' => $request->status,
+            'title' => $request->title,
+            'content' => $request->content,
+            'image_id' => $request->image_id
+        ]);
+
+        return to_route('profile', [$postData]);
     }
 
     /**
