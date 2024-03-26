@@ -3,39 +3,44 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ChillControllers\ProfileController;
 use App\Http\Controllers\ChillControllers\IndexController;
+use App\Http\Controllers\ChillControllers\PostController;
+use App\Http\Controllers\ChillControllers\ReviewController;
+use App\Http\Controllers\ChillControllers\FavoriteController;
+use App\Http\Controllers\ChillControllers\ImageController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-// Route::get('/', [IndexController::class, 'index']);
-
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('ChillPages/Index', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
 });
+// Route::resource('/', IndexController::class);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/profile-edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile-update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile-destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::resource('post', PostController::class)->middleware(['auth', 'verified']);
+    Route::resource('review', ReviewController::class)->middleware(['auth', 'verified']);
+    Route::resource('favorite', FavoriteController::class)->middleware(['auth', 'verified']);
+    Route::resource('image', ImageController::class)->middleware(['auth', 'verified']);
 });
 
 require __DIR__ . '/auth.php';

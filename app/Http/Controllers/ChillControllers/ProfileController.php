@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ChillControllers;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
@@ -13,6 +14,16 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
+
+    public function index(Request $request): Response
+    {
+        $user = Auth::user();
+
+        return Inertia::render('Profile/Index', [
+            'user' => $user,
+        ]);
+    }
+
     /**
      * Display the user's profile form.
      */
