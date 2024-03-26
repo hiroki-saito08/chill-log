@@ -19,7 +19,7 @@ const form = useForm({
   status: 0,
   title: null,
   content: null,
-  image_id: null
+  image: null
 });
 
 const storePost = () => {
@@ -33,6 +33,10 @@ const closeModal = () => {
 };
 const openModal = () => {
   modalState.value = true;
+}
+const onImageUploaded = (e) => {
+  const image = e.target.files[0];
+  form.image = image;
 }
 </script>
 
@@ -72,6 +76,8 @@ const openModal = () => {
             <label for="content" value="content" class="leading-7 text-sm text-gray-600">content</label>
             <textarea id="content" v-model="form.content" type="textarea" placeholder="content" @keyup.enter=false name="content" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
           </div>
+
+          <input id="image" @change="onImageUploaded" type="file" placeholder="image" name="image">
 
           <div class="mt-6 flex justify-end">
             <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>

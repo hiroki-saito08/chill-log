@@ -7,6 +7,8 @@ use App\Http\Requests\StorepostRequest;
 use App\Http\Requests\UpdatepostRequest;
 use App\Models\post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\ChillControllers\ImageController;
 
 class PostController extends Controller
 {
@@ -38,15 +40,26 @@ class PostController extends Controller
      */
     public function store(StorepostRequest $request)
     {
+        $image = $request->file('image');
+        if (is_null($image)) {
+            $image_id = null;
+        } else {
+            // imageコントローラーで画像のインサートを行う
+            $ImageController =  new ImageController();
+            $imageData = $ImageController->store($image);
+            $image_id = $imageData->id;
+        }
+
         $postData = Post::create([
             'user_id' => $request->user_id,
             'status' => $request->status,
             'title' => $request->title,
             'content' => $request->content,
-            'image_id' => $request->image_id
+            'image_id' => $image_id
         ]);
 
-        return to_route('profile', [$postData]);
+        // 追々投稿後は投稿したpostのshow画面に飛ばすように修正する
+        return Redirect::to('/profile');
     }
 
     /**
