@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ChillControllers;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreimageRequest;
 use App\Http\Requests\UpdateimageRequest;
 use App\Models\image;
@@ -34,9 +35,18 @@ class ImageController extends Controller
      * @param  \App\Http\Requests\StoreimageRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreimageRequest $request)
+    public function store($image)
     {
-        //
+        // 画像を保存して、かつimageテーブルにインサートする
+        // その後インサートした情報を返却する
+        $path = $image->store('public/images/postImages');
+        $name = $image->getClientOriginalName();
+        $imageData = image::create([
+            'name' => $name,
+            'path' => $path
+        ]);
+
+        return ($imageData);
     }
 
     /**

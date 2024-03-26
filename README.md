@@ -7,3 +7,8 @@ npm run dev
 php artisan serve
 
 APP_URL: http://localhost:8000/
+
+開発用コマンド
+php artisan migrate:fresh --seed
+ID: test@test.com
+PASS: password
