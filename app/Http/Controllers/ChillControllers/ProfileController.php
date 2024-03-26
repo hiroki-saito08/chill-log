@@ -19,7 +19,7 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        return Inertia::render('Profile/Index', [
+        return Inertia::render('ChillPages/Profile/Index', [
             'user' => $user,
         ]);
     }
@@ -29,7 +29,7 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
-        return Inertia::render('Profile/Edit', [
+        return Inertia::render('ChillPages/Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
         ]);
@@ -48,7 +48,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit');
+        return Redirect::route('ChillPages/profile.edit');
     }
 
     /**

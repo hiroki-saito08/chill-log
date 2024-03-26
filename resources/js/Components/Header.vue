@@ -26,7 +26,7 @@ defineProps({
         <Link class="mr-5 hover:text-gray-900">Third Link</Link>
         <Link class="mr-5 hover:text-gray-900">Fourth Link</Link>
       </nav>
-      <div v-if="authProps.canLogin" class="">
+      <div v-if="authProps.canLogin">
         <!-- ログイン -->
         <Link v-if="$page.props.auth.user" :href="route('logout')" method="post" as="button" class="mr-5 hover:text-gray-900">Log out
         </Link>
