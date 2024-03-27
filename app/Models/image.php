@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class image extends Model
+class Image extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -14,4 +14,20 @@ class image extends Model
         'name',
         'path'
     ];
+
+    /**
+     * post
+     */
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    }
+
+    /**
+     * review
+     */
+    public function review()
+    {
+        return $this->belongsTo(Review::class);
+    }
 }
