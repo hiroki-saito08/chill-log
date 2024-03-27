@@ -19,7 +19,7 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $posts = post::images()->all();
+        $posts = post::with('images')->get();
 
         return Inertia::render('ChillPages/Index', [
             'posts' => $posts,

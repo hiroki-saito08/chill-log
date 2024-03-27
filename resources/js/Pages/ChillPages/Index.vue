@@ -7,6 +7,9 @@ const props = defineProps({
   canLogin: Boolean,
   canRegister: Boolean
 });
+
+console.log(props.posts);
+
 </script>
 
 <template>
@@ -25,8 +28,16 @@ const props = defineProps({
   表示テンプレートは分けたい -->
   <template v-if="posts">
     <div v-for=" post in posts" :key="post.id">
-    <p>{{ post.title }}</p>
-    <p>{{ post.content }}</p>
+      <div v-if="post.images">
+        <div v-for=" image in post.images" :key="image.id">
+
+
+          <p>{{ image.path }}</p>
+          <p>{{ image.name }}</p>
+        </div>
+      </div>
+      <p>{{ post.title }}</p>
+      <p>{{ post.content }}</p>
     </div>
   </template>
 </template>

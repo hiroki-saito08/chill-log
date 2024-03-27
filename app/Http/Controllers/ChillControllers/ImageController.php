@@ -35,15 +35,18 @@ class ImageController extends Controller
      * @param  \App\Http\Requests\StoreimageRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($image)
+    public function store($image, $postId)
     {
         // 画像を保存して、かつimageテーブルにインサートする
         // その後インサートした情報を返却する
-        $path = $image->store('public/images/postImages');
-        $name = $image->getClientOriginalName();
+        $time = strtotime(now());
+        $filename = $time . '_' . $image->getClientOriginalName();
+        $path = $image->storeAs('public/images/postImages', $filename);
+
         $imageData = image::create([
-            'name' => $name,
-            'path' => $path
+            'name' => $filename,
+            'path' => $path,
+            'post_id' => $postId
         ]);
 
         return ($imageData);

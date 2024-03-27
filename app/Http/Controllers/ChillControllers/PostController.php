@@ -41,23 +41,19 @@ class PostController extends Controller
     public function store(StorepostRequest $request)
     {
         $image = $request->file('image');
-        if (is_null($image)) {
-            $image_id = null;
-        } else {
-            // imageコントローラーで画像のインサートを行う
-            $ImageController =  new ImageController();
-            $imageData = $ImageController->store($image);
-            $image_id = $imageData->id;
-        }
 
         $postData = Post::create([
             'user_id' => $request->user_id,
             'status' => $request->status,
             'title' => $request->title,
-            'content' => $request->content,
-            'image_id' => $image_id
+            'content' => $request->content
         ]);
 
+        if (!is_null($image)) {
+            // imageコントローラーで画像のインサートを行う
+            $ImageController =  new ImageController();
+            $ImageController->store($image, $postData->id);
+        }
         // 追々投稿後は投稿したpostのshow画面に飛ばすように修正する
         return Redirect::to('/profile');
     }
