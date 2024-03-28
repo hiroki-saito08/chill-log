@@ -67,15 +67,14 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show(int $id)
     {
-        $images = Image::where('post_id', $post->id)->get();
+        $post = Post::find($id);
+        $images = Image::where('post_id', $id)->get();
         $post['images'] = $images;
 
         return Inertia::render('ChillPages/Post', [
-            'post' => $post,
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
+            'post' => $post
         ]);
     }
 

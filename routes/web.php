@@ -24,13 +24,19 @@ use App\Http\Controllers\ChillControllers\ImageController;
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/', [IndexController::class, 'index']);
+Route::get('/post', [PostController::class, 'index'])->name('post');
+Route::get('/post-show/{id}', [PostController::class, 'show'])->name('post.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::get('/profile-edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile-update', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile-destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::resource('post', PostController::class)->middleware(['auth', 'verified']);
+    Route::get('/post-create', [PostController::class, 'create'])->name('post.create');
+    Route::get('/post-store', [PostController::class, 'store'])->name('post.store');
+    Route::get('/post-edit', [PostController::class, 'edit'])->name('post.edit');
+    Route::patch('/post-update', [PostController::class, 'update'])->name('post.update');
+    Route::delete('/post-destroy', [PostController::class, 'destroy'])->name('post.destroy');
     Route::resource('review', ReviewController::class)->middleware(['auth', 'verified']);
     Route::resource('favorite', FavoriteController::class)->middleware(['auth', 'verified']);
     Route::resource('image', ImageController::class)->middleware(['auth', 'verified']);

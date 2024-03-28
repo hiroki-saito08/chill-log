@@ -26,16 +26,14 @@ defineProps({
         <Link class="mr-5 hover:text-gray-900">Third Link</Link>
         <Link class="mr-5 hover:text-gray-900">Fourth Link</Link>
       </nav>
-      <div v-if="authProps.canLogin">
         <!-- ログイン -->
         <Link v-if="$page.props.auth.user" :href="route('logout')" method="post" as="button" class="mr-5 hover:text-gray-900">Log out
         </Link>
         <!-- 未ログイン -->
         <template v-else>
           <Link :href="route('login')" class="mr-5 hover:text-gray-900">Log in</Link>
-          <Link v-if="authProps.canRegister" :href="route('register')" class="mr-5 hover:text-gray-900">Register</Link>
+          <Link :href="route('register')" class="mr-5 hover:text-gray-900">Register</Link>
         </template>
-      </div>
     </div>
   </header>
 </template>

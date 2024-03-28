@@ -22,9 +22,7 @@ class IndexController extends Controller
         $posts = post::with('images')->get();
 
         return Inertia::render('ChillPages/Index', [
-            'posts' => $posts,
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
+            'posts' => $posts
         ]);
     }
 
