@@ -15,7 +15,7 @@ class Post extends Model
         'status',
         'title',
         'content',
-        'image_id'
+        'location'
     ];
 
     /**

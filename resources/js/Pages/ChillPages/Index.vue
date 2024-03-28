@@ -7,9 +7,6 @@ const props = defineProps({
   canLogin: Boolean,
   canRegister: Boolean
 });
-
-console.log(props.posts);
-
 </script>
 
 <template>
@@ -24,20 +21,26 @@ console.log(props.posts);
     </div>
   </div>
 
-  <!-- 投稿を最新から5件くらい取得して表示する。
+  <!-- 投稿を最新から6件取得して表示する。残りは投稿一覧ページへ誘導する
   表示テンプレートは分けたい -->
   <template v-if="posts">
-    <div v-for=" post in posts" :key="post.id">
-      <div v-if="post.images">
-        <div v-for=" image in post.images" :key="image.id">
-
-
-          <p>{{ image.path }}</p>
-          <p>{{ image.name }}</p>
-        </div>
+    <div class="grid grid-cols-2">
+      <div v-for=" post in posts" :key="post.id" class="m-5">
+        <Link :href="route('post.show', post.id)">
+        <article class="p-5 border">
+          <p class="pt-2 pb-2">{{ post.title }}</p>
+          <div v-if="post.images">
+            <div v-for=" image in post.images" :key="image.id">
+              <!-- 画像は複数の時選択した画像を拡大表示できるようにする -->
+              <div class="h-80">
+                <img :src="image.path" alt="画像" class="w-full h-full object-cover">
+              </div>
+            </div>
+          </div>
+          <p class="pt-2 pb-2">{{ post.content }}</p>
+        </article>
+        </Link>
       </div>
-      <p>{{ post.title }}</p>
-      <p>{{ post.content }}</p>
     </div>
   </template>
 </template>

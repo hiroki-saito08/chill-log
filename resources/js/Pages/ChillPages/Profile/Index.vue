@@ -91,6 +91,8 @@ const onImageUploaded = (e) => {
       </div>
     </form>
   </Modal>
+
+  <Link href="/">戻る</Link>
 </template>
 
 <style>

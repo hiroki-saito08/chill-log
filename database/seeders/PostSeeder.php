@@ -36,7 +36,7 @@ class PostSeeder extends Seeder
                 'user_id' => 1,
                 'status' => 1,
                 'title' => 'テスト投稿3',
-                'content' => 'ハワイ島というところです',
+                'content' => '面白いところ',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -44,7 +44,7 @@ class PostSeeder extends Seeder
                 'user_id' => 1,
                 'status' => 1,
                 'title' => 'テスト投稿4',
-                'content' => '燃え盛ってました',
+                'content' => 'ハワイの綺麗なところ',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -60,7 +60,7 @@ class PostSeeder extends Seeder
                 'user_id' => 1,
                 'status' => 1,
                 'title' => 'テスト投稿6',
-                'content' => '可愛いわんちゃん',
+                'content' => '綺麗な景色',
                 'created_at' => now(),
                 'updated_at' => now()
             ],

@@ -5,10 +5,13 @@ namespace App\Http\Controllers\ChillControllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorepostRequest;
 use App\Http\Requests\UpdatepostRequest;
-use App\Models\post;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\ChillControllers\ImageController;
+use App\Models\Image;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
 
 class PostController extends Controller
 {
@@ -61,21 +64,28 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\post  $post
+     * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(post $post)
+    public function show(Post $post)
     {
-        //
+        $images = Image::where('post_id', $post->id)->get();
+        $post['images'] = $images;
+
+        return Inertia::render('ChillPages/Post', [
+            'post' => $post,
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\post  $post
+     * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(post $post)
+    public function edit(Post $post)
     {
         //
     }
@@ -84,10 +94,10 @@ class PostController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdatepostRequest  $request
-     * @param  \App\Models\post  $post
+     * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatepostRequest $request, post $post)
+    public function update(UpdatepostRequest $request, Post $post)
     {
         //
     }
@@ -95,10 +105,10 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\post  $post
+     * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(post $post)
+    public function destroy(Post $post)
     {
         //
     }

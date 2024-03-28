@@ -41,7 +41,8 @@ class ImageController extends Controller
         // その後インサートした情報を返却する
         $time = strtotime(now());
         $filename = $time . '_' . $image->getClientOriginalName();
-        $path = $image->storeAs('public/images/postImages', $filename);
+        $image->storeAs('public/images/postImages', $filename);
+        $path = '/storage/images/postImages/' . $filename;
 
         $imageData = image::create([
             'name' => $filename,
