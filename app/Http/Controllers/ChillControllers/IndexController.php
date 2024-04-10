@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\ChillControllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\post;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Foundation\Application;

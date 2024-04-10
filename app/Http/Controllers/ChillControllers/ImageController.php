@@ -5,7 +5,7 @@ namespace App\Http\Controllers\ChillControllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreimageRequest;
 use App\Http\Requests\UpdateimageRequest;
-use App\Models\image;
+use App\Models\Image;
 
 class ImageController extends Controller
 {
@@ -35,7 +35,7 @@ class ImageController extends Controller
      * @param  \App\Http\Requests\StoreimageRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($image, $postId)
+    public function store($image, $postId, $review_id)
     {
         // 画像を保存して、かつimageテーブルにインサートする
         // その後インサートした情報を返却する
@@ -47,7 +47,8 @@ class ImageController extends Controller
         $imageData = image::create([
             'name' => $filename,
             'path' => $path,
-            'post_id' => $postId
+            'post_id' => $postId,
+            'review_id' => $review_id
         ]);
 
         return ($imageData);

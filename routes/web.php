@@ -24,7 +24,7 @@ use App\Http\Controllers\ChillControllers\ImageController;
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/', [IndexController::class, 'index']);
-Route::get('/post', [PostController::class, 'index'])->name('post');
+Route::get('/posts', [PostController::class, 'index'])->name('posts');
 Route::get('/post-show/{id}', [PostController::class, 'show'])->name('post.show');
 
 Route::middleware('auth')->group(function () {
@@ -33,7 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile-update', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile-destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/post-create', [PostController::class, 'create'])->name('post.create');
-    Route::get('/post-store', [PostController::class, 'store'])->name('post.store');
+    Route::post('/post-store', [PostController::class, 'store'])->name('post.store');
     Route::get('/post-edit', [PostController::class, 'edit'])->name('post.edit');
     Route::patch('/post-update', [PostController::class, 'update'])->name('post.update');
     Route::delete('/post-destroy', [PostController::class, 'destroy'])->name('post.destroy');

@@ -31,6 +31,7 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
+            'appName' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
             ],
@@ -38,6 +39,13 @@ class HandleInertiaRequests extends Middleware
                 return array_merge((new Ziggy)->toArray(), [
                     'location' => $request->url(),
                 ]);
+            },
+            'urlPrev' => function () {
+                if (url()->previous() && url()->previous() !== '' && url()->previous() !== url()->current()) {
+                    return url()->previous();
+                } else {
+                    return 'empty'; // used in javascript to disable back button behavior
+                }
             },
         ]);
     }

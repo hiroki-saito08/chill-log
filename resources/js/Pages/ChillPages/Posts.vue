@@ -8,10 +8,10 @@ const props = defineProps({
 </script>
 
 <template>
-  <Head title="Top" />
+  <Head title="Posts" />
   <!-- メインビジュアルは後で写真を設定 -->
-  <div class="position: relative h-svh w-full bg-green-300">
-    <Header :authProps=props></Header>
+  <Header :authProps=props></Header>
+  <div class="m-5">
     <!-- 検索バー -->
     <div class="mx-auto flex flex-wrap justify-around h-14 p-4 w-3/5 m-auto mt-5">
       <input type="" id="" name="" class="w-3/5 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
@@ -41,12 +41,8 @@ const props = defineProps({
       </div>
     </div>
   </template>
-
-  <div class="m-5 flex justify-center">
-    <Link class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg" :href="route('posts')">投稿一覧へ</Link>
-  </div>
 </template>
 
-<style>
+  <style>
 
-</style>
+  </style>

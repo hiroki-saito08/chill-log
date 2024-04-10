@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\ChillControllers\ImageController;
 use App\Models\Image;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -22,7 +22,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = post::with('images')->get();
+
+        return Inertia::render('ChillPages/Posts', [
+            'posts' => $posts
+        ]);
     }
 
     /**
@@ -55,7 +59,7 @@ class PostController extends Controller
         if (!is_null($image)) {
             // imageコントローラーで画像のインサートを行う
             $ImageController =  new ImageController();
-            $ImageController->store($image, $postData->id);
+            $ImageController->store($image, $postData->id, null);
         }
         // 追々投稿後は投稿したpostのshow画面に飛ばすように修正する
         return Redirect::to('/profile');
@@ -70,11 +74,13 @@ class PostController extends Controller
     public function show(int $id)
     {
         $post = Post::find($id);
+        $user = Auth::user();
         $images = Image::where('post_id', $id)->get();
         $post['images'] = $images;
 
-        return Inertia::render('ChillPages/Post', [
-            'post' => $post
+        return Inertia::render('ChillPages/Post-detail', [
+            'post' => $post,
+            'user' => $user
         ]);
     }
 

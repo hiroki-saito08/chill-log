@@ -6,23 +6,36 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { usePage } from "@inertiajs/inertia-vue3";
+import { Inertia } from '@inertiajs/inertia'
 
 defineProps({
     canResetPassword: Boolean,
     status: String,
-});
+})
 
+const page = usePage()
 const form = useForm({
     email: '',
     password: '',
     remember: false,
-});
+})
 
 const submit = () => {
     form.post(route('login'), {
         onFinish: () => form.reset('password'),
-    });
-};
+    })
+}
+
+const back = () => {
+    let urlPrev = page.props.value.urlPrev
+    console.log(urlPrev)
+    if (urlPrev !== 'empty') {
+        Inertia.visit(urlPrev)
+    } else {
+        Inertia.visit('/')
+    }
+}
 </script>
 
 <template>
@@ -74,7 +87,6 @@ const submit = () => {
 
             <div class="flex items-center justify-end mt-4">
                 <div class="">
-                    <Link href="/" class="mr-10 text-gray-600 hover:text-gray-900">Back to top</Link>
                     <Link
                         v-if="canResetPassword"
                         :href="route('password.request')"
@@ -88,5 +100,6 @@ const submit = () => {
                 </div>
             </div>
         </form>
+        <button @click="back" class="mr-10 text-gray-600 hover:text-gray-900">Back</button>
     </GuestLayout>
 </template>
