@@ -78,7 +78,7 @@ const onImageUploaded = (e) => {
     </article>
   </div>
 
-  <button @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5">コメント・評価</button>
+  <button @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 ml-auto block">コメントする</button>
 
   <!-- レビュー一覧 -->
   <div>
