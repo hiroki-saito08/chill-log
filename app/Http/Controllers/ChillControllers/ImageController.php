@@ -35,7 +35,7 @@ class ImageController extends Controller
      * @param  \App\Http\Requests\StoreimageRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($image, $postId, $review_id)
+    public function store($image, $postId = null, $review_id = null)
     {
         // 画像を保存して、かつimageテーブルにインサートする
         // その後インサートした情報を返却する

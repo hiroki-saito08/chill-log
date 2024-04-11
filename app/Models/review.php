@@ -18,6 +18,14 @@ class Review extends Model
     ];
 
     /**
+     * images
+     */
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
+
+    /**
      * post
      */
     public function post()

@@ -22,7 +22,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = post::with('images')->get();
+        $posts = post::with('images')->with('reviews')->with(['reviews.images'])->get();
 
         return Inertia::render('ChillPages/Posts', [
             'posts' => $posts
@@ -73,10 +73,8 @@ class PostController extends Controller
      */
     public function show(int $id)
     {
-        $post = Post::find($id);
+        $post = post::where('id', $id)->with('images')->with('reviews')->with(['reviews.images'])->first();
         $user = Auth::user();
-        $images = Image::where('post_id', $id)->get();
-        $post['images'] = $images;
 
         return Inertia::render('ChillPages/Post-detail', [
             'post' => $post,

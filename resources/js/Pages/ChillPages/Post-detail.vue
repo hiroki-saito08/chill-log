@@ -80,6 +80,36 @@ const onImageUploaded = (e) => {
 
   <button @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5">コメント・評価</button>
 
+  <!-- レビュー一覧 -->
+  <div>
+    <article class="p-5 border">
+      <div v-if="post.reviews">
+        <div v-for=" review in post.reviews" :key="review.id">
+          <article class="border">
+            <div class="stars relative mb-4">
+              <span>
+                <input class="star5" type="radio" :checked="review.star == 5"><label>★</label>
+                <input class="star4" type="radio" :checked="review.star == 4"><label>★</label>
+                <input class="star3" type="radio" :checked="review.star == 3"><label>★</label>
+                <input class="star2" type="radio" :checked="review.star == 2"><label>★</label>
+                <input class="star1" type="radio" :checked="review.star == 1"><label>★</label>
+              </span>
+            </div>
+            <div v-if="review.images">
+              <div v-for=" image in review.images" :key="image.id">
+                <div class="h-80">
+                  <img :src="image.path" alt="画像" class="w-full h-full object-cover">
+                </div>
+              </div>
+            </div>
+            <p class="pt-2 pb-2">{{ review.comment_title }}</p>
+            <p class="pt-2 pb-2">{{ review.comment_content }}</p>
+          </article>
+        </div>
+      </div>
+    </article>
+  </div>
+
   <div class="m-5 flex justify-center">
     <Link class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg" :href="route('posts')">投稿一覧へ</Link>
   </div>
@@ -92,12 +122,13 @@ const onImageUploaded = (e) => {
           <h2 class="text-lg font-medium text-gray-900 mb-4">コメントを投稿する</h2>
 
           <div class="stars relative mb-4">
-            <span>
-              <input id="star01" type="radio" name="star" value="1" v-model="form.star"><label for="star01">★</label>
-              <input id="star02" type="radio" name="star" value="2" v-model="form.star"><label for="star02">★</label>
+            <!-- 星はCSSの関係で逆順 -->
+            <span class="form-stars">
+              <input id="star01" type="radio" name="star" value="5" v-model="form.star"><label for="star01">★</label>
+              <input id="star02" type="radio" name="star" value="4" v-model="form.star"><label for="star02">★</label>
               <input id="star03" type="radio" name="star" value="3" v-model="form.star"><label for="star03">★</label>
-              <input id="star04" type="radio" name="star" value="4" v-model="form.star"><label for="star04">★</label>
-              <input id="star05" type="radio" name="star" value="5" v-model="form.star"><label for="star05">★</label>
+              <input id="star04" type="radio" name="star" value="2" v-model="form.star"><label for="star04">★</label>
+              <input id="star05" type="radio" name="star" value="1" v-model="form.star"><label for="star05">★</label>
             </span>
           </div>
 
@@ -148,12 +179,15 @@ const onImageUploaded = (e) => {
   /* 星の大きさを30pxに指定 */
   padding: 0 5px;
   /* 左右の余白を5pxに指定 */
+}
+
+.stars .form-stars label {
   cursor: pointer;
   /* カーソルが上に乗ったときに指の形にする */
 }
 
-.stars label:hover,
-.stars label:hover~label,
+.stars .form-stars label:hover,
+.stars .form-stars label:hover~label,
 .stars input[type='radio']:checked~label {
   color: #F8C601;
   /* 選択された星以降をすべて黄色にする */
