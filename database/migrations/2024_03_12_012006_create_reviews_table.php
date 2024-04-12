@@ -26,7 +26,6 @@ return new class extends Migration
             $table->integer('star');
             $table->string('comment_title');
             $table->string('comment_content')->nullable();
-            $table->integer('image_id')->nullable();
             $table->timestamps();
         });
     }

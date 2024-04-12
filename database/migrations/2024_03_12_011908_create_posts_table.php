@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('status')->default(0);
             $table->string('title');
             $table->string('content')->nullable();
-            $table->integer('image_id')->nullable();
+            $table->string('location');
             $table->timestamps();
             $table->softDeletes();
         });

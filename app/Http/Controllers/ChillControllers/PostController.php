@@ -5,10 +5,13 @@ namespace App\Http\Controllers\ChillControllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorepostRequest;
 use App\Http\Requests\UpdatepostRequest;
-use App\Models\post;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\ChillControllers\ImageController;
+use App\Models\Image;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -19,7 +22,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = post::with('images')->with('reviews')->with(['reviews.images'])->get();
+
+        return Inertia::render('ChillPages/Posts', [
+            'posts' => $posts
+        ]);
     }
 
     /**
@@ -41,23 +48,19 @@ class PostController extends Controller
     public function store(StorepostRequest $request)
     {
         $image = $request->file('image');
-        if (is_null($image)) {
-            $image_id = null;
-        } else {
-            // imageコントローラーで画像のインサートを行う
-            $ImageController =  new ImageController();
-            $imageData = $ImageController->store($image);
-            $image_id = $imageData->id;
-        }
 
         $postData = Post::create([
             'user_id' => $request->user_id,
             'status' => $request->status,
             'title' => $request->title,
-            'content' => $request->content,
-            'image_id' => $image_id
+            'content' => $request->content
         ]);
 
+        if (!is_null($image)) {
+            // imageコントローラーで画像のインサートを行う
+            $ImageController =  new ImageController();
+            $ImageController->store($image, $postData->id, null);
+        }
         // 追々投稿後は投稿したpostのshow画面に飛ばすように修正する
         return Redirect::to('/profile');
     }
@@ -65,21 +68,27 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\post  $post
+     * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(post $post)
+    public function show(int $id)
     {
-        //
+        $post = post::where('id', $id)->with('images')->with('reviews')->with(['reviews.images'])->first();
+        $user = Auth::user();
+
+        return Inertia::render('ChillPages/Post-detail', [
+            'post' => $post,
+            'user' => $user
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\post  $post
+     * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(post $post)
+    public function edit(Post $post)
     {
         //
     }
@@ -88,10 +97,10 @@ class PostController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdatepostRequest  $request
-     * @param  \App\Models\post  $post
+     * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatepostRequest $request, post $post)
+    public function update(UpdatepostRequest $request, Post $post)
     {
         //
     }
@@ -99,10 +108,10 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\post  $post
+     * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(post $post)
+    public function destroy(Post $post)
     {
         //
     }

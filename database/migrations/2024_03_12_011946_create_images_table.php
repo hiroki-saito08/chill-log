@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('path')->unique();
+            $table->integer('post_id')->nullable();
+            $table->integer('review_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
