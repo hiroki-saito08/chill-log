@@ -49,4 +49,12 @@ class Post extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * ratings
+     */
+    public function rating()
+    {
+        return $this->reviews()->selectRaw('post_id, avg(star) AS avg_review')->groupBy('post_id');
+    }
 }
