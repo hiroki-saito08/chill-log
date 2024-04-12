@@ -5,7 +5,8 @@ namespace App\Http\Controllers\ChillControllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorefavoriteRequest;
 use App\Http\Requests\UpdatefavoriteRequest;
-use App\Models\favorite;
+use App\Models\Favorite;
+use Inertia\Inertia;
 
 class FavoriteController extends Controller
 {

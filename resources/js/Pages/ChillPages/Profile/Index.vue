@@ -9,6 +9,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps({
+  posts: Object,
   user: Array,
   errors: Object
 });
@@ -16,7 +17,7 @@ const props = defineProps({
 const modalState = ref(false);
 const form = useForm({
   user_id: props.user.id,
-  status: 0,
+  status: 1, //下書き保存ボタンを追加したら、下書きの時0にする
   title: null,
   content: null,
   image: null
@@ -48,14 +49,14 @@ const onImageUploaded = (e) => {
     <div>
       <p class="m-5">ここにログインユーザーのプロフィールデータを表示する。</p>
       <ul>
-        <li class="m-5">画像: {{props.user.img}}</li>
-        <li class="m-5">ID: {{props.user.id}}</li>
-        <li class="m-5">名前: {{props.user.name}}</li>
-        <li class="m-5">メールアドレス: {{props.user.email}}</li>
-        <li class="m-5">電話番号: {{props.user.phone}}</li>
-        <li class="m-5">住所: {{props.user.address}}</li>
-        <li class="m-5">誕生日: {{props.user.birthday}}</li>
-        <li class="m-5">性別: {{props.user.gender}}</li>
+        <li class="m-5">画像: {{user.img}}</li>
+        <li class="m-5">ID: {{user.id}}</li>
+        <li class="m-5">名前: {{user.name}}</li>
+        <li class="m-5">メールアドレス: {{user.email}}</li>
+        <li class="m-5">電話番号: {{user.phone}}</li>
+        <li class="m-5">住所: {{user.address}}</li>
+        <li class="m-5">誕生日: {{user.birthday}}</li>
+        <li class="m-5">性別: {{user.gender}}</li>
       </ul>
     </div>
     <Link :href="route('profile.edit')" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5">プロフィールの修正画面</Link>
@@ -90,6 +91,8 @@ const onImageUploaded = (e) => {
       </div>
     </form>
   </Modal>
+
+  <Link href="/">戻る</Link>
 </template>
 
 <style>

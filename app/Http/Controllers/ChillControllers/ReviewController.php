@@ -5,7 +5,8 @@ namespace App\Http\Controllers\ChillControllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorereviewRequest;
 use App\Http\Requests\UpdatereviewRequest;
-use App\Models\review;
+use App\Models\Review;
+use Inertia\Inertia;
 
 class ReviewController extends Controller
 {
@@ -37,7 +38,23 @@ class ReviewController extends Controller
      */
     public function store(StorereviewRequest $request)
     {
-        //
+        $image = $request->file('image');
+
+        $reviewData = Review::create([
+            'post_id' => $request->post_id,
+            'user_id' => $request->user_id,
+            'star' => $request->star,
+            'comment_title' => $request->comment_title,
+            'comment_content' => $request->comment_content
+        ]);
+
+        if (!is_null($image)) {
+            // imageコントローラーで画像のインサートを行う
+            $ImageController =  new ImageController();
+            $ImageController->store($image, null, $reviewData->id);
+        }
+
+        return back();
     }
 
     /**

@@ -6,12 +6,31 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class image extends Model
+class Image extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
-        'path'
+        'path',
+        'post_id',
+        'post_id',
+        'review_id'
     ];
+
+    /**
+     * post
+     */
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    }
+
+    /**
+     * review
+     */
+    public function review()
+    {
+        return $this->belongsTo(Review::class);
+    }
 }

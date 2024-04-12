@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\ChillControllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 class IndexController extends Controller
 {
@@ -15,7 +19,11 @@ class IndexController extends Controller
      */
     public function index()
     {
-        return Inertia::render('ChillPages/Index');
+        $posts = post::with('images')->with('reviews')->with(['reviews.images'])->withCount('reviews')->with('rating')->get();
+
+        return Inertia::render('ChillPages/Index', [
+            'posts' => $posts
+        ]);
     }
 
     /**
