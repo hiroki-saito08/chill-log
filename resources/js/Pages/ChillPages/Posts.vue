@@ -36,6 +36,11 @@ const props = defineProps({
             </div>
           </div>
           <p class="pt-2 pb-2">{{ post.content }}</p>
+          <div>{{ post.reviews_count }}件</div>
+          <div>
+            <div v-if="post.rating[0]">{{ post.rating[0].avg_review }}</div>
+            <div v-else> 0.00 </div>
+          </div>
         </article>
         </Link>
       </div>

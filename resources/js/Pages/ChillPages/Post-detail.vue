@@ -75,6 +75,11 @@ const onImageUploaded = (e) => {
         </div>
       </div>
       <p class="pt-2 pb-2">{{ post.content }}</p>
+      <div>{{ post.reviews_count }}件</div>
+      <div>
+        <div v-if="post.rating[0]">{{ post.rating[0].avg_review }}</div>
+        <div v-else> 0.00 </div>
+      </div>
     </article>
   </div>
 
@@ -186,8 +191,8 @@ const onImageUploaded = (e) => {
   /* カーソルが上に乗ったときに指の形にする */
 }
 
-.stars .form-stars label:hover,
-.stars .form-stars label:hover~label,
+/* .stars .form-stars label:hover, */
+/* .stars .form-stars label:hover~label, */
 .stars input[type='radio']:checked~label {
   color: #F8C601;
   /* 選択された星以降をすべて黄色にする */

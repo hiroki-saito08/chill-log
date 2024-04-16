@@ -47,7 +47,6 @@ const onImageUploaded = (e) => {
   <div class="m-5">
     <button @click="openModal" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5">記事を投稿する</button>
     <div>
-      <p class="m-5">ここにログインユーザーのプロフィールデータを表示する。</p>
       <ul>
         <li class="m-5">画像: {{user.img}}</li>
         <li class="m-5">ID: {{user.id}}</li>

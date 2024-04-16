@@ -55,6 +55,6 @@ class Post extends Model
      */
     public function rating()
     {
-        return $this->reviews()->selectRaw('post_id, avg(star) AS avg_review')->groupBy('post_id');
+        return $this->reviews()->selectRaw('post_id, ROUND(avg(star), 2) AS avg_review')->groupBy('post_id');
     }
 }
