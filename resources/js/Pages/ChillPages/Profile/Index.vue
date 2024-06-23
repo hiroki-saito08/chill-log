@@ -7,6 +7,17 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { Inertia } from '@inertiajs/inertia';
+import Slick from 'vue-slick';
+
+const slickOptions = ref({
+  arrows: true,    //スライドの矢印ボタン
+  dots: true,      //ドットマーク
+  autoplay: true,  //自動スライド
+  autoplaySpeed: 4000,  //自動スライド間隔(ms)
+  pauseOnFocus: false,  //ドットマークを押すとスライドショーが止まるのを防ぐ
+  prevArrow: '<button type="button" class="slick-prev"></button>',  //ひとつ前の画像に戻る矢印ボタン
+  nextArrow: '<button type="button" class="slick-next"></button>'   //ひとつ先の画像に進む矢印ボタン
+});
 
 const props = defineProps({
   posts: Object,

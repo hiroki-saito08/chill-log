@@ -23,6 +23,10 @@ use App\Http\Controllers\ChillControllers\ImageController;
 //     return Inertia::render('Dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/test', function () {
+    return Inertia::render('Test');
+});
+
 Route::get('/', [IndexController::class, 'index']);
 Route::get('/posts', [PostController::class, 'index'])->name('posts');
 Route::get('/post-show/{id}', [PostController::class, 'show'])->name('post.show');
