@@ -35,7 +35,7 @@ class ImageController extends Controller
      * @param  \App\Http\Requests\StoreimageRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($image, $postId = null, $review_id = null)
+    public function store($image, $postId = null, $reviewId = null)
     {
         // 画像を保存して、かつimageテーブルにインサートする
         // その後インサートした情報を返却する
@@ -48,7 +48,7 @@ class ImageController extends Controller
             'name' => $filename,
             'path' => $path,
             'post_id' => $postId,
-            'review_id' => $review_id
+            'review_id' => $reviewId
         ]);
 
         return ($imageData);
@@ -83,9 +83,35 @@ class ImageController extends Controller
      * @param  \App\Models\image  $image
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateimageRequest $request, image $image)
+    public function update($image, $postId = null, $reviewId = null)
     {
-        //
+        // 画像を保存して、かつimageテーブルにインサートする
+        // その後インサートした情報を返却する
+        $time = strtotime(now());
+        $filename = $time . '_' . $image->getClientOriginalName();
+        $image->storeAs('public/images/postImages', $filename);
+        $path = '/storage/images/postImages/' . $filename;
+
+        if (!empty($postId)) {
+            $image_record = image::where('post_id', $postId)->first();
+        }
+        $image_record = image::where('review_id', $reviewId)->first();
+
+        if (!empty($image_record)) {
+            $imageData = $image_record->update([
+                'name' => $filename,
+                'path' => $path
+            ]);
+        } else {
+            $imageData = image::create([
+                'name' => $filename,
+                'path' => $path,
+                'post_id' => $postId,
+                'review_id' => $reviewId
+            ]);
+        }
+
+        return ($imageData);
     }
 
     /**

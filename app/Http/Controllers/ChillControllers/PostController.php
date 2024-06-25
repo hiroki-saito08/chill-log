@@ -7,9 +7,11 @@ use App\Http\Requests\StorepostRequest;
 use App\Http\Requests\UpdatepostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\ChillControllers\ImageController;
 use App\Models\Image;
+use App\Models\Review;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
@@ -53,7 +55,8 @@ class PostController extends Controller
             'user_id' => $request->user_id,
             'status' => $request->status,
             'title' => $request->title,
-            'content' => $request->content
+            'content' => $request->content,
+            'location' => 'テスト県テスト市'
         ]);
 
         if (!is_null($image)) {
@@ -73,12 +76,26 @@ class PostController extends Controller
      */
     public function show(int $id)
     {
+        $own_post = false;
         $post = post::where('id', $id)->with('images')->with('reviews')->with(['reviews.images'])->withCount('reviews')->with('rating')->first();
         $user = Auth::user();
 
+        // 投稿がログインユーザーのものか判定->編集と削除のボタンを表示する
+        if ($post->user_id == Auth::id()) {
+            $own_post = true;
+        }
+
+        // ログインユーザーのコメントがあれば取得する
+        $review = Review::where([
+            ['post_id', $id],
+            ['user_id', Auth::id()],
+        ])->first();
+
         return Inertia::render('ChillPages/Post-detail', [
             'post' => $post,
-            'user' => $user
+            'user' => $user,
+            'review' => $review,
+            'own_post' => $own_post,
         ]);
     }
 
@@ -102,7 +119,22 @@ class PostController extends Controller
      */
     public function update(UpdatepostRequest $request, Post $post)
     {
-        //
+        $image = $request->form['image'];
+
+        $post->update([
+            'status' => $request->form['status'],
+            'title' => $request->form['title'],
+            'content' => $request->form['content'],
+            'location' => 'テスト県テスト市'
+        ]);
+
+        if (!is_null($image)) {
+            // imageコントローラーで画像のインサートを行う
+            $ImageController =  new ImageController();
+            $ImageController->update($image, $post->id, null);
+        }
+
+        return redirect()->back();
     }
 
     /**
@@ -113,6 +145,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 }

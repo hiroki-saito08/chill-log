@@ -54,7 +54,7 @@ class ReviewController extends Controller
             $ImageController->store($image, null, $reviewData->id);
         }
 
-        return back();
+        return redirect()->back();
     }
 
     /**
@@ -88,7 +88,21 @@ class ReviewController extends Controller
      */
     public function update(UpdatereviewRequest $request, review $review)
     {
-        //
+        // putをポストにするため、formの階層に配列で入れて送ってる
+        $image = $request->form['image'];
+
+        $review->update([
+            'star' => $request->form['star'],
+            'comment_title' => $request->form['comment_title'],
+            'comment_content' => $request->form['comment_content']
+        ]);
+
+        if (!is_null($image)) {
+            $ImageController =  new ImageController();
+            $ImageController->update($image, null, $review->id);
+        }
+
+        return redirect()->back();
     }
 
     /**
@@ -99,6 +113,7 @@ class ReviewController extends Controller
      */
     public function destroy(review $review)
     {
-        //
+        $review->delete();
+        return redirect()->back();
     }
 }

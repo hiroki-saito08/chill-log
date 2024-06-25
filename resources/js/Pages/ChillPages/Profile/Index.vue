@@ -34,22 +34,26 @@ const form = useForm({
   image: null
 });
 
-const storePost = () => {
-  Inertia.post(route('post.store'), form);
-  closeModal();
+const openModal = () => {
+  modalState.value = true;
 }
 const closeModal = () => {
   modalState.value = false;
 
   form.reset();
 };
-const openModal = () => {
-  modalState.value = true;
+
+const storePost = () => {
+  Inertia.post(route('post.store'), form);
+  alert('投稿しました');
+  closeModal();
 }
+
 const onImageUploaded = (e) => {
   const image = e.target.files[0];
   form.image = image;
 }
+
 </script>
 
 <template>
