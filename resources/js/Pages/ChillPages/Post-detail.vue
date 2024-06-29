@@ -19,19 +19,23 @@ const props = defineProps({
 let commented = false;
 const modalState = ref(false);
 const editPostModalState = ref(false);
+const userId = ref(null)
+if (props.user !== null) {
+  userId.value = props.user.id
+}
 
 // 非ログインユーザーもいるため初期設定はnull
 const form = useForm({
-  post_id: props.post.id,
+  post_id: userId,
   user_id: null,
   star: null,
   comment_title: null,
   comment_content: null,
   image: null
 });
-
 const editPostForm = useForm({
-  user_id: props.user.id,
+
+  user_id: props.userId,
   status: props.post.status,
   title: props.post.title,
   content: props.post.content,
@@ -42,7 +46,7 @@ const canReview = () => {
   if (props.user === null) {
     Inertia.get(route('login'));
   } else {
-    form.user_id = props.user.id;
+    form.user_id = props.userId;
     // コメント済みの場合の処理
     if (props.review != null) {
       form.star = props.review.star;
@@ -201,7 +205,7 @@ const closeEditPostModal = () => {
             <p class="pt-2 pb-2">{{ review.comment_content }}</p>
 
             <!-- ログインユーザーのコメントの時に表示 -->
-            <div v-if="review.user_id == user.id" class="flex flex-wrap justify-end">
+            <div v-if="review.user_id == userId" class="flex flex-wrap justify-end">
               <button @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">編集</button>
               <button @click="deleteReview" class="text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">削除</button>
             </div>
