@@ -73,7 +73,7 @@ const onImageUploaded = (e) => {
         <li class="m-5">性別: {{user.gender}}</li>
       </ul>
     </div>
-    <Link :href="route('profile.edit')" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5">プロフィールの修正画面</Link>
+    <!-- <Link :href="route('profile.edit')" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5">プロフィールの修正画面</Link> -->
   </div>
 
   <!-- モーダルウィンドウ できれば機能切り出す -->

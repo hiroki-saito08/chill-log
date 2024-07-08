@@ -26,16 +26,15 @@ if (props.user !== null) {
 
 // 非ログインユーザーもいるため初期設定はnull
 const form = useForm({
-  post_id: userId,
-  user_id: null,
+  post_id: props.post.id,
+  user_id: userId,
   star: null,
   comment_title: null,
   comment_content: null,
   image: null
 });
 const editPostForm = useForm({
-
-  user_id: props.userId,
+  user_id: userId,
   status: props.post.status,
   title: props.post.title,
   content: props.post.content,
@@ -46,7 +45,6 @@ const canReview = () => {
   if (props.user === null) {
     Inertia.get(route('login'));
   } else {
-    form.user_id = props.userId;
     // コメント済みの場合の処理
     if (props.review != null) {
       form.star = props.review.star;

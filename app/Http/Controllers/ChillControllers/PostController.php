@@ -119,7 +119,10 @@ class PostController extends Controller
      */
     public function update(UpdatepostRequest $request, Post $post)
     {
-        $image = $request->form['image'];
+        $image = null;
+        if (isset($request->form['image'])) {
+            $image = $request->form['image'];
+        };
 
         $post->update([
             'status' => $request->form['status'],
