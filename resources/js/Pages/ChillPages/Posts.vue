@@ -28,8 +28,8 @@ const props = defineProps({
         <article class="p-5 border">
           <p class="pt-2 pb-2">{{ post.title }}</p>
           <div class="h-80">
-            <div v-if="post.images">
-              <div v-for=" image in post.images" :key="image.id">
+            <div v-if="post.images" class="h-full">
+              <div v-for=" image in post.images" :key="image.id" class="h-full">
                 <!-- 画像は複数の時選択した画像を拡大表示できるようにする -->
                 <img :src="image.path" alt="画像" class="w-full h-full object-cover">
               </div>
