@@ -94,8 +94,9 @@ class ImageController extends Controller
 
         if (!empty($postId)) {
             $image_record = image::where('post_id', $postId)->first();
+        } else {
+            $image_record = image::where('review_id', $reviewId)->first();
         }
-        $image_record = image::where('review_id', $reviewId)->first();
 
         if (!empty($image_record)) {
             $imageData = $image_record->update([
