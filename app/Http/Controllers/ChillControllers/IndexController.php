@@ -19,10 +19,10 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $posts = post::with('images')->with('reviews')->withCount('reviews')->with('rating')
+        $posts = post::with('user')->with('images')->with('reviews')->withCount('reviews')->with('rating')
             ->orderBy('posts.created_at', 'DESC')->limit(6)->get();
 
-        $popularPosts = post::with('images')->with('reviews')->withCount('reviews')->with('rating')
+        $popularPosts = post::with('user')->with('images')->with('reviews')->withCount('reviews')->with('rating')
             ->orderBy('reviews_count', 'DESC')->limit(3)->get();
 
         return Inertia::render('ChillPages/Index', [

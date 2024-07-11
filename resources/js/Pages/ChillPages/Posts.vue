@@ -9,7 +9,6 @@ const props = defineProps({
 
 <template>
   <Head title="Posts" />
-  <!-- メインビジュアルは後で写真を設定 -->
   <Header :authProps=props></Header>
   <div class="m-5">
     <!-- 検索バー -->
@@ -25,21 +24,28 @@ const props = defineProps({
     <div class="grid grid-cols-3">
       <div v-for=" post in posts" :key="post.id" class="m-5">
         <Link :href="route('post.show', post.id)">
+
         <article class="p-5 border">
-          <p class="pt-2 pb-2">{{ post.title }}</p>
-          <div class="h-80">
-            <div v-if="post.images" class="h-full">
+          <div class="pb-2 border-b">
+            <h2 class="text-lg pt-2 pb-2 font-bold">「{{ post.title }}」</h2>
+            <!-- <h2 class="font-bold">{{ post.user.name }} さんの投稿</h2> -->
+          </div>
+          <div class="h-80 pt-3 pb-3">
+            <div v-if="post.images.length" class="h-full">
               <div v-for=" image in post.images" :key="image.id" class="h-full">
-                <!-- 画像は複数の時選択した画像を拡大表示できるようにする -->
                 <img :src="image.path" alt="画像" class="w-full h-full object-cover">
               </div>
             </div>
+            <div v-else> 画像なし </div>
           </div>
-          <p class="pt-2 pb-2">{{ post.content }}</p>
-          <div>{{ post.reviews_count }}件</div>
-          <div>
-            <div v-if="post.rating[0]">{{ post.rating[0].avg_review }}</div>
-            <div v-else> 0.00 </div>
+
+          <div class="flex justify-between pt-2 border-t">
+            <div>コメント: {{ post.reviews_count }}件</div>
+            <div>
+              評価:
+              <span v-if="post.rating[0]">{{ post.rating[0].avg_review }}</span>
+              <span v-else> 0.00 </span>
+            </div>
           </div>
         </article>
         </Link>

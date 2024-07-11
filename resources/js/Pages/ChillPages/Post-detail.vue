@@ -142,29 +142,32 @@ const closeEditPostModal = () => {
   <Head title="Post-detail" />
   <!-- メインビジュアルは後で写真を設定 -->
   <Header :authProps=props></Header>
-  <div class="m-5">
-    <!-- 検索バー -->
-    <div class="mx-auto flex flex-wrap justify-around h-14 p-4 w-3/5 m-auto mt-5">
-      <input type="" id="" name="" class="w-3/5 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-      <button class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">検索</button>
-    </div>
-  </div>
 
-  <div>
-    <article class="p-5 border">
-      <p class="pt-2 pb-2">{{ post.title }}</p>
-      <div v-if="post.images">
+  <div class="mt-10 w-9/12 m-auto">
+    <article class="p-10 border mb-5">
+      <h2 class="text-center text-xl font-bold">「{{ post.title }}」</h2>
+      <h3 class="text-right text-lg pt-5 pb-5">{{ user.name }} さんの投稿</h3>
+
+      <div v-if="post.images.length">
         <div v-for=" image in post.images" :key="image.id">
-          <div class="h-80">
+          <div class="h-svh">
             <img :src="image.path" alt="画像" class="w-full h-full object-cover">
           </div>
         </div>
       </div>
-      <p class="pt-2 pb-2">{{ post.content }}</p>
-      <div>{{ post.reviews_count }}件</div>
-      <div>
-        <div v-if="post.rating[0]">{{ post.rating[0].avg_review }}</div>
-        <div v-else> 0.00 </div>
+      <div v-else> 画像なし </div>
+
+      <div class="mt-5 mb-5">
+        <p class="pt-5 pb-5">{{ post.content }}</p>
+      </div>
+
+      <div class="flex justify-between pt-2 border-t">
+        <div>コメント: {{ post.reviews_count }}件</div>
+        <div>
+          評価:
+          <span v-if="post.rating[0]">{{ post.rating[0].avg_review }}</span>
+          <span v-else> 0.00 </span>
+        </div>
       </div>
 
       <!-- ログインユーザーの投稿の時に表示 -->
@@ -173,13 +176,15 @@ const closeEditPostModal = () => {
         <button v-if="own_post" @click="deletePost" class="text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">削除</button>
       </div>
     </article>
+
+    <button @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg ml-auto block mt-10 mb-10">コメントする</button>
   </div>
 
-  <button @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 ml-auto block">コメントする</button>
+  <!-- コメントー一覧 -->
+  <div class="mt-10 w-2/3 m-auto">
+    <h3 class="mt-5 mb-10 text-xl font-bold">コメント一覧</h3>
 
-  <!-- レビュー一覧 -->
-  <div>
-    <article class="p-5 border">
+    <article>
       <div v-if="post.reviews">
         <div v-for=" review in post.reviews" :key="review.id">
           <article class="border p-5">
@@ -193,13 +198,13 @@ const closeEditPostModal = () => {
               </span>
             </div>
             <div v-if="review.images">
-              <div v-for=" image in review.images" :key="image.id">
-                <div class="h-80">
+              <div v-for="image in review.images" :key="image.id">
+                <div class="h-80 mb-5">
                   <img :src="image.path" alt="画像" class="w-full h-full object-cover">
                 </div>
               </div>
             </div>
-            <p class="pt-2 pb-2">{{ review.comment_title }}</p>
+            <p class="pt-2 pb-4 text-xl font-bold">{{ review.comment_title }}</p>
             <p class="pt-2 pb-2">{{ review.comment_content }}</p>
 
             <!-- ログインユーザーのコメントの時に表示 -->
@@ -213,7 +218,7 @@ const closeEditPostModal = () => {
     </article>
   </div>
 
-  <div class="m-5 flex justify-center">
+  <div class="m-10 flex justify-center">
     <Link class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg" :href="route('posts')">投稿一覧へ</Link>
   </div>
 

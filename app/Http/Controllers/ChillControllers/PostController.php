@@ -24,7 +24,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = post::with('images')->with('reviews')->with(['reviews.images'])->withCount('reviews')->with('rating')->get();
+        $posts = post::with('user')->with('images')->with('reviews')->with(['reviews.images'])->withCount('reviews')->with('rating')->get();
 
         return Inertia::render('ChillPages/Posts', [
             'posts' => $posts

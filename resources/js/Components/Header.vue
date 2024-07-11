@@ -21,18 +21,16 @@ defineProps({
       </NavLink>
       <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
         <Link :href="route('posts')" class=" mr-5 hover:underline">投稿一覧</Link>
-        <Link :href="route('profile')" class="mr-5 hover:underline">プロフィール</Link>
-        <Link class="mr-5 hover:underline">Third Link</Link>
-        <Link class="mr-5 hover:underline">Fourth Link</Link>
+        <Link :href="route('profile')" class="mr-5 hover:underline">マイページ</Link>
+        <!-- ログイン -->
+        <Link v-if="$page.props.auth.user" :href="route('logout')" method="post" as="button" class="mr-5 hover:underline">ログアウト
+        </Link>
+        <!-- 未ログイン -->
+        <div v-else>
+          <Link :href="route('login')" class="mr-5 hover:underline">ログイン</Link>
+          <Link :href="route('register')" class="mr-5 hover:underline">新規登録</Link>
+        </div>
       </nav>
-      <!-- ログイン -->
-      <Link v-if="$page.props.auth.user" :href="route('logout')" method="post" as="button" class="mr-5 hover:underline">ログアウト
-      </Link>
-      <!-- 未ログイン -->
-      <template v-else>
-        <Link :href="route('login')" class="mr-5 hover:underline">ログイン</Link>
-        <Link :href="route('register')" class="mr-5 hover:underline">新規登録</Link>
-      </template>
     </div>
   </header>
 </template>

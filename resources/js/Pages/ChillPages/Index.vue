@@ -14,7 +14,7 @@ const sideBer = true;
 <template>
   <Head title="Top" />
   <!-- 追々はスライドショーにしたい -->
-  <div class="position: relative h-svh w-full main_image">
+  <div class="position: relative h-svh w-full main_image mb-5">
     <div class="inner_musk">
       <Header :authProps=props></Header>
       <!-- 検索バー -->
@@ -28,26 +28,33 @@ const sideBer = true;
   <div class="flex">
     <!-- メインバー -->
     <template v-if="mainBer">
-      <div id="main-ber" class="p-5 bg-amber-100">
-        <h2 class="text-2xl font-bold m-6">新規投稿</h2>
+      <div id="main-ber" class="p-5">
+        <h2 class="text-2xl font-bold mb-6 pl-3">新規投稿</h2>
         <div v-if="posts" class="grid grid-cols-2">
-          <div v-for=" post in posts" :key="post.id" class="">
+          <div v-for=" post in posts" :key="post.id" class="m-3">
             <Link :href="route('post.show', post.id)">
 
-            <article class="article-border-position p-5 border border-black">
-              <p class=" pt-2 pb-2 font-bold">{{ post.title }}</p>
-              <div class="h-80">
-                <div v-if="post.images" class="h-full">
+            <article class="p-5 border">
+              <div class="pb-2 border-b">
+                <h2 class="text-lg pt-2 pb-2 font-bold">「{{ post.title }}」</h2>
+                <!-- <h2 class="font-bold">{{ post.user.name }} さんの投稿</h2> -->
+              </div>
+              <div class="h-80 pt-3 pb-3">
+                <div v-if="post.images.length" class="h-full">
                   <div v-for=" image in post.images" :key="image.id" class="h-full">
                     <img :src="image.path" alt="画像" class="w-full h-full object-cover">
                   </div>
                 </div>
+                <div v-else> 画像なし </div>
               </div>
-              <p class="pt-2 pb-2">{{ post.content }}</p>
-              <div>{{ post.reviews_count }}件</div>
-              <div>
-                <div v-if="post.rating[0]">{{ post.rating[0].avg_review }}</div>
-                <div v-else> 0.00 </div>
+
+              <div class="flex justify-between pt-2 border-t">
+                <div>コメント: {{ post.reviews_count }}件</div>
+                <div>
+                  評価:
+                  <span v-if="post.rating[0]">{{ post.rating[0].avg_review }}</span>
+                  <span v-else> 0.00 </span>
+                </div>
               </div>
             </article>
             </Link>
@@ -58,26 +65,34 @@ const sideBer = true;
 
     <!-- サイドバー -->
     <template v-if="sideBer">
-      <div id="side_ber" class="bg-yellow-200 h-auto p-5 border-l border-black">
-        <h2 class=" text-2xl font-bold m-6">人気ランキング</h2>
+      <div id="side_ber" class="h-auto p-5">
+        <h2 class=" text-2xl font-bold mb-8 pl-6">人気ランキング</h2>
         <div v-if="popularPosts" class="">
-          <div v-for=" popularPost in popularPosts" :key="popularPost.id" class="">
+          <div v-for="(popularPost, i) in popularPosts" :key="popularPost.id" class="m-3">
             <Link :href="route('post.show', popularPost.id)">
+            <h2 class="font-bold">{{ i+1 }} 位</h2>
 
-            <article class="article-border-position p-5 border border-black">
-              <p class=" pt-2 pb-2 font-bold">{{ popularPost.title }}</p>
-              <div class="h-80">
-                <div v-if="popularPost.images" class="h-full">
+            <article class="p-5">
+              <div class="pb-2 border-b">
+                <p class="pt-2 pb-2 font-bold">{{ popularPost.title }}</p>
+                <!-- <h2 class="font-bold">{{ popularPost.user.name }} さんの投稿</h2> -->
+              </div>
+              <div class="h-80 pt-3 pb-3">
+                <div v-if="popularPost.images.length" class=" h-full">
                   <div v-for=" image in popularPost.images" :key="image.id" class="h-full">
                     <img :src="image.path" alt="画像" class="w-full h-full object-cover">
                   </div>
                 </div>
+                <div v-else> 画像なし </div>
               </div>
-              <p class="pt-2 pb-2">{{ popularPost.content }}</p>
-              <div>{{ popularPost.reviews_count }}件</div>
-              <div>
-                <div v-if="popularPost.rating[0]">{{ popularPost.rating[0].avg_review }}</div>
-                <div v-else> 0.00 </div>
+
+              <div class="flex justify-between pt-2 border-t">
+                <div>コメント: {{ popularPost.reviews_count }}件</div>
+                <div>
+                  評価:
+                  <span v-if="popularPost.rating[0]">{{ popularPost.rating[0].avg_review }}</span>
+                  <span v-else> 0.00 </span>
+                </div>
               </div>
             </article>
             </Link>
@@ -106,10 +121,5 @@ const sideBer = true;
 }
 .header_text {
   color: white;
-}
-
-.article-border-position {
-  margin-top: -1px;
-  margin-left: -1px;
 }
 </style>
