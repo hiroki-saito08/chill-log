@@ -177,7 +177,7 @@ const closeEditPostModal = () => {
       </div>
     </article>
 
-    <button @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg ml-auto block mt-10 mb-10">コメントする</button>
+    <button v-if="!own_post" @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg ml-auto block mt-10 mb-10">コメントする</button>
   </div>
 
   <!-- コメントー一覧 -->

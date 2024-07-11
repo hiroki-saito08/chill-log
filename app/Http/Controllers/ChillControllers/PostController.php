@@ -64,8 +64,8 @@ class PostController extends Controller
             $ImageController =  new ImageController();
             $ImageController->store($image, $postData->id, null);
         }
-        // 追々投稿後は投稿したpostのshow画面に飛ばすように修正する
-        return Redirect::to('/profile');
+
+        return redirect()->route('post.show', $postData->id);
     }
 
     /**
