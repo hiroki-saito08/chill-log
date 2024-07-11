@@ -146,7 +146,7 @@ const closeEditPostModal = () => {
   <div class="mt-10 w-9/12 m-auto">
     <article class="p-10 border mb-5">
       <h2 class="text-center text-xl font-bold">「{{ post.title }}」</h2>
-      <h3 class="text-right text-lg pt-5 pb-5">{{ user.name }} さんの投稿</h3>
+      <h3 class="text-right text-lg pt-5 pb-5">{{ post.user.name }} さんの投稿</h3>
 
       <div v-if="post.images.length">
         <div v-for=" image in post.images" :key="image.id">
@@ -207,7 +207,7 @@ const closeEditPostModal = () => {
             <p class="pt-2 pb-4 text-xl font-bold">{{ review.comment_title }}</p>
             <p class="pt-2 pb-2">{{ review.comment_content }}</p>
 
-            <h3 class="text-right text-lg pt-5 pb-5">{{ user.name }} さんの投稿</h3>
+            <h3 class="text-right text-lg pt-5 pb-5">{{ review.user.name }} さんの投稿</h3>
 
             <!-- ログインユーザーのコメントの時に表示 -->
             <div v-if="review.user_id == userId" class="flex flex-wrap justify-end">

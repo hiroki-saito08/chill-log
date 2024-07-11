@@ -24,7 +24,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = post::with('user')->with('images')->with('reviews')->with(['reviews.images'])->withCount('reviews')->with('rating')->get();
+        $posts = post::with('user')->with('images')->with('reviews')->with(['reviews.images'])->withCount('reviews')->with('rating')->orderBy('posts.created_at', 'DESC')->limit(50)->get();
+        // ページネーションにする
 
         return Inertia::render('ChillPages/Posts', [
             'posts' => $posts
@@ -77,7 +78,7 @@ class PostController extends Controller
     public function show(int $id)
     {
         $own_post = false;
-        $post = post::where('id', $id)->with('images')->with('reviews')->with(['reviews.images'])->withCount('reviews')->with('rating')->first();
+        $post = post::where('id', $id)->with('user')->with('images')->with('reviews')->with(['reviews.user', 'reviews.images'])->withCount('reviews')->with('rating')->first();
         $user = Auth::user();
 
         // 投稿がログインユーザーのものか判定->編集と削除のボタンを表示する
