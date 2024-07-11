@@ -12,80 +12,182 @@ import { Inertia } from '@inertiajs/inertia';
 const props = defineProps({
   post: Object,
   user: Array,
-  errors: Object
+  errors: Object,
+  review: Object,
+  own_post: Boolean,
 });
+let commented = false;
 const modalState = ref(false);
+const editPostModalState = ref(false);
+const userId = ref(null)
+if (props.user !== null) {
+  userId.value = props.user.id
+}
+
 // 非ログインユーザーもいるため初期設定はnull
 const form = useForm({
   post_id: props.post.id,
-  user_id: null,
+  user_id: userId,
   star: null,
   comment_title: null,
   comment_content: null,
   image: null
+});
+const editPostForm = useForm({
+  user_id: userId,
+  status: props.post.status,
+  title: props.post.title,
+  content: props.post.content,
+  image: props.post.image
 });
 
 const canReview = () => {
   if (props.user === null) {
     Inertia.get(route('login'));
   } else {
-    form.user_id = props.user.id;
+    // コメント済みの場合の処理
+    if (props.review != null) {
+      form.star = props.review.star;
+      form.comment_title = props.review.comment_title;
+      form.comment_content = props.review.comment_content;
+      // form.image = props.review.image;
+      commented = true;
+    }
+
     openModal();
   }
 }
 
+// コメント削除
+const deleteReview = () => {
+  // 確認用ポップアップ
+  let result = confirm('コメントを削除してよろしいですか？');
+
+  if (result) {
+    Inertia.delete(route('review.destroy', props.review.id));
+    alert('コメントを削除しました');
+  }
+
+  closeEditPostModal();
+}
+
 const storePost = () => {
-  Inertia.post(route('review.store'), form);
+  // コメント済みの場合は修正に飛ばす
+  if (commented) {
+    // inertiaではputでfileを送れないらしいからこんな感じに変更
+    Inertia.post(route('review.update', props.review.id ), {
+      _method: 'put',
+      form: form,
+    });
+    alert('コメントを更新しました');
+  } else {
+    Inertia.post(route('review.store'), form);
+    alert('コメントを投稿しました');
+  }
   closeModal();
+}
+
+const updatePost = () => {
+  Inertia.post(route('post.update', props.post.id), {
+    _method: 'put',
+    form: editPostForm,
+  });
+  alert('投稿を更新しました');
+  closeEditPostModal();
+}
+
+// 投稿削除
+const deletePost = () => {
+  // 確認用ポップアップ
+  let result = confirm('投稿を削除してよろしいですか？');
+
+  if (result) {
+    Inertia.delete(route('post.destroy', props.post.id));
+    alert('投稿を削除しました');
+  }
+
+  closeEditPostModal();
+}
+
+const onImageUploaded = (e) => {
+  const image = e.target.files[0];
+  form.image = image;
+}
+const onPostImageUploaded = (e) => {
+  const postImage = e.target.files[0];
+  editPostForm.image = postImage;
+}
+
+const openModal = () => {
+  modalState.value = true;
 }
 const closeModal = () => {
   modalState.value = false;
 
   form.reset();
 };
-const openModal = () => {
-  modalState.value = true;
+
+const openEditPostModal = () => {
+  editPostModalState.value = true;
 }
-const onImageUploaded = (e) => {
-  const image = e.target.files[0];
-  form.image = image;
-}
+const closeEditPostModal = () => {
+  editPostModalState.value = false;
+
+  editPostForm.reset();
+};
+
 </script>
 
 <template>
   <Head title="Post-detail" />
   <!-- メインビジュアルは後で写真を設定 -->
   <Header :authProps=props></Header>
-  <div class="m-5">
-    <!-- 検索バー -->
-    <div class="mx-auto flex flex-wrap justify-around h-14 p-4 w-3/5 m-auto mt-5">
-      <input type="" id="" name="" class="w-3/5 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-      <button class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">検索</button>
-    </div>
-  </div>
 
-  <div>
-    <article class="p-5 border">
-      <p class="pt-2 pb-2">{{ post.title }}</p>
-      <div v-if="post.images">
+  <div class="mt-10 w-9/12 m-auto">
+    <article class="p-10 border mb-5">
+      <h2 class="text-center text-xl font-bold">「{{ post.title }}」</h2>
+      <h3 class="text-right text-lg pt-5 pb-5">{{ user.name }} さんの投稿</h3>
+
+      <div v-if="post.images.length">
         <div v-for=" image in post.images" :key="image.id">
-          <div class="h-80">
+          <div class="h-svh">
             <img :src="image.path" alt="画像" class="w-full h-full object-cover">
           </div>
         </div>
       </div>
-      <p class="pt-2 pb-2">{{ post.content }}</p>
+      <div v-else> 画像なし </div>
+
+      <div class="mt-5 mb-5">
+        <p class="pt-5 pb-5">{{ post.content }}</p>
+      </div>
+
+      <div class="flex justify-between pt-2 border-t">
+        <div>コメント: {{ post.reviews_count }}件</div>
+        <div>
+          評価:
+          <span v-if="post.rating[0]">{{ post.rating[0].avg_review }}</span>
+          <span v-else> 0.00 </span>
+        </div>
+      </div>
+
+      <!-- ログインユーザーの投稿の時に表示 -->
+      <div class="flex flex-wrap justify-end">
+        <button v-if="own_post" @click="openEditPostModal" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">編集</button>
+        <button v-if="own_post" @click="deletePost" class="text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">削除</button>
+      </div>
     </article>
+
+    <button @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg ml-auto block mt-10 mb-10">コメントする</button>
   </div>
 
-  <button @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 ml-auto block">コメントする</button>
+  <!-- コメントー一覧 -->
+  <div class="mt-10 w-2/3 m-auto">
+    <h3 class="mt-5 mb-10 text-xl font-bold">コメント一覧</h3>
 
-  <!-- レビュー一覧 -->
-  <div>
-    <article class="p-5 border">
+    <article>
       <div v-if="post.reviews">
         <div v-for=" review in post.reviews" :key="review.id">
-          <article class="border">
+          <article class="border p-5">
             <div class="stars relative mb-4">
               <span>
                 <input class="star5" type="radio" :checked="review.star == 5"><label>★</label>
@@ -96,25 +198,64 @@ const onImageUploaded = (e) => {
               </span>
             </div>
             <div v-if="review.images">
-              <div v-for=" image in review.images" :key="image.id">
-                <div class="h-80">
+              <div v-for="image in review.images" :key="image.id">
+                <div class="h-80 mb-5">
                   <img :src="image.path" alt="画像" class="w-full h-full object-cover">
                 </div>
               </div>
             </div>
-            <p class="pt-2 pb-2">{{ review.comment_title }}</p>
+            <p class="pt-2 pb-4 text-xl font-bold">{{ review.comment_title }}</p>
             <p class="pt-2 pb-2">{{ review.comment_content }}</p>
+
+            <h3 class="text-right text-lg pt-5 pb-5">{{ user.name }} さんの投稿</h3>
+
+            <!-- ログインユーザーのコメントの時に表示 -->
+            <div v-if="review.user_id == userId" class="flex flex-wrap justify-end">
+              <button @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">編集</button>
+              <button @click="deleteReview" class="text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">削除</button>
+            </div>
           </article>
         </div>
       </div>
     </article>
   </div>
 
-  <div class="m-5 flex justify-center">
+  <div class="m-10 flex justify-center">
     <Link class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg" :href="route('posts')">投稿一覧へ</Link>
   </div>
 
-  <!-- モーダルウィンドウ できれば機能切り出す -->
+
+  <!-- 編集用モーダルウィンドウ -->
+  <Modal :show="editPostModalState" @close="closeEditPostModal">
+    <form @submit.prevent="updatePost">
+      <div class="container mx-auto flex">
+        <div class="bg-white rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 relative z-10 shadow-md">
+          <h2 class="text-lg font-medium text-gray-900 mb-4">記事を編集する</h2>
+          <div class="relative mb-4">
+            <label for="title" value="title" class="leading-7 text-sm text-gray-600">Title</label>
+            <input id="title" v-model="editPostForm.title" type="text" placeholder="title" @keyup.enter=false name="title" required class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+          </div>
+
+          <div class="relative mb-4">
+            <label for="content" value="content" class="leading-7 text-sm text-gray-600">content</label>
+            <textarea id="content" v-model="editPostForm.content" type="textarea" placeholder="content" @keyup.enter=false name="content" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+          </div>
+
+          <input id="image" @change="onPostImageUploaded" type="file" placeholder="image" name="image">
+
+          <div class="mt-6 flex justify-end">
+            <SecondaryButton @click="closeEditPostModal"> Cancel </SecondaryButton>
+
+            <PrimaryButton class="ml-3" :class="{ 'opacity-25': editPostForm.processing }" :disabled="editPostForm.processing">
+              更新する
+            </PrimaryButton>
+          </div>
+        </div>
+      </div>
+    </form>
+  </Modal>
+
+  <!-- コメント用モーダルウィンドウ -->
   <Modal :show="modalState" @close="closeModal">
     <form @submit.prevent="storePost">
       <div class="container mx-auto flex">
@@ -186,8 +327,8 @@ const onImageUploaded = (e) => {
   /* カーソルが上に乗ったときに指の形にする */
 }
 
-.stars .form-stars label:hover,
-.stars .form-stars label:hover~label,
+/* .stars .form-stars label:hover, */
+/* .stars .form-stars label:hover~label, */
 .stars input[type='radio']:checked~label {
   color: #F8C601;
   /* 選択された星以降をすべて黄色にする */

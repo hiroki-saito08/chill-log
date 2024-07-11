@@ -21,6 +21,7 @@ class PostSeeder extends Seeder
                 'status' => 1,
                 'title' => 'テスト投稿1',
                 'content' => 'ここはとっても安らげる空間です',
+                'location' => 'テスト県テスト市',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -29,6 +30,7 @@ class PostSeeder extends Seeder
                 'status' => 1,
                 'title' => 'テスト投稿2',
                 'content' => 'ここは火山があってすごく貴重な体験ができる',
+                'location' => 'テスト県テスト市',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -37,6 +39,7 @@ class PostSeeder extends Seeder
                 'status' => 1,
                 'title' => 'テスト投稿3',
                 'content' => '面白いところ',
+                'location' => 'テスト県テスト市',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -45,6 +48,7 @@ class PostSeeder extends Seeder
                 'status' => 1,
                 'title' => 'テスト投稿4',
                 'content' => 'ハワイの綺麗なところ',
+                'location' => 'テスト県テスト市',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -53,6 +57,7 @@ class PostSeeder extends Seeder
                 'status' => 1,
                 'title' => 'テスト投稿5',
                 'content' => 'お花がありました',
+                'location' => 'テスト県テスト市',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -61,6 +66,7 @@ class PostSeeder extends Seeder
                 'status' => 1,
                 'title' => 'テスト投稿6',
                 'content' => '綺麗な景色',
+                'location' => 'テスト県テスト市',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
