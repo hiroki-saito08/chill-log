@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, nextTick, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
 import DangerButton from '@/Components/DangerButton.vue';
@@ -7,17 +7,6 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { Inertia } from '@inertiajs/inertia';
-import Slick from 'vue-slick';
-
-const slickOptions = ref({
-  arrows: true,    //スライドの矢印ボタン
-  dots: true,      //ドットマーク
-  autoplay: true,  //自動スライド
-  autoplaySpeed: 4000,  //自動スライド間隔(ms)
-  pauseOnFocus: false,  //ドットマークを押すとスライドショーが止まるのを防ぐ
-  prevArrow: '<button type="button" class="slick-prev"></button>',  //ひとつ前の画像に戻る矢印ボタン
-  nextArrow: '<button type="button" class="slick-next"></button>'   //ひとつ先の画像に進む矢印ボタン
-});
 
 const props = defineProps({
   posts: Object,
@@ -26,6 +15,8 @@ const props = defineProps({
 });
 
 const modalState = ref(false);
+const editProfileModalState = ref(false);
+
 const form = useForm({
   user_id: props.user.id,
   status: 1, //下書き保存ボタンを追加したら、下書きの時0にする
@@ -33,20 +24,41 @@ const form = useForm({
   content: null,
   image: null
 });
+const editName = ref(props.user.name);
 
 const openModal = () => {
   modalState.value = true;
 }
+const openEditProfileModal = () => {
+  editProfileModalState.value = true;
+}
+
 const closeModal = () => {
   modalState.value = false;
 
   form.reset();
+};
+const closeEditProfileModal = () => {
+  editProfileModalState.value = false;
+
+  editName.value = '';
 };
 
 const storePost = () => {
   Inertia.post(route('post.store'), form);
   alert('投稿しました');
   closeModal();
+}
+
+const updateProfile = () => {
+  console.log(editName)
+  Inertia.post(route('profile.update', props.user.id), {
+    _method: 'put',
+    name: editName.value,
+  });
+
+  alert('変更しました');
+  closeEditProfileModal();
 }
 
 const onImageUploaded = (e) => {
@@ -59,37 +71,43 @@ const onImageUploaded = (e) => {
 <template>
   <Head title="profile" />
   <Header :authProps=props></Header>
-  <div class="m-5">
-    <button @click="openModal" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5">記事を投稿する</button>
-    <div>
+
+  <div class="w-1/2 m-auto mt-10">
+    <div class="mb-10">
+      <h2 class="text-2xl font-bold mb-6">記事の投稿</h2>
+      <button @click="openModal" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">投稿する</button>
+    </div>
+
+    <div class="mt-10 mb-10">
+      <h2 class="text-2xl font-bold mb-6">ユーザー情報</h2>
       <ul>
-        <li class="m-5">画像: {{user.img}}</li>
-        <li class="m-5">ID: {{user.id}}</li>
-        <li class="m-5">名前: {{user.name}}</li>
-        <li class="m-5">メールアドレス: {{user.email}}</li>
-        <li class="m-5">電話番号: {{user.phone}}</li>
-        <li class="m-5">住所: {{user.address}}</li>
-        <li class="m-5">誕生日: {{user.birthday}}</li>
-        <li class="m-5">性別: {{user.gender}}</li>
+        <li class="mt-5">ID: {{user.id}}</li>
+        <li class="mt-5">名前: {{user.name}}</li>
+        <!-- <li class="mt-5">メールアドレス: {{user.email}}</li>
+        <li class="mt-5">電話番号: {{user.phone}}</li>
+        <li class="mt-5">住所: {{user.address}}</li>
+        <li class="mt-5">誕生日: {{user.birthday}}</li>
+        <li class="mt-5">性別: {{user.gender}}</li> -->
       </ul>
     </div>
-    <!-- <Link :href="route('profile.edit')" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5">プロフィールの修正画面</Link> -->
+
+    <button @click="openEditProfileModal" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg mb-10">名前を変更する</button>
   </div>
 
-  <!-- モーダルウィンドウ できれば機能切り出す -->
-  <Modal :show="modalState" @close="closeModal">
-    <form @submit.prevent="storePost">
+  <!-- 記事投稿モーダル -->
+  <Modal :show=" modalState " @close=" closeModal ">
+    <form @submit.prevent=" storePost ">
       <div class="container mx-auto flex">
         <div class="bg-white rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 relative z-10 shadow-md">
           <h2 class="text-lg font-medium text-gray-900 mb-4">記事を投稿する</h2>
           <div class="relative mb-4">
             <label for="title" value="title" class="leading-7 text-sm text-gray-600">Title</label>
-            <input id="title" v-model="form.title" type="text" placeholder="title" @keyup.enter=false name="title" required class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            <input id="title" v-model=" form.title " type="text" placeholder="title" @keyup.enter=false name="title" required class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
           </div>
 
           <div class="relative mb-4">
             <label for="content" value="content" class="leading-7 text-sm text-gray-600">content</label>
-            <textarea id="content" v-model="form.content" type="textarea" placeholder="content" @keyup.enter=false name="content" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+            <textarea id="content" v-model=" form.content " type="textarea" placeholder="content" @keyup.enter=false name="content" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
           </div>
 
           <input id="image" @change="onImageUploaded" type="file" placeholder="image" name="image">
@@ -106,7 +124,29 @@ const onImageUploaded = (e) => {
     </form>
   </Modal>
 
-  <Link href="/">戻る</Link>
+  <!-- 名前修正モーダル -->
+  <Modal :show="editProfileModalState" @close="closeEditProfileModal ">
+    <form @submit.prevent="updateProfile">
+      <div class="container mx-auto">
+        <div class="bg-white rounded-lg p-8 md:ml-auto w-full mt-10 md:mt-0 relative z-10 shadow-md">
+          <h2 class="text-lg font-medium text-gray-900 mb-4">名前を変更する</h2>
+          <div class="relative mb-4">
+            <label for="name" value="name" class="leading-7 text-sm text-gray-600">Name</label>
+            <input id="name" v-model="editName" type="text" placeholder="name" @keyup.enter=false name="name" required class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+          </div>
+
+          <div class="mt-6">
+            <SecondaryButton @click="closeEditProfileModal"> Cancel </SecondaryButton>
+
+            <PrimaryButton class="ml-3" :class="{ 'opacity-25': editName.processing }" :disabled="editName.processing">
+              変更する
+            </PrimaryButton>
+          </div>
+        </div>
+      </div>
+    </form>
+  </Modal>
+
 </template>
 
 <style>
