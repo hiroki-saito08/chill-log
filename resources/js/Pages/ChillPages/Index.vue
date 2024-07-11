@@ -90,7 +90,7 @@ const sideBer = true;
                 <div>コメント: {{ popularPost.reviews_count }}件</div>
                 <div>
                   評価:
-                  <span v-if="popularPost.rating[0]">{{ popularPost.rating[0].avg_review }}</span>
+                  <span v-if="popularPost.avg_review">{{ popularPost.avg_review }}</span>
                   <span v-else> 0.00 </span>
                 </div>
               </div>

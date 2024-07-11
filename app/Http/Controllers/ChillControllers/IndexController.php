@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 class IndexController extends Controller
@@ -22,8 +23,16 @@ class IndexController extends Controller
         $posts = post::with('user')->with('images')->with('reviews')->withCount('reviews')->with('rating')
             ->orderBy('posts.created_at', 'DESC')->limit(6)->get();
 
-        $popularPosts = post::with('user')->with('images')->with('reviews')->withCount('reviews')->with('rating')
-            ->orderBy('reviews_count', 'DESC')->limit(3)->get();
+        // レビューの数が多い順、かつレビューの高い順に並び替え（全体のクエリの並び替えはjoin必須）
+        $popularPosts = post::with('images')
+            ->leftJoin('reviews', 'posts.id', '=', 'reviews.post_id')
+            ->select('posts.*', DB::raw('count(reviews.id) as reviews_count'))
+            ->selectRaw('reviews.post_id, ROUND(avg(reviews.star), 2) AS avg_review')
+            ->groupBy('posts.id')
+            ->orderBy('reviews_count', 'DESC')
+            ->orderBy('avg_review', 'DESC')
+            ->limit(3)
+            ->get();
 
         return Inertia::render('ChillPages/Index', [
             'posts' => $posts,

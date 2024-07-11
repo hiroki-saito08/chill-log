@@ -78,7 +78,14 @@ class PostController extends Controller
     public function show(int $id)
     {
         $own_post = false;
-        $post = post::where('id', $id)->with('user')->with('images')->with('reviews')->with(['reviews.user', 'reviews.images'])->withCount('reviews')->with('rating')->first();
+
+        // レビューを新基順にソート（最後にソートするとうまく行った）
+        $post = post::where('id', $id)->with('user')->with('images')
+            ->with(['reviews.user', 'reviews.images'])->withCount('reviews')->with('rating')
+            ->with(array('reviews' => function ($query) {
+                $query->orderBy('created_at', 'DESC');
+            }))->first();
+
         $user = Auth::user();
 
         // 投稿がログインユーザーのものか判定->編集と削除のボタンを表示する
