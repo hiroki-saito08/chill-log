@@ -207,6 +207,8 @@ const closeEditPostModal = () => {
             <p class="pt-2 pb-4 text-xl font-bold">{{ review.comment_title }}</p>
             <p class="pt-2 pb-2">{{ review.comment_content }}</p>
 
+            <h3 class="text-right text-lg pt-5 pb-5">{{ user.name }} さんの投稿</h3>
+
             <!-- ログインユーザーのコメントの時に表示 -->
             <div v-if="review.user_id == userId" class="flex flex-wrap justify-end">
               <button @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">編集</button>
