@@ -11,14 +11,20 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Session;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
      * Display the login view.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
+        // セッションから前のURLを取得
+        $previousUrl = $request->session()->get('previous_url');
+        // セッションに'two_previous_url'を追加する
+        $request->session()->put('two_previous_url', $previousUrl);
+
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
@@ -31,9 +37,15 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
 
+        // ミドルウェアからURLを取得
+        $previousUrl = $request->session()->get('two_previous_url');
+
+        if ($previousUrl) {
+            $request->session()->forget('two_previous_url');
+            return redirect($previousUrl);
+        }
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 

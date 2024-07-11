@@ -23,20 +23,24 @@ use App\Http\Controllers\ChillControllers\ImageController;
 //     return Inertia::render('Dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/test', function () {
+    return Inertia::render('Test');
+});
+
 Route::get('/', [IndexController::class, 'index']);
 Route::get('/posts', [PostController::class, 'index'])->name('posts');
-Route::get('/post-show/{id}', [PostController::class, 'show'])->name('post.show');
+Route::get('/post-show/{post}', [PostController::class, 'show'])->name('post.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::get('/profile-edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile-update', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile-destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile-edit/{profile}', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile-update/{profile}', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile-destroy/{profile}', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/post-create', [PostController::class, 'create'])->name('post.create');
     Route::post('/post-store', [PostController::class, 'store'])->name('post.store');
-    Route::get('/post-edit', [PostController::class, 'edit'])->name('post.edit');
-    Route::patch('/post-update', [PostController::class, 'update'])->name('post.update');
-    Route::delete('/post-destroy', [PostController::class, 'destroy'])->name('post.destroy');
+    Route::get('/post-edit/{post}', [PostController::class, 'edit'])->name('post.edit');
+    Route::put('/post-update/{post}', [PostController::class, 'update'])->name('post.update');
+    Route::delete('/post-destroy/{post}', [PostController::class, 'destroy'])->name('post.destroy');
     Route::resource('review', ReviewController::class)->middleware(['auth', 'verified']);
     Route::resource('favorite', FavoriteController::class)->middleware(['auth', 'verified']);
     Route::resource('image', ImageController::class)->middleware(['auth', 'verified']);

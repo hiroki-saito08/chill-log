@@ -3,50 +3,123 @@ import { Head, Link } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
 
 const props = defineProps({
-  posts: Object
+  posts: Object,
+  popularPosts: Object
 });
+
+const mainBer = true;
+const sideBer = true;
 </script>
 
 <template>
   <Head title="Top" />
-  <!-- メインビジュアルは後で写真を設定 -->
-  <div class="position: relative h-svh w-full bg-green-300">
-    <Header :authProps=props></Header>
-    <!-- 検索バー -->
-    <div class="mx-auto flex flex-wrap justify-around h-14 p-4 w-3/5 m-auto mt-5">
-      <input type="" id="" name="" class="w-3/5 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-      <button class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">検索</button>
+  <!-- 追々はスライドショーにしたい -->
+  <div class="position: relative h-svh w-full main_image mb-5">
+    <div class="inner_musk">
+      <Header :authProps=props></Header>
+      <!-- 検索バー -->
+      <div class="mx-auto flex flex-wrap justify-around h-14 p-4 w-3/5 m-auto mt-5">
+        <input type="" id="" name="" class="w-3/5 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+        <button class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">検索</button>
+      </div>
     </div>
   </div>
 
-  <!-- 投稿を最新から6件取得して表示する。残りは投稿一覧ページへ誘導する
-  表示テンプレートは分けたい -->
-  <template v-if="posts">
-    <div class="grid grid-cols-2">
-      <div v-for=" post in posts" :key="post.id" class="m-5">
-        <Link :href="route('post.show', post.id)">
-        <article class="p-5 border">
-          <p class="pt-2 pb-2">{{ post.title }}</p>
-          <div v-if="post.images">
-            <div v-for=" image in post.images" :key="image.id">
-              <!-- 画像は複数の時選択した画像を拡大表示できるようにする -->
-              <div class="h-80">
-                <img :src="image.path" alt="画像" class="w-full h-full object-cover">
-              </div>
-            </div>
-          </div>
-          <p class="pt-2 pb-2">{{ post.content }}</p>
-        </article>
-        </Link>
-      </div>
-    </div>
-  </template>
+  <div class="flex">
+    <!-- メインバー -->
+    <template v-if="mainBer">
+      <div id="main-ber" class="p-5">
+        <h2 class="text-2xl font-bold mb-6 pl-3">新規投稿</h2>
+        <div v-if="posts" class="grid grid-cols-2">
+          <div v-for=" post in posts" :key="post.id" class="m-3">
+            <Link :href="route('post.show', post.id)">
 
-  <div class="m-5 flex justify-center">
+            <article class="p-5 border">
+              <div class="pb-2 border-b">
+                <h2 class="text-lg pt-2 pb-2 font-bold">「{{ post.title }}」</h2>
+                <!-- <h2 class="font-bold">{{ post.user.name }} さんの投稿</h2> -->
+              </div>
+              <div class="h-80 pt-3 pb-3">
+                <div v-if="post.images.length" class="h-full">
+                  <div v-for=" image in post.images" :key="image.id" class="h-full">
+                    <img :src="image.path" alt="画像" class="w-full h-full object-cover">
+                  </div>
+                </div>
+                <div v-else> 画像なし </div>
+              </div>
+
+              <div class="flex justify-between pt-2 border-t">
+                <div>コメント: {{ post.reviews_count }}件</div>
+                <div>
+                  評価:
+                  <span v-if="post.rating[0]">{{ post.rating[0].avg_review }}</span>
+                  <span v-else> 0.00 </span>
+                </div>
+              </div>
+            </article>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- サイドバー -->
+    <template v-if="sideBer">
+      <div id="side_ber" class="h-auto p-5">
+        <h2 class=" text-2xl font-bold mb-8 pl-6">人気ランキング</h2>
+        <div v-if="popularPosts" class="">
+          <div v-for="(popularPost, i) in popularPosts" :key="popularPost.id" class="m-3">
+            <Link :href="route('post.show', popularPost.id)">
+            <h2 class="font-bold">{{ i+1 }} 位</h2>
+
+            <article class="p-5">
+              <div class="pb-2 border-b">
+                <p class="pt-2 pb-2 font-bold">{{ popularPost.title }}</p>
+                <!-- <h2 class="font-bold">{{ popularPost.user.name }} さんの投稿</h2> -->
+              </div>
+              <div class="h-80 pt-3 pb-3">
+                <div v-if="popularPost.images.length" class=" h-full">
+                  <div v-for=" image in popularPost.images" :key="image.id" class="h-full">
+                    <img :src="image.path" alt="画像" class="w-full h-full object-cover">
+                  </div>
+                </div>
+                <div v-else> 画像なし </div>
+              </div>
+
+              <div class="flex justify-between pt-2 border-t">
+                <div>コメント: {{ popularPost.reviews_count }}件</div>
+                <div>
+                  評価:
+                  <span v-if="popularPost.rating[0]">{{ popularPost.rating[0].avg_review }}</span>
+                  <span v-else> 0.00 </span>
+                </div>
+              </div>
+            </article>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <div class="mt-5 mb-10 flex justify-center">
     <Link class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg" :href="route('posts')">投稿一覧へ</Link>
   </div>
 </template>
 
 <style>
-
+.main_image {
+    background-image: url("../images/top1.jpg");
+    background-size: cover;
+    background-position: top;
+}
+.main_image .inner_musk {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.header_text {
+  color: white;
+}
 </style>
