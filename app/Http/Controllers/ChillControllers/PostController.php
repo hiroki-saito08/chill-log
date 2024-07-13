@@ -33,6 +33,33 @@ class PostController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $searchWord = $request->searchWord;
+        if (empty($searchWord)) {
+            $searchWord  = session()->get('searchWord');
+        }
+
+        // セッションに保存する
+        session()->put('searchWord', $searchWord);
+
+        $posts = post::where('title', 'LIKE', "%${searchWord}%")
+            ->orWhere('content', 'LIKE', "%${searchWord}%")
+            ->with('user')->with('images')->with('reviews')
+            ->with(['reviews.images'])->withCount('reviews')
+            ->with('rating')
+            ->orderBy('posts.created_at', 'DESC')->limit(50)->get();
+
+        return Inertia::render('ChillPages/Posts', [
+            'posts' => $posts,
+        ]);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

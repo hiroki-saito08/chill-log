@@ -29,6 +29,8 @@ Route::get('/test', function () {
 
 Route::get('/', [IndexController::class, 'index']);
 Route::get('/posts', [PostController::class, 'index'])->name('posts');
+Route::get('/posts-search', [PostController::class, 'search'])->name('posts.search');
+Route::post('/posts-search', [PostController::class, 'search'])->name('posts.search');
 Route::get('/post-show/{post}', [PostController::class, 'show'])->name('post.show');
 
 Route::middleware('auth')->group(function () {
