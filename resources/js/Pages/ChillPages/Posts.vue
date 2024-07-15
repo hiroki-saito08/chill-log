@@ -2,10 +2,13 @@
 import { Head, Link } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
 import Search from '@/Components/Search.vue';
+import Pagination from '@/Components/Pagination.vue'
 
 const props = defineProps({
   posts: Object
 });
+
+console.log(props.posts)
 </script>
 
 <template>
@@ -20,13 +23,12 @@ const props = defineProps({
   表示テンプレートは分けたい -->
   <template v-if="posts">
     <div class="grid grid-cols-3">
-      <div v-for=" post in posts" :key="post.id" class="m-5">
+      <div v-for=" post in posts.data" :key="post.id" class="m-5">
         <Link :href="route('post.show', post.id)">
 
         <article class="p-5 border">
           <div class="pb-2 border-b">
             <h2 class="text-lg pt-2 pb-2 font-bold">「{{ post.title }}」</h2>
-            <!-- <h2 class="font-bold">{{ post.user.name }} さんの投稿</h2> -->
           </div>
           <div class="h-80 pt-3 pb-3">
             <div v-if="post.images.length" class="h-full">
@@ -49,6 +51,7 @@ const props = defineProps({
         </Link>
       </div>
     </div>
+    <Pagination class="mt-6" :links="posts.links" />
   </template>
 
   <div class="m-5 mt-10 mb-10 flex justify-center">

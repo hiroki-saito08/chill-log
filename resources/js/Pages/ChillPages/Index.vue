@@ -37,7 +37,6 @@ const sideBer = true;
             <article class="p-5 border">
               <div class="pb-2 border-b">
                 <h2 class="text-lg pt-2 pb-2 font-bold">「{{ post.title }}」</h2>
-                <!-- <h2 class="font-bold">{{ post.user.name }} さんの投稿</h2> -->
               </div>
               <div class="h-80 pt-3 pb-3">
                 <div v-if="post.images.length" class="h-full">

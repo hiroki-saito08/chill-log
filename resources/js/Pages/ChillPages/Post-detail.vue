@@ -38,7 +38,8 @@ const editPostForm = useForm({
   status: props.post.status,
   title: props.post.title,
   content: props.post.content,
-  image: props.post.image
+  image: props.post.image,
+  deleteImage: false
 });
 
 const canReview = () => {
@@ -241,7 +242,15 @@ const closeEditPostModal = () => {
             <textarea id="content" v-model="editPostForm.content" type="textarea" placeholder="content" @keyup.enter=false name="content" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
           </div>
 
-          <input id="image" @change="onPostImageUploaded" type="file" placeholder="image" name="image">
+          <div class="flex">
+            <div>
+              <input id="image" @change="onPostImageUploaded" type="file" placeholder="image" name="image" :disabled="editPostForm.deleteImage">
+            </div>
+            <div>
+              <label for=" deleteImage" class="leading-7 pr-3">登録済みの画像を削除</label>
+              <input id="deleteImage" v-model="editPostForm.deleteImage" @change="onPostImageUploaded" type="checkbox" name="deleteImage" :disabled="editPostForm.image" :class="{ 'opacity-25': editPostForm.image }">
+            </div>
+          </div>
 
           <div class="mt-6 flex justify-end">
             <SecondaryButton @click="closeEditPostModal"> Cancel </SecondaryButton>

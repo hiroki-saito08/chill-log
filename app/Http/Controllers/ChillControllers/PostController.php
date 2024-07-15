@@ -24,8 +24,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = post::with('user')->with('images')->with('reviews')->with(['reviews.images'])->withCount('reviews')->with('rating')->orderBy('posts.created_at', 'DESC')->limit(50)->get();
-        // ページネーションにする
+        // ページネーション
+        $posts = post::with('user')->with('images')->with('reviews')->with(['reviews.images'])->withCount('reviews')->with('rating')->orderBy('posts.created_at', 'DESC')->paginate(6);
 
         return Inertia::render('ChillPages/Posts', [
             'posts' => $posts
@@ -155,6 +155,9 @@ class PostController extends Controller
     public function update(UpdatepostRequest $request, Post $post)
     {
         $image = null;
+        if ($request->form['deleteImage']) {
+            Image::where('post_id', $post->id)->delete();
+        }
         if (isset($request->form['image'])) {
             $image = $request->form['image'];
         };
