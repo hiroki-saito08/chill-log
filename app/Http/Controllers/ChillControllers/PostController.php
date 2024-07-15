@@ -179,6 +179,25 @@ class PostController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function own()
+    {
+        $user = Auth::user();
+        $posts = post::where('user_id', $user->id)
+            ->with('user')->with('images')->with('reviews')->with(['reviews.images'])
+            ->withCount('reviews')->with('rating')
+            ->orderBy('posts.created_at', 'DESC')->paginate(6);
+
+        return Inertia::render('ChillPages/Own-posts', [
+            'user' => $user,
+            'posts' => $posts
+        ]);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Post  $post

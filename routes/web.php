@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile-edit/{profile}', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile-update/{profile}', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile-destroy/{profile}', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/post-own', [PostController::class, 'own'])->name('post.own');
     Route::get('/post-create', [PostController::class, 'create'])->name('post.create');
     Route::post('/post-store', [PostController::class, 'store'])->name('post.store');
     Route::get('/post-edit/{post}', [PostController::class, 'edit'])->name('post.edit');
