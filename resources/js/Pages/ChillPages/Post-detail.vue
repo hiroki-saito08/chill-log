@@ -15,11 +15,16 @@ const props = defineProps({
   errors: Object,
   review: Object,
   own_post: Boolean,
+  isFavorite: Boolean,
+  favoriteId: Number
 });
 let commented = false;
 const modalState = ref(false);
 const editPostModalState = ref(false);
 const userId = ref(null)
+console.log(props.isFavorite);
+console.log(props.favoriteId);
+
 if (props.user !== null) {
   userId.value = props.user.id
 }
@@ -27,14 +32,14 @@ if (props.user !== null) {
 // 非ログインユーザーもいるため初期設定はnull
 const form = useForm({
   post_id: props.post.id,
-  user_id: userId,
+  user_id: userId.value,
   star: null,
   comment_title: null,
   comment_content: null,
   image: null
 });
 const editPostForm = useForm({
-  user_id: userId,
+  user_id: userId.value,
   status: props.post.status,
   title: props.post.title,
   content: props.post.content,
@@ -56,6 +61,26 @@ const canReview = () => {
     }
 
     openModal();
+  }
+}
+
+// お気に入り登録
+const canFavorite = () => {
+  if (props.user === null) {
+    Inertia.get(route('login'));
+  } else {
+    // お気に入り済みの場合の処理
+    if (props.isFavorite) {
+      Inertia.delete(route('favorite.destroy', props.favoriteId));
+      console.log('お気に入りを削除しました')
+    } else {
+      Inertia.post(route('favorite.store',
+        {
+          post_id: props.post.id,
+          user_id: userId.value
+        }))
+      console.log('お気に入りに登録しました')
+    }
   }
 }
 
@@ -178,7 +203,13 @@ const closeEditPostModal = () => {
       </div>
     </article>
 
-    <button v-if="!own_post" @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg ml-auto block mt-10 mb-10">コメントする</button>
+    <div class="flex">
+      <button v-if="!own_post" @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg ml-auto block">コメントする</button>
+      <!-- お気に入り -->
+      <button v-if="!own_post" @click="canFavorite">
+        <a class="unfavorite-star" :class="{ 'favorite-star': props.isFavorite }">★</a>
+      </button>
+    </div>
   </div>
 
   <!-- コメントー一覧 -->
@@ -211,7 +242,7 @@ const closeEditPostModal = () => {
             <h3 class="text-right text-lg pt-5 pb-5">{{ review.user.name }} さんの投稿</h3>
 
             <!-- ログインユーザーのコメントの時に表示 -->
-            <div v-if="review.user_id == userId" class="flex flex-wrap justify-end">
+            <div v-if="review.user_id == userId.value" class="flex flex-wrap justify-end">
               <button @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">編集</button>
               <button @click="deleteReview" class="text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">削除</button>
             </div>
@@ -341,5 +372,18 @@ const closeEditPostModal = () => {
 .stars input[type='radio']:checked~label {
   color: #F8C601;
   /* 選択された星以降をすべて黄色にする */
+}
+
+/* favorite */
+.unfavorite-star {
+  color: #D2D2D2;
+  font-size: 30px;
+  padding: 0 5px;
+}
+
+.favorite-star {
+  color: #F8C601;
+  font-size: 30px;
+  padding: 0 5px;
 }
 </style>

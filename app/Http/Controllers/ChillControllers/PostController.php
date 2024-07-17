@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\ChillControllers\ImageController;
+use App\Models\Favorite;
 use App\Models\Image;
 use App\Models\Review;
 use Inertia\Inertia;
@@ -105,6 +106,8 @@ class PostController extends Controller
     public function show(int $id)
     {
         $own_post = false;
+        $isFavorite = false;
+        $favoriteId = null;
 
         // レビューを新基順にソート（最後にソートするとうまく行った）
         $post = post::where('id', $id)->with('user')->with('images')
@@ -114,6 +117,14 @@ class PostController extends Controller
             }))->first();
 
         $user = Auth::user();
+        if (!empty($user)) {
+            $favorite = Favorite::where('user_id', $user->id)->where('post_id', $post->id)->first();
+
+            if (!empty($favorite)) {
+                $isFavorite = true;
+                $favoriteId = $favorite->id;
+            }
+        }
 
         // 投稿がログインユーザーのものか判定->編集と削除のボタンを表示する
         if ($post->user_id == Auth::id()) {
@@ -131,6 +142,8 @@ class PostController extends Controller
             'user' => $user,
             'review' => $review,
             'own_post' => $own_post,
+            'isFavorite' => $isFavorite,
+            'favoriteId' => $favoriteId
         ]);
     }
 

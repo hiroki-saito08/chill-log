@@ -38,7 +38,15 @@ class FavoriteController extends Controller
      */
     public function store(StorefavoriteRequest $request)
     {
-        //
+        $postId = $request->post_id;
+        $userId = $request->user_id;
+
+        Favorite::create([
+            'post_id' => $postId,
+            'user_id' => $userId
+        ]);
+
+        return redirect()->route('post.show', $postId);
     }
 
     /**
@@ -83,6 +91,8 @@ class FavoriteController extends Controller
      */
     public function destroy(favorite $favorite)
     {
-        //
+        $postId = $favorite->post_id;
+        $favorite->delete();
+        return redirect()->route('post.show', $postId);
     }
 }
