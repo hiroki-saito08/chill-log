@@ -13,6 +13,7 @@ use App\Http\Controllers\ChillControllers\ImageController;
 use App\Models\Favorite;
 use App\Models\Image;
 use App\Models\Review;
+use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
@@ -204,7 +205,29 @@ class PostController extends Controller
             ->withCount('reviews')->with('rating')
             ->orderBy('posts.created_at', 'DESC')->paginate(6);
 
-        return Inertia::render('ChillPages/Own-posts', [
+        return Inertia::render('ChillPages/Profile/Own-posts', [
+            'user' => $user,
+            'posts' => $posts
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function favorite(Request $request)
+    {
+        $user = Auth::user();
+        // Eloquentでの取得が難しいため、IN句で取得する
+        $favoritePostIds = Favorite::where('user_id', $user->id)->pluck("post_id")->toArray();
+
+        $posts = post::whereIn('id', $favoritePostIds)
+            ->with('user')->with('images')->with('reviews')->with(['reviews.images'])
+            ->withCount('reviews')->with('rating')
+            ->orderBy('posts.created_at', 'DESC')->paginate(6);
+
+        return Inertia::render('ChillPages/Profile/Favorite-posts', [
             'user' => $user,
             'posts' => $posts
         ]);
