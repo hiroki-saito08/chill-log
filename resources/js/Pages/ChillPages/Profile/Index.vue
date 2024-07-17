@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref } from 'vue';
+import { ref, watch } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
 import DangerButton from '@/Components/DangerButton.vue';
@@ -7,13 +7,25 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { Inertia } from '@inertiajs/inertia';
+import { GoogleMap } from 'vue3-google-map';
 
 const props = defineProps({
   user: Array,
   errors: Object
 });
 
+// googlemapの設定
+const mapRef = ref(null);
+const center = { lat: 34.7055864522747, lng: 135.4989457104213 };
+
+watch(() => mapRef.value?.ready, (ready) => {
+  if (!ready) {
+    return;
+  }
+});
+
 const modalState = ref(false);
+const mapModalState = ref(false);
 const editProfileModalState = ref(false);
 
 const form = useForm({
@@ -28,6 +40,9 @@ const editName = ref(props.user.name);
 const openModal = () => {
   modalState.value = true;
 }
+const openMapModal = () => {
+  mapModalState.value = true;
+}
 const openEditProfileModal = () => {
   editProfileModalState.value = true;
 }
@@ -36,12 +51,17 @@ const closeModal = () => {
   modalState.value = false;
 
   form.reset();
-};
+}
+const closeMapModal = () => {
+  mapModalState.value = false;
+
+  form.reset();
+}
 const closeEditProfileModal = () => {
   editProfileModalState.value = false;
 
   editName.value = '';
-};
+}
 
 const storePost = () => {
   Inertia.post(route('post.store'), form);
@@ -97,8 +117,6 @@ const onImageUploaded = (e) => {
   </div>
 
 
-
-
   <!-- 記事投稿モーダル -->
   <Modal :show=" modalState " @close=" closeModal ">
     <form @submit.prevent=" storePost ">
@@ -115,7 +133,10 @@ const onImageUploaded = (e) => {
             <textarea id="content" v-model=" form.content " type="textarea" placeholder="content" @keyup.enter=false name="content" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
           </div>
 
-          <input id="image" @change="onImageUploaded" type="file" placeholder="image" name="image">
+          <div class="mb-5">
+            <input id="image" @change="onImageUploaded" type="file" placeholder="image" name="image">
+          </div>
+          <button @click="openMapModal" class="text-white bg-indigo-500 border-0 py-2 px-6 text-lg w-2/5">位置を選択する</button>
 
           <div class="mt-6 flex justify-end">
             <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
@@ -127,6 +148,12 @@ const onImageUploaded = (e) => {
         </div>
       </div>
     </form>
+  </Modal>
+
+  <!-- 位置選択モーダル -->
+  <Modal :show="mapModalState" @close="closeMapModal ">
+    <GoogleMap ref="mapRef" :api-key="VITE_GMAP_API_KRY" style="width: 100%;
+      height: 600px" :center="center" :zoom="15" />
   </Modal>
 
   <!-- 名前修正モーダル -->
