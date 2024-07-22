@@ -54,7 +54,7 @@ class PostController extends Controller
             ->with('user')->with('images')->with('reviews')
             ->with(['reviews.images'])->withCount('reviews')
             ->with('rating')
-            ->orderBy('posts.created_at', 'DESC')->limit(50)->get();
+            ->orderBy('posts.created_at', 'DESC')->paginate(6);
 
         return Inertia::render('ChillPages/Posts', [
             'posts' => $posts,
