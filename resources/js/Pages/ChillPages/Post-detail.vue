@@ -26,7 +26,7 @@ const location = props.post.location.split(',')
 const location_lat = Number(location[0])
 const location_lng = Number(location[1])
 const center = ref({ lat: location_lat, lng: location_lng }); // 取得した座標
-const zoom = ref(20);
+const zoom = ref(16);
 
 const commented = ref(false);
 const modalState = ref(false);
