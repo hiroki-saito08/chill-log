@@ -80,13 +80,20 @@ class PostController extends Controller
     public function store(StorepostRequest $request)
     {
         $image = $request->file('image');
+        $location = '';
+
+        if (!empty($request->location)) {
+            $location_lat = $request->location['lat'];
+            $location_lng = $request->location['lng'];
+            $location =  $location_lat . ',' . $location_lng;
+        }
 
         $postData = Post::create([
             'user_id' => $request->user_id,
             'status' => $request->status,
             'title' => $request->title,
             'content' => $request->content,
-            'location' => 'テスト県テスト市'
+            'location' => $location
         ]);
 
         if (!is_null($image)) {

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
 import DangerButton from '@/Components/DangerButton.vue';
@@ -15,48 +15,17 @@ const props = defineProps({
 });
 
 // GoogleMap コンポーネントで使用するデータ
-const { VITE_GMAP_API_KRY } = import.meta.env;
+const { VITE_GMAP_API_KEY } = import.meta.env;
 const center = ref({ lat: 35.6895, lng: 139.6917 }); // 東京の座標
 const zoom = ref(10);
 const clickedLatLng = ref(null); // クリックした位置情報を保持する変数
 const mapRef = ref(null);
-const searchQuery = ref('');
-const searchResults = ref([]);
-
-// GoogleMap コンポーネントのイベントハンドラ
-const onMapReady = () => {
-  console.log('Map is ready!');
-};
 
 // マップ上をクリックしたときのイベントハンドラ
 const onMapClick = (event) => {
   clickedLatLng.value = {
     lat: event.latLng.lat(),
     lng: event.latLng.lng()
-  };
-};
-
-// マップ上で場所を検索する関数
-const searchPlaces = () => {
-  if (!mapRef.value) return;
-
-  const service = new google.maps.places.PlacesService(mapRef.value.$mapObject);
-  const request = {
-    query: searchQuery.value,
-    fields: ['name', 'formatted_address', 'geometry']
-  };
-  service.textSearch(request, (results, status) => {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      searchResults.value = results;
-    }
-  });
-};
-
-// 検索結果から場所を選択する関数
-const selectPlace = (place) => {
-  center.value = {
-    lat: place.geometry.location.lat(),
-    lng: place.geometry.location.lng()
   };
 };
 
@@ -83,8 +52,13 @@ const form = useForm({
   status: 1, //下書き保存ボタンを追加したら、下書きの時0にする
   title: null,
   content: null,
-  image: null
+  image: null,
+  location: {
+    lat: null,
+    lng: null
+  }
 });
+
 const editName = ref(props.user.name);
 
 const openModal = () => {
@@ -104,8 +78,6 @@ const closeModal = () => {
 }
 const closeMapModal = () => {
   mapModalState.value = false;
-
-  form.reset();
 }
 const closeEditProfileModal = () => {
   editProfileModalState.value = false;
@@ -133,6 +105,11 @@ const updateProfile = () => {
 const onImageUploaded = (e) => {
   const image = e.target.files[0];
   form.image = image;
+}
+
+const SelectLocation = () => {
+  form.location = clickedLatLng.value;
+  closeMapModal();
 }
 
 </script>
@@ -186,7 +163,12 @@ const onImageUploaded = (e) => {
           <div class="mb-5">
             <input id="image" @change="onImageUploaded" type="file" placeholder="image" name="image">
           </div>
-          <button @click="openMapModal" class="text-white bg-indigo-500 border-0 py-2 px-6 text-lg w-2/5">位置を選択する</button>
+          <button @click="openMapModal" class="text-white bg-indigo-500 border-0 py-2 px-6 text-lg w-2/5" type="button">位置を選択する</button>
+
+          <div v-if="form.location.lat" class="mt-2 mb-2">
+            <p>緯度: {{ form.location.lat }}</p>
+            <p>経度: {{ form.location.lng }}</p>
+          </div>
 
           <div class="mt-6 flex justify-end">
             <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
@@ -203,40 +185,23 @@ const onImageUploaded = (e) => {
   <!-- 位置選択モーダル -->
   <Modal :show="mapModalState" @close="closeMapModal ">
 
-    <div>
-      <!-- 検索フォーム -->
-      <input v-model="searchQuery" type="text" placeholder="検索する場所を入力">
-      <button @click="searchPlaces">検索</button>
-
-      <!-- 検索結果表示 -->
-      <ul>
-        <li v-for="place in searchResults" :key="place.id">
-          {{ place.name }} - {{ place.formatted_address }}
-          <button @click="selectPlace(place)">選択</button>
-        </li>
-      </ul>
-    </div>
-
-    <GoogleMap
-      ref="mapRef"
-      :api-key="VITE_GMAP_API_KRY"
-      style="width: 100%;
-      height: 600px"
-      :center="center"
-      :zoom="zoom"
-      @map-ready="onMapReady"
-      @click="onMapClick"
-    />
-
-    <!-- 現在地取得ボタン -->
-    <button @click="getCurrentLocation">現在地を取得する</button>
+    <GoogleMap ref="mapRef" :api-key="VITE_GMAP_API_KEY" style="width: 100%;
+      height: 450px" :center="center" :zoom="zoom" @click="onMapClick" />
 
     <!-- 取得した位置情報表示 -->
-    <div v-if="clickedLatLng" class="mt-4">
-      <p><strong>クリックした位置情報:</strong></p>
-      <p>緯度: {{ clickedLatLng.lat }}</p>
-      <p>経度: {{ clickedLatLng.lng }}</p>
+    <div class="m-5">
+
+      <!-- 現在地取得ボタン -->
+      <button class="block mb-5 border-b border-black" @click="getCurrentLocation">現在地を取得する</button>
+      <div v-if="clickedLatLng" class="mt-4 mb-4">
+        <p><strong>クリックした位置情報:</strong></p>
+        <p>緯度: {{ clickedLatLng.lat }}</p>
+        <p>経度: {{ clickedLatLng.lng }}</p>
+      </div>
+
+      <button @click="SelectLocation" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">ここを選択する</button>
     </div>
+
   </Modal>
 
   <!-- 名前修正モーダル -->
