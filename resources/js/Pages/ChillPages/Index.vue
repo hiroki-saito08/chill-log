@@ -74,7 +74,6 @@ const sideBer = true;
             <article class="p-5">
               <div class="pb-2 border-b">
                 <p class="pt-2 pb-2 font-bold">{{ popularPost.title }}</p>
-                <!-- <h2 class="font-bold">{{ popularPost.user.name }} さんの投稿</h2> -->
               </div>
               <div class="h-80 pt-3 pb-3">
                 <div v-if="popularPost.images.length" class=" h-full">

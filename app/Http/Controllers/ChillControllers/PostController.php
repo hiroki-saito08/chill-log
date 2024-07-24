@@ -82,7 +82,7 @@ class PostController extends Controller
         $image = $request->file('image');
         $location = '';
 
-        if (!empty($request->location)) {
+        if (!empty($request->location['lat']) && !empty($request->location['lng'])) {
             $location_lat = $request->location['lat'];
             $location_lng = $request->location['lng'];
             $location =  $location_lat . ',' . $location_lng;

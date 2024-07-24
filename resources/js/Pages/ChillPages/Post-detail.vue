@@ -1,13 +1,14 @@
 
 <script setup>
 import Header from '@/Components/Header.vue';
-import { reactive, nextTick, ref } from 'vue';
+import { ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import DangerButton from '@/Components/DangerButton.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { Inertia } from '@inertiajs/inertia';
+import { GoogleMap } from 'vue3-google-map';
 
 const props = defineProps({
   post: Object,
@@ -18,12 +19,19 @@ const props = defineProps({
   isFavorite: Boolean,
   favoriteId: Number
 });
-let commented = false;
+
+// GoogleMap コンポーネントで使用するデータ
+const { VITE_GMAP_API_KEY } = import.meta.env;
+const location = props.post.location.split(',')
+const location_lat = Number(location[0])
+const location_lng = Number(location[1])
+const center = ref({ lat: location_lat, lng: location_lng }); // 取得した座標
+const zoom = ref(20);
+
+const commented = ref(false);
 const modalState = ref(false);
 const editPostModalState = ref(false);
 const userId = ref(null)
-console.log(props.isFavorite);
-console.log(props.favoriteId);
 
 if (props.user !== null) {
   userId.value = props.user.id
@@ -57,7 +65,7 @@ const canReview = () => {
       form.comment_title = props.review.comment_title;
       form.comment_content = props.review.comment_content;
       // form.image = props.review.image;
-      commented = true;
+      commented.value = true;
     }
 
     openModal();
@@ -72,14 +80,12 @@ const canFavorite = () => {
     // お気に入り済みの場合の処理
     if (props.isFavorite) {
       Inertia.delete(route('favorite.destroy', props.favoriteId));
-      console.log('お気に入りを削除しました')
     } else {
       Inertia.post(route('favorite.store',
         {
           post_id: props.post.id,
           user_id: userId.value
         }))
-      console.log('お気に入りに登録しました')
     }
   }
 }
@@ -209,6 +215,21 @@ const closeEditPostModal = () => {
       <button v-if="!own_post" @click="canFavorite">
         <a class="unfavorite-star" :class="{ 'favorite-star': props.isFavorite }">★</a>
       </button>
+    </div>
+
+    <!-- マップ -->
+    <div v-if="post.location">
+      <GoogleMap :api-key="VITE_GMAP_API_KEY" style="width: 100%;
+      height: 450px" :center="center" :zoom="zoom" />
+
+      <!-- 取得した位置情報表示 -->
+      <div class="m-5">
+        <div class="mt-4 mb-4">
+          <p><strong>座標:</strong></p>
+          <p>緯度: {{ location_lat }}</p>
+          <p>経度: {{ location_lng }}</p>
+        </div>
+      </div>
     </div>
   </div>
 
