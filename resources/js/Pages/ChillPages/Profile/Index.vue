@@ -157,7 +157,7 @@ const SelectLocation = () => {
 
           <div class="relative mb-4">
             <label for="content" value="content" class="leading-7 text-sm text-gray-600">content</label>
-            <textarea id="content" v-model=" form.content " type="textarea" placeholder="content" @keyup.enter=false name="content" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+            <textarea id="content" v-model=" form.content " type="textarea" placeholder="content" @keyup.enter=false name="content" required class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
           </div>
 
           <div class="mb-5">
@@ -166,8 +166,8 @@ const SelectLocation = () => {
           <button @click="openMapModal" class="text-white bg-indigo-500 border-0 py-2 px-6 text-lg w-2/5" type="button">位置を選択する</button>
 
           <div v-if="form.location.lat" class="mt-2 mb-2">
-            <p>緯度: {{ form.location.lat }}</p>
-            <p>経度: {{ form.location.lng }}</p>
+            <p>緯度: <input id="location" v-model="form.location.lat" type="text" name="location.lat" required class="border-none"></p>
+            <p>経度: <input id="location" v-model="form.location.lng" type="text" name="location.lng" required class="border-none"></p>
           </div>
 
           <div class="mt-6 flex justify-end">
