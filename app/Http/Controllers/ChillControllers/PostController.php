@@ -27,7 +27,7 @@ class PostController extends Controller
     public function index()
     {
         // ページネーション
-        $posts = post::with('user')->with('images')->with('reviews')->with(['reviews.images'])->withCount('reviews')->with('rating')->orderBy('posts.created_at', 'DESC')->paginate(6);
+        $posts = post::where('status', 1)->with('user')->with('images')->with('reviews')->with(['reviews.images'])->withCount('reviews')->with('rating')->orderBy('posts.created_at', 'DESC')->paginate(6);
 
         return Inertia::render('ChillPages/Posts', [
             'posts' => $posts
@@ -49,7 +49,8 @@ class PostController extends Controller
         // セッションに保存する
         session()->put('searchWord', $searchWord);
 
-        $posts = post::where('title', 'LIKE', "%${searchWord}%")
+        $posts = post::where('status', 1)
+            ->where('title', 'LIKE', "%${searchWord}%")
             ->orWhere('content', 'LIKE', "%${searchWord}%")
             ->with('user')->with('images')->with('reviews')
             ->with(['reviews.images'])->withCount('reviews')
@@ -199,15 +200,10 @@ class PostController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function own()
     {
         $user = Auth::user();
-        $posts = post::where('user_id', $user->id)
+        $posts = post::where('status', 1)->where('user_id', $user->id)
             ->with('user')->with('images')->with('reviews')->with(['reviews.images'])
             ->withCount('reviews')->with('rating')
             ->orderBy('posts.created_at', 'DESC')->paginate(6);
@@ -218,11 +214,6 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function favorite(Request $request)
     {
         $user = Auth::user();
@@ -235,6 +226,48 @@ class PostController extends Controller
             ->orderBy('posts.created_at', 'DESC')->paginate(6);
 
         return Inertia::render('ChillPages/Profile/Favorite-posts', [
+            'user' => $user,
+            'posts' => $posts
+        ]);
+    }
+
+    public function save(Request $request)
+    {
+        $image = $request->file('image');
+        $location = '';
+
+        if (!empty($request->location['lat']) && !empty($request->location['lng'])) {
+            $location_lat = $request->location['lat'];
+            $location_lng = $request->location['lng'];
+            $location =  $location_lat . ',' . $location_lng;
+        }
+
+        $postData = Post::create([
+            'user_id' => $request->user_id,
+            'status' => $request->status,
+            'title' => $request->title,
+            'content' => $request->content,
+            'location' => $location
+        ]);
+
+        if (!is_null($image)) {
+            // imageコントローラーで画像のインサートを行う
+            $ImageController =  new ImageController();
+            $ImageController->store($image, $postData->id, null);
+        }
+
+        return redirect()->route('post.show', $postData->id);
+    }
+
+    public function savePosts()
+    {
+        $user = Auth::user();
+        $posts = post::where('status', 0)->where('user_id', $user->id)
+            ->with('user')->with('images')->with('reviews')->with(['reviews.images'])
+            ->withCount('reviews')->with('rating')
+            ->orderBy('posts.created_at', 'DESC')->paginate(6);
+
+        return Inertia::render('ChillPages/Profile/Save-posts', [
             'user' => $user,
             'posts' => $posts
         ]);

@@ -120,6 +120,7 @@ const storePost = () => {
 }
 
 const updatePost = () => {
+  editPostForm.status = 1;
   Inertia.post(route('post.update', props.post.id), {
     _method: 'put',
     form: editPostForm,
@@ -308,7 +309,8 @@ const closeEditPostModal = () => {
             <SecondaryButton @click="closeEditPostModal"> Cancel </SecondaryButton>
 
             <PrimaryButton class="ml-3" :class="{ 'opacity-25': editPostForm.processing }" :disabled="editPostForm.processing">
-              更新する
+              <span v-if="props.post.status">更新する</span>
+              <span v-else>投稿する</span>
             </PrimaryButton>
           </div>
         </div>

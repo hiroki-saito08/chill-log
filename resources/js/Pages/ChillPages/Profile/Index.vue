@@ -107,9 +107,16 @@ const onImageUploaded = (e) => {
   form.image = image;
 }
 
-const SelectLocation = () => {
+const selectLocation = () => {
   form.location = clickedLatLng.value;
   closeMapModal();
+}
+
+const save = () => {
+  form.status = 0;
+  Inertia.post(route('post.save'), form);
+  alert('下書きに保存しました');
+  closeModal();
 }
 
 </script>
@@ -136,6 +143,10 @@ const SelectLocation = () => {
 
     <div class="mb-10">
       <Link :href="route('post.own')" class="block text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg w-3/12">自分の投稿一覧</Link>
+    </div>
+
+    <div class="mb-10">
+      <Link :href="route('post.savePosts') " class="block text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg w-3/12">下書き一覧</Link>
     </div>
 
     <div class="mb-10">
@@ -171,7 +182,9 @@ const SelectLocation = () => {
           </div>
 
           <div class="mt-6 flex justify-end">
-            <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+            <SecondaryButton class="ml-3" @click="save"> 下書きに保存する </SecondaryButton>
+
+            <SecondaryButton class="ml-3" @click="closeModal"> Cancel </SecondaryButton>
 
             <PrimaryButton class="ml-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
               投稿する
@@ -199,7 +212,7 @@ const SelectLocation = () => {
         <p>経度: {{ clickedLatLng.lng }}</p>
       </div>
 
-      <button @click="SelectLocation" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">ここを選択する</button>
+      <button @click="selectLocation" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">ここを選択する</button>
     </div>
 
   </Modal>

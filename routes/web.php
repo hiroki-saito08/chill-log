@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/post-favorite', [PostController::class, 'favorite'])->name('post.favorite');
     Route::get('/post-create', [PostController::class, 'create'])->name('post.create');
     Route::post('/post-store', [PostController::class, 'store'])->name('post.store');
+    Route::post('/post-save', [PostController::class, 'save'])->name('post.save');
+    Route::get('/post-savePosts', [PostController::class, 'savePosts'])->name('post.savePosts');
     Route::get('/post-edit/{post}', [PostController::class, 'edit'])->name('post.edit');
     Route::put('/post-update/{post}', [PostController::class, 'update'])->name('post.update');
     Route::delete('/post-destroy/{post}', [PostController::class, 'destroy'])->name('post.destroy');
