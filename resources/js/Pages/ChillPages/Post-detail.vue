@@ -23,15 +23,18 @@ const props = defineProps({
 // GoogleMap コンポーネントで使用するデータ
 const { VITE_GMAP_API_KEY } = import.meta.env;
 const location = props.post.location.split(',')
+const clickedLatLng = ref(null); // クリックした位置情報を保持する変数
 const location_lat = Number(location[0])
 const location_lng = Number(location[1])
 const center = ref({ lat: location_lat, lng: location_lng }); // 取得した座標
 const zoom = ref(16);
+const errors = ref([]);
 
 const commented = ref(false);
 const modalState = ref(false);
 const editPostModalState = ref(false);
 const userId = ref(null)
+const mapModalState = ref(false);
 
 if (props.user !== null) {
   userId.value = props.user.id
@@ -46,13 +49,18 @@ const form = useForm({
   comment_content: null,
   image: null
 });
+
 const editPostForm = useForm({
   user_id: userId.value,
   status: props.post.status,
   title: props.post.title,
   content: props.post.content,
   image: props.post.image,
-  deleteImage: false
+  deleteImage: false,
+  location: {
+    lat: location_lat,
+    lng: location_lng
+  }
 });
 
 const canReview = () => {
@@ -70,6 +78,33 @@ const canReview = () => {
 
     openModal();
   }
+}
+
+// マップ上をクリックしたときのイベントハンドラ
+const onMapClick = (event) => {
+  clickedLatLng.value = {
+    lat: event.latLng.lat(),
+    lng: event.latLng.lng()
+  };
+};
+
+// 現在地を取得する関数
+const getCurrentLocation = () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      center.value = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+    });
+  } else {
+    alert('Geolocation is not supported by this browser.');
+  }
+};
+
+const selectLocation = () => {
+  editPostForm.location = clickedLatLng.value;
+  closeMapModal();
 }
 
 // お気に入り登録
@@ -103,30 +138,37 @@ const deleteReview = () => {
   closeEditPostModal();
 }
 
-const storePost = () => {
+const storeComment = () => {
   // コメント済みの場合は修正に飛ばす
   if (commented) {
     // inertiaではputでfileを送れないらしいからこんな感じに変更
-    Inertia.post(route('review.update', props.review.id ), {
-      _method: 'put',
-      form: form,
-    });
-    alert('コメントを更新しました');
+    if (checkCommentForm()) {
+      Inertia.post(route('review.update', props.review.id ), {
+        _method: 'put',
+        form: form,
+      });
+      alert('コメントを更新しました');
+      closeModal();
+    }
   } else {
-    Inertia.post(route('review.store'), form);
-    alert('コメントを投稿しました');
+    if (checkCommentForm()) {
+      Inertia.post(route('review.store'), form);
+      alert('コメントを投稿しました');
+      closeModal();
+    }
   }
-  closeModal();
 }
 
 const updatePost = () => {
-  editPostForm.status = 1;
-  Inertia.post(route('post.update', props.post.id), {
-    _method: 'put',
-    form: editPostForm,
-  });
-  alert('投稿を更新しました');
-  closeEditPostModal();
+  if (checkForm()) {
+    editPostForm.status = 1;
+    Inertia.post(route('post.update', props.post.id), {
+      _method: 'put',
+      form: editPostForm,
+    });
+    alert('投稿を更新しました');
+    closeEditPostModal();
+  }
 }
 
 // 投稿削除
@@ -160,6 +202,13 @@ const closeModal = () => {
   form.reset();
 };
 
+const openMapModal = () => {
+  mapModalState.value = true;
+}
+const closeMapModal = () => {
+  mapModalState.value = false;
+}
+
 const openEditPostModal = () => {
   editPostModalState.value = true;
 }
@@ -168,6 +217,46 @@ const closeEditPostModal = () => {
 
   editPostForm.reset();
 };
+
+// バリデーション
+const checkForm = () => {
+  errors.value = []
+
+  // 投稿の編集の場合
+  if (editPostForm.title && editPostForm.content && editPostForm.location.lat) {
+    return true;
+  }
+
+  if (!editPostForm.title) {
+    errors.value.push('Titleは必須です');
+  }
+  if (!editPostForm.content) {
+    errors.value.push('Contentは必須です');
+  }
+  if (!editPostForm.location.lat) {
+    errors.value.push('位置の選択は必須です');
+  }
+
+  return false;
+}
+// バリデーション
+const checkCommentForm = () => {
+  errors.value = []
+
+  // コメントの場合
+  if (form.comment_title && form.comment_content) {
+    return true;
+  }
+
+  if (!form.comment_title) {
+    errors.value.push('Titleは必須です');
+  }
+  if (!form.comment_content) {
+    errors.value.push('Contentは必須です');
+  }
+
+  return false;
+}
 
 </script>
 
@@ -210,14 +299,6 @@ const closeEditPostModal = () => {
       </div>
     </article>
 
-    <div class="flex">
-      <button v-if="!own_post" @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg ml-auto block">コメントする</button>
-      <!-- お気に入り -->
-      <button v-if="!own_post" @click="canFavorite">
-        <a class="unfavorite-star" :class="{ 'favorite-star': props.isFavorite }">★</a>
-      </button>
-    </div>
-
     <!-- マップ -->
     <div v-if="post.location">
       <GoogleMap :api-key="VITE_GMAP_API_KEY" style="width: 100%;
@@ -231,6 +312,14 @@ const closeEditPostModal = () => {
           <p>経度: {{ location_lng }}</p>
         </div>
       </div>
+    </div>
+
+    <div class="flex">
+      <button v-if="!own_post" @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg ml-auto block">コメントする</button>
+      <!-- お気に入り -->
+      <button v-if="!own_post" @click="canFavorite">
+        <a class="unfavorite-star" :class="{ 'favorite-star': props.isFavorite }">★</a>
+      </button>
     </div>
   </div>
 
@@ -278,24 +367,30 @@ const closeEditPostModal = () => {
     <Link class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg" :href="route('posts')">投稿一覧へ</Link>
   </div>
 
-
   <!-- 編集用モーダルウィンドウ -->
   <Modal :show="editPostModalState" @close="closeEditPostModal">
     <form @submit.prevent="updatePost">
       <div class="container mx-auto flex">
         <div class="bg-white rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 relative z-10 shadow-md">
           <h2 class="text-lg font-medium text-gray-900 mb-4">記事を編集する</h2>
+
+          <p v-if="errors.length">
+            <ul class="m-3">
+              <li v-for="error in errors" :key="error" class="text-red-500 list-disc mb-3">{{ error }}</li>
+            </ul>
+          </p>
+
           <div class="relative mb-4">
             <label for="title" value="title" class="leading-7 text-sm text-gray-600">Title</label>
-            <input id="title" v-model="editPostForm.title" type="text" placeholder="title" @keyup.enter=false name="title" required class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            <input id="title" v-model="editPostForm.title" type="text" placeholder="title" @keyup.enter=false name="title" maxlength="20" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
           </div>
 
           <div class="relative mb-4">
             <label for="content" value="content" class="leading-7 text-sm text-gray-600">content</label>
-            <textarea id="content" v-model="editPostForm.content" type="textarea" placeholder="content" @keyup.enter=false name="content" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+            <textarea id="content" v-model="editPostForm.content" type="textarea" placeholder="content" @keyup.enter=false name="content" maxlength="250" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
           </div>
 
-          <div class="flex">
+          <div class="flex mb-5">
             <div>
               <input id="image" @change="onPostImageUploaded" type="file" placeholder="image" name="image" :disabled="editPostForm.deleteImage">
             </div>
@@ -303,6 +398,13 @@ const closeEditPostModal = () => {
               <label for=" deleteImage" class="leading-7 pr-3">登録済みの画像を削除</label>
               <input id="deleteImage" v-model="editPostForm.deleteImage" @change="onPostImageUploaded" type="checkbox" name="deleteImage" :disabled="editPostForm.image" :class="{ 'opacity-25': editPostForm.image }">
             </div>
+          </div>
+
+          <button @click="openMapModal" class="text-white bg-indigo-500 border-0 py-2 px-6 text-lg w-2/5" type="button">位置を選択する</button>
+
+          <div v-if="editPostForm.location.lat" class="mt-2 mb-2">
+            <p>緯度: <input id="location" v-model="editPostForm.location.lat" type="text" name="location.lat" class="border-none"></p>
+            <p>経度: <input id="location" v-model="editPostForm.location.lng" type="text" name="location.lng" class="border-none"></p>
           </div>
 
           <div class="mt-6 flex justify-end">
@@ -318,12 +420,40 @@ const closeEditPostModal = () => {
     </form>
   </Modal>
 
+  <!-- 位置選択モーダル -->
+  <Modal :show="mapModalState" @close="closeMapModal">
+
+    <GoogleMap ref="mapRef" :api-key="VITE_GMAP_API_KEY" style="width: 100%;
+      height: 450px" :center="center" :zoom="zoom" @click="onMapClick" />
+
+    <!-- 取得した位置情報表示 -->
+    <div class="m-5">
+
+      <!-- 現在地取得ボタン -->
+      <button class="block mb-5 border-b border-black" @click="getCurrentLocation">現在地を取得する</button>
+      <div v-if="clickedLatLng" class="mt-4 mb-4">
+        <p><strong>クリックした位置情報:</strong></p>
+        <p>緯度: {{ clickedLatLng.lat }}</p>
+        <p>経度: {{ clickedLatLng.lng }}</p>
+      </div>
+
+      <button @click="selectLocation" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">ここを選択する</button>
+    </div>
+
+  </Modal>
+
   <!-- コメント用モーダルウィンドウ -->
   <Modal :show="modalState" @close="closeModal">
-    <form @submit.prevent="storePost">
+    <form @submit.prevent="storeComment">
       <div class="container mx-auto flex">
         <div class="bg-white rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 relative z-10 shadow-md">
           <h2 class="text-lg font-medium text-gray-900 mb-4">コメントを投稿する</h2>
+
+          <p v-if="errors.length">
+            <ul class="m-3">
+              <li v-for="error in errors" :key="error" class="text-red-500 list-disc mb-3">{{ error }}</li>
+            </ul>
+          </p>
 
           <div class="stars relative mb-4">
             <!-- 星はCSSの関係で逆順 -->
@@ -338,12 +468,12 @@ const closeEditPostModal = () => {
 
           <div class="relative mb-4">
             <label for="comment_title" value="comment_title" class="leading-7 text-sm text-gray-600">Title</label>
-            <input id="comment_title" v-model="form.comment_title" type="text" placeholder="title" @keyup.enter=false name="comment_title" required class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            <input id="comment_title" v-model="form.comment_title" type="text" placeholder="title" @keyup.enter=false name="comment_title" maxlength="20" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
           </div>
 
           <div class="relative mb-4">
             <label for="comment_content" value="comment_content" class="leading-7 text-sm text-gray-600">Content</label>
-            <textarea id="comment_content" v-model="form.comment_content" type="textarea" placeholder="content" @keyup.enter=false name="comment_content" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+            <textarea id="comment_content" v-model="form.comment_content" type="textarea" placeholder="content" @keyup.enter=false name="comment_content" maxlength="250" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
           </div>
 
           <input id="image" @change="onImageUploaded" type="file" placeholder="image" name="image">

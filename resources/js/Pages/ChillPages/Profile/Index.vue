@@ -11,7 +11,6 @@ import { GoogleMap } from 'vue3-google-map';
 
 const props = defineProps({
   user: Array,
-  errors: Object
 });
 
 // GoogleMap コンポーネントで使用するデータ
@@ -20,6 +19,7 @@ const center = ref({ lat: 35.6895, lng: 139.6917 }); // 東京の座標
 const zoom = ref(10);
 const clickedLatLng = ref(null); // クリックした位置情報を保持する変数
 const mapRef = ref(null);
+const errors = ref([]);
 
 // マップ上をクリックしたときのイベントハンドラ
 const onMapClick = (event) => {
@@ -86,9 +86,32 @@ const closeEditProfileModal = () => {
 }
 
 const storePost = () => {
-  Inertia.post(route('post.store'), form);
-  alert('投稿しました');
-  closeModal();
+  if (checkForm()) {
+    Inertia.post(route('post.store'), form);
+    alert('投稿しました');
+    closeModal();
+  }
+}
+
+// バリデーション
+const checkForm = () => {
+  errors.value = []
+
+  if (form.title && form.content && form.location.lat) {
+    return true;
+  }
+
+  if (!form.title) {
+    errors.value.push('Titleは必須です');
+  }
+  if (!form.content) {
+    errors.value.push('Contentは必須です');
+  }
+  if (!form.location.lat) {
+    errors.value.push('位置の選択は必須です');
+  }
+
+  return false;
 }
 
 const updateProfile = () => {
@@ -113,10 +136,12 @@ const selectLocation = () => {
 }
 
 const save = () => {
-  form.status = 0;
-  Inertia.post(route('post.save'), form);
-  alert('下書きに保存しました');
-  closeModal();
+  if (checkForm()) {
+    form.status = 0;
+    Inertia.post(route('post.save'), form);
+    alert('下書きに保存しました');
+    closeModal();
+  }
 }
 
 </script>
@@ -161,24 +186,32 @@ const save = () => {
       <div class=" container mx-auto flex">
         <div class="bg-white rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 relative z-10 shadow-md">
           <h2 class="text-lg font-medium text-gray-900 mb-4">記事を投稿する</h2>
+
+          <p v-if="errors.length">
+            <ul class="m-3">
+              <li v-for="error in errors" :key="error" class="text-red-500 list-disc mb-3">{{ error }}</li>
+            </ul>
+          </p>
+
           <div class="relative mb-4">
             <label for="title" value="title" class="leading-7 text-sm text-gray-600">Title</label>
-            <input id="title" v-model=" form.title " type="text" placeholder="title" @keyup.enter=false name="title" required class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            <input id="title" v-model=" form.title " type="text" placeholder="title" @keyup.enter=false name="title" maxlength="20" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
           </div>
 
           <div class="relative mb-4">
-            <label for="content" value="content" class="leading-7 text-sm text-gray-600">content</label>
-            <textarea id="content" v-model=" form.content " type="textarea" placeholder="content" @keyup.enter=false name="content" required class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+            <label for="content" value="content" class="leading-7 text-sm text-gray-600">Content</label>
+            <textarea id="content" v-model=" form.content " type="textarea" placeholder="content" @keyup.enter=false name="content" maxlength="250" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
           </div>
 
           <div class="mb-5">
             <input id="image" @change="onImageUploaded" type="file" placeholder="image" name="image">
           </div>
+
           <button @click="openMapModal" class="text-white bg-indigo-500 border-0 py-2 px-6 text-lg w-2/5" type="button">位置を選択する</button>
 
           <div v-if="form.location.lat" class="mt-2 mb-2">
-            <p>緯度: <input id="location" v-model="form.location.lat" type="text" name="location.lat" required class="border-none"></p>
-            <p>経度: <input id="location" v-model="form.location.lng" type="text" name="location.lng" required class="border-none"></p>
+            <p>緯度: <input id="location" v-model="form.location.lat" type="text" name="location.lat" class="border-none"></p>
+            <p>経度: <input id="location" v-model="form.location.lng" type="text" name="location.lng" class="border-none"></p>
           </div>
 
           <div class="mt-6 flex justify-end">
@@ -225,7 +258,7 @@ const save = () => {
           <h2 class="text-lg font-medium text-gray-900 mb-4">名前を変更する</h2>
           <div class="relative mb-4">
             <label for="name" value="name" class="leading-7 text-sm text-gray-600">Name</label>
-            <input id="name" v-model="editName" type="text" placeholder="name" @keyup.enter=false name="name" required class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            <input id="name" v-model="editName" type="text" placeholder="name" @keyup.enter=false name="name" maxlength="10" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
           </div>
 
           <div class="mt-6">

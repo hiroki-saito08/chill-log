@@ -177,6 +177,8 @@ class PostController extends Controller
     public function update(UpdatepostRequest $request, Post $post)
     {
         $image = null;
+        $location = '';
+
         if ($request->form['deleteImage']) {
             Image::where('post_id', $post->id)->delete();
         }
@@ -184,11 +186,17 @@ class PostController extends Controller
             $image = $request->form['image'];
         };
 
+        if (!empty($request->form['location']['lat']) && !empty($request->form['location']['lng'])) {
+            $location_lat = $request->form['location']['lat'];
+            $location_lng = $request->form['location']['lng'];
+            $location =  $location_lat . ',' . $location_lng;
+        }
+
         $post->update([
             'status' => $request->form['status'],
             'title' => $request->form['title'],
             'content' => $request->form['content'],
-            'location' => 'テスト県テスト市'
+            'location' => $location
         ]);
 
         if (!is_null($image)) {
