@@ -22,8 +22,8 @@ const props = defineProps({
 
 // GoogleMap コンポーネントで使用するデータ
 const { VITE_GMAP_API_KEY } = import.meta.env;
-const location = props.post.location.split(',')
 const clickedLatLng = ref(null); // クリックした位置情報を保持する変数
+const location = props.post.location.split(',')
 const location_lat = Number(location[0])
 const location_lng = Number(location[1])
 const center = ref({ lat: location_lat, lng: location_lng }); // 取得した座標
@@ -33,7 +33,7 @@ const errors = ref([]);
 const commented = ref(false);
 const modalState = ref(false);
 const editPostModalState = ref(false);
-const userId = ref(null)
+const userId = ref(false)
 const mapModalState = ref(false);
 
 if (props.user !== null) {

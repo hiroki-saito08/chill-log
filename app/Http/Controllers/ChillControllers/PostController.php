@@ -239,7 +239,7 @@ class PostController extends Controller
         ]);
     }
 
-    public function save(Request $request)
+    public function save(StorepostRequest $request)
     {
         $image = $request->file('image');
         $location = '';
