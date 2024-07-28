@@ -280,7 +280,7 @@ const checkCommentForm = () => {
       <div v-else> 画像なし </div>
 
       <div class="mt-5 mb-5">
-        <p class="pt-5 pb-5">{{ post.content }}</p>
+        <p class="pt-5 pb-5 whitespace-pre-wrap text-center">{{ post.content }}</p>
       </div>
 
       <div class="flex justify-between pt-2 border-t">
