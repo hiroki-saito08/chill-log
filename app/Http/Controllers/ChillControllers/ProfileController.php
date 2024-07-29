@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ChillControllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Post;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,7 +21,7 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         return Inertia::render('ChillPages/Profile/Index', [
-            'user' => $user,
+            'user' => $user
         ]);
     }
 

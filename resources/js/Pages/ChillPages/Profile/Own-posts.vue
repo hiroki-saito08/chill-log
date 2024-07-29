@@ -5,7 +5,8 @@ import Search from '@/Components/Search.vue';
 import Pagination from '@/Components/Pagination.vue'
 
 const props = defineProps({
-  posts: Object
+  posts: Object,
+  user: Array
 });
 
 console.log(props.posts)
