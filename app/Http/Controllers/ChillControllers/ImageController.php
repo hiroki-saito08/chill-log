@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreimageRequest;
 use App\Http\Requests\UpdateimageRequest;
 use App\Models\Image;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver;
 
 class ImageController extends Controller
 {
@@ -37,11 +39,15 @@ class ImageController extends Controller
      */
     public function store($image, $postId = null, $reviewId = null)
     {
+        $manager = new ImageManager(new Driver());
+
         // 画像を保存して、かつimageテーブルにインサートする
         // その後インサートした情報を返却する
         $time = strtotime(now());
         $filename = $time . '_' . $image->getClientOriginalName();
-        $image->storeAs('public/images/postImages', $filename);
+        $image = $manager->read($image);
+        $image->scale(width: 1000);
+        $image->toPng()->save('storage/images/postImages/' . $filename);
         $path = '/storage/images/postImages/' . $filename;
 
         $imageData = image::create([

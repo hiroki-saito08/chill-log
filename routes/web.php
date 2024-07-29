@@ -29,6 +29,8 @@ Route::get('/test', function () {
 
 Route::get('/', [IndexController::class, 'index']);
 Route::get('/posts', [PostController::class, 'index'])->name('posts');
+Route::get('/posts-search', [PostController::class, 'search'])->name('posts.search');
+Route::post('/posts-search', [PostController::class, 'search'])->name('posts.search');
 Route::get('/post-show/{post}', [PostController::class, 'show'])->name('post.show');
 
 Route::middleware('auth')->group(function () {
@@ -36,8 +38,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile-edit/{profile}', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile-update/{profile}', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile-destroy/{profile}', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/post-own', [PostController::class, 'own'])->name('post.own');
+    Route::get('/post-favorite', [PostController::class, 'favorite'])->name('post.favorite');
     Route::get('/post-create', [PostController::class, 'create'])->name('post.create');
     Route::post('/post-store', [PostController::class, 'store'])->name('post.store');
+    Route::post('/post-save', [PostController::class, 'save'])->name('post.save');
+    Route::get('/post-savePosts', [PostController::class, 'savePosts'])->name('post.savePosts');
     Route::get('/post-edit/{post}', [PostController::class, 'edit'])->name('post.edit');
     Route::put('/post-update/{post}', [PostController::class, 'update'])->name('post.update');
     Route::delete('/post-destroy/{post}', [PostController::class, 'destroy'])->name('post.destroy');

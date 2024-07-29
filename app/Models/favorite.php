@@ -13,4 +13,20 @@ class Favorite extends Model
         'post_id',
         'user_id'
     ];
+
+    /**
+     * user
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * post
+     */
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    }
 }

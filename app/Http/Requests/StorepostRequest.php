@@ -24,11 +24,11 @@ class StorepostRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'user_id' => ['string', 'max:255'],
-            // 'status' => ['string', 'max:255'],
-            // 'title' => ['string', 'max:255'],
-            // 'content' => ['string', 'max:255'],
-            // 'image_id' => ['string', 'max:255'],
+            'user_id' => ['required', 'integer'],
+            'status' => ['required', 'boolean'],
+            'title' => ['required', 'string', 'max:20'],
+            'content' => ['required', 'string', 'max:250'],
+            'location' => ['required', 'array']
         ];
     }
 }

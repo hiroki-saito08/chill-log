@@ -22,6 +22,7 @@
     "dependencies": {
         "jquery": "^3.7.1",
         "swiper": "^11.1.1",
-        "vue-slick": "^1.2.0"
+        "vue-slick": "^1.2.0",
+        "vue3-google-map": "^0.20.0"
     }
 }
