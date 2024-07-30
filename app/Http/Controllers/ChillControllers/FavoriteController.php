@@ -52,7 +52,7 @@ class FavoriteController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\favorite  $favorite
+     * @param  \App\Models\Favorite  $favorite
      * @return \Illuminate\Http\Response
      */
     public function show(favorite $favorite)
@@ -66,7 +66,7 @@ class FavoriteController extends Controller
      * @param  \App\Models\favorite  $favorite
      * @return \Illuminate\Http\Response
      */
-    public function edit(favorite $favorite)
+    public function edit(Favorite $favorite)
     {
         //
     }
@@ -75,10 +75,10 @@ class FavoriteController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdatefavoriteRequest  $request
-     * @param  \App\Models\favorite  $favorite
+     * @param  \App\Models\Favorite  $favorite
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatefavoriteRequest $request, favorite $favorite)
+    public function update(UpdatefavoriteRequest $request, Favorite $favorite)
     {
         //
     }
@@ -86,10 +86,10 @@ class FavoriteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\favorite  $favorite
+     * @param  \App\Models\Favorite  $favorite
      * @return \Illuminate\Http\Response
      */
-    public function destroy(favorite $favorite)
+    public function destroy(Favorite $favorite)
     {
         $postId = $favorite->post_id;
         $favorite->delete();

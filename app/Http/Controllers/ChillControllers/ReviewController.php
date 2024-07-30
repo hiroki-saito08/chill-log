@@ -60,10 +60,10 @@ class ReviewController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\review  $review
+     * @param  \App\Models\Review  $review
      * @return \Illuminate\Http\Response
      */
-    public function show(review $review)
+    public function show(Review $review)
     {
         //
     }
@@ -74,7 +74,7 @@ class ReviewController extends Controller
      * @param  \App\Models\review  $review
      * @return \Illuminate\Http\Response
      */
-    public function edit(review $review)
+    public function edit(Review $review)
     {
         //
     }
@@ -83,10 +83,10 @@ class ReviewController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdatereviewRequest  $request
-     * @param  \App\Models\review  $review
+     * @param  \App\Models\Review  $review
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatereviewRequest $request, review $review)
+    public function update(UpdatereviewRequest $request, Review $review)
     {
         // putをポストにするため、formの階層に配列で入れて送ってる
         $image = $request->form['image'];
@@ -108,10 +108,10 @@ class ReviewController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\review  $review
+     * @param  \App\Models\Review  $review
      * @return \Illuminate\Http\Response
      */
-    public function destroy(review $review)
+    public function destroy(Review $review)
     {
         $review->delete();
         return redirect()->back();

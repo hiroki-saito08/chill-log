@@ -50,7 +50,7 @@ class ImageController extends Controller
         $image->toPng()->save('storage/images/postImages/' . $filename);
         $path = '/storage/images/postImages/' . $filename;
 
-        $imageData = image::create([
+        $imageData = Image::create([
             'name' => $filename,
             'path' => $path,
             'post_id' => $postId,
@@ -66,7 +66,7 @@ class ImageController extends Controller
      * @param  \App\Models\image  $image
      * @return \Illuminate\Http\Response
      */
-    public function show(image $image)
+    public function show(Image $image)
     {
         //
     }
@@ -77,7 +77,7 @@ class ImageController extends Controller
      * @param  \App\Models\image  $image
      * @return \Illuminate\Http\Response
      */
-    public function edit(image $image)
+    public function edit(Image $image)
     {
         //
     }
@@ -99,9 +99,9 @@ class ImageController extends Controller
         $path = '/storage/images/postImages/' . $filename;
 
         if (!empty($postId)) {
-            $image_record = image::where('post_id', $postId)->first();
+            $image_record = Image::where('post_id', $postId)->first();
         } else {
-            $image_record = image::where('review_id', $reviewId)->first();
+            $image_record = Image::where('review_id', $reviewId)->first();
         }
 
         if (!empty($image_record)) {
@@ -110,7 +110,7 @@ class ImageController extends Controller
                 'path' => $path
             ]);
         } else {
-            $imageData = image::create([
+            $imageData = Image::create([
                 'name' => $filename,
                 'path' => $path,
                 'post_id' => $postId,
@@ -124,10 +124,10 @@ class ImageController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\image  $image
+     * @param  \App\Models\Image  $image
      * @return \Illuminate\Http\Response
      */
-    public function destroy(image $image)
+    public function destroy(Image $image)
     {
         //
     }
