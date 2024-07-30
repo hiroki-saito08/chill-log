@@ -27,7 +27,7 @@ class PostController extends Controller
     public function index()
     {
         // ページネーション
-        $posts = post::where('status', 1)->with('user')->with('images')->with('reviews')->with(['reviews.images'])->withCount('reviews')->with('rating')->orderBy('posts.created_at', 'DESC')->paginate(6);
+        $posts = Post::where('status', 1)->with('user')->with('images')->with('reviews')->with(['reviews.images'])->withCount('reviews')->with('rating')->orderBy('posts.created_at', 'DESC')->paginate(6);
 
         return Inertia::render('ChillPages/Posts', [
             'posts' => $posts
@@ -49,7 +49,7 @@ class PostController extends Controller
         // セッションに保存する
         session()->put('searchWord', $searchWord);
 
-        $posts = post::where('status', 1)
+        $posts = Post::where('status', 1)
             ->where('title', 'LIKE', "%${searchWord}%")
             ->orWhere('content', 'LIKE', "%${searchWord}%")
             ->with('user')->with('images')->with('reviews')
@@ -119,7 +119,7 @@ class PostController extends Controller
         $favoriteId = null;
 
         // レビューを新基順にソート（最後にソートするとうまく行った）
-        $post = post::where('id', $id)->with('user')->with('images')
+        $post = Post::where('id', $id)->with('user')->with('images')
             ->with(['reviews.user', 'reviews.images'])->withCount('reviews')->with('rating')
             ->with(array('reviews' => function ($query) {
                 $query->orderBy('created_at', 'DESC');
@@ -211,7 +211,7 @@ class PostController extends Controller
     public function own()
     {
         $user = Auth::user();
-        $posts = post::where('status', 1)->where('user_id', $user->id)
+        $posts = Post::where('status', 1)->where('user_id', $user->id)
             ->with('user')->with('images')->with('reviews')->with(['reviews.images'])
             ->withCount('reviews')->with('rating')
             ->orderBy('posts.created_at', 'DESC')->paginate(6);
@@ -228,7 +228,7 @@ class PostController extends Controller
         // Eloquentでの取得が難しいため、IN句で取得する
         $favoritePostIds = Favorite::where('user_id', $user->id)->pluck("post_id")->toArray();
 
-        $posts = post::whereIn('id', $favoritePostIds)
+        $posts = Post::whereIn('id', $favoritePostIds)
             ->with('user')->with('images')->with('reviews')->with(['reviews.images'])
             ->withCount('reviews')->with('rating')
             ->orderBy('posts.created_at', 'DESC')->paginate(6);
@@ -270,7 +270,7 @@ class PostController extends Controller
     public function savePosts()
     {
         $user = Auth::user();
-        $posts = post::where('status', 0)->where('user_id', $user->id)
+        $posts = Post::where('status', 0)->where('user_id', $user->id)
             ->with('user')->with('images')->with('reviews')->with(['reviews.images'])
             ->withCount('reviews')->with('rating')
             ->orderBy('posts.created_at', 'DESC')->paginate(6);
