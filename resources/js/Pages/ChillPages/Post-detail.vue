@@ -140,7 +140,7 @@ const deleteReview = () => {
 
 const storeComment = () => {
   // コメント済みの場合は修正に飛ばす
-  if (commented) {
+  if (commented.value) {
     // inertiaではputでfileを送れないらしいからこんな感じに変更
     if (checkCommentForm()) {
       Inertia.post(route('review.update', props.review.id ), {
