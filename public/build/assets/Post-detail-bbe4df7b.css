@@ -1,0 +1,1 @@
+.stars span{display:flex;flex-direction:row-reverse;justify-content:flex-end}.stars input[type=radio]{display:none}.stars label{color:#d2d2d2;font-size:30px;padding:0 5px}.stars .form-stars label{cursor:pointer}.stars input[type=radio]:checked~label{color:#f8c601}.unfavorite-star{color:#d2d2d2;font-size:30px;padding:0 5px}.favorite-star{color:#f8c601;font-size:30px;padding:0 5px}
