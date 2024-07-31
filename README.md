@@ -10,6 +10,13 @@ APP_URL: http://localhost:8000/
 
 開発用コマンド
 php artisan migrate:fresh --seed
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan config:clear
+php artisan cache:clear
+php artisan route:clear
+
 ID: test@test.com
 PASS: password
 
