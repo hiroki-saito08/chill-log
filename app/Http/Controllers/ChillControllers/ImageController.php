@@ -45,10 +45,16 @@ class ImageController extends Controller
         // その後インサートした情報を返却する
         $time = strtotime(now());
         $filename = $time . '_' . $image->getClientOriginalName();
+        $directory = 'storage/images/postImages/';
+        $path = $directory . $filename;
         $image = $manager->read($image);
         $image->scale(width: 1000);
-        $image->toPng()->save('storage/images/postImages/' . $filename);
-        $path = '/storage/images/postImages/' . $filename;
+
+        // ディレクトリが存在しない場合は作成
+        if (!file_exists($directory)) {
+            mkdir($directory, 666, true);
+        }
+        $image->toPng()->save($path);
 
         $imageData = Image::create([
             'name' => $filename,
