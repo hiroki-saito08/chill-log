@@ -25,9 +25,9 @@ class IndexController extends Controller
         // レビューの高い順かつレビューの数が多い順に並び替え（全体のクエリの並び替えはjoin必須）
         $popularPosts = Post::with('images')
             ->leftJoin('reviews', 'posts.id', '=', 'reviews.post_id')
-            ->select('posts.*', DB::raw('count(reviews.id) as reviews_count'))
+            ->select('posts.id', 'posts.title', DB::raw('count(reviews.id) as reviews_count'))
             ->selectRaw('reviews.post_id, ROUND(avg(reviews.star), 2) AS avg_review')
-            ->groupBy('posts.id')
+            ->groupBy('posts.id', 'posts.title', 'reviews.post_id')
             ->orderBy('avg_review', 'DESC')
             ->orderBy('reviews_count', 'DESC')
             ->limit(3)
