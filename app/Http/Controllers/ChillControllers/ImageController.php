@@ -92,12 +92,17 @@ class ImageController extends Controller
      */
     public function update($image, $postId = null, $reviewId = null)
     {
+        $manager = new ImageManager(new Driver());
+
         // 画像を保存して、かつimageテーブルにインサートする
         // その後インサートした情報を返却する
         $time = strtotime(now());
         $filename = $time . '_' . $image->getClientOriginalName();
-        $image->storeAs('public/images/postImages', $filename);
-        $path = '/storage/images/postImages/' . $filename;
+        $directory = 'storage/images/postImages/';
+        $path = $directory . $filename;
+        $image = $manager->read($image);
+        $image->scale(width: 1000);
+        $image->toPng()->save($path);
 
         if (!empty($postId)) {
             $image_record = Image::where('post_id', $postId)->first();
