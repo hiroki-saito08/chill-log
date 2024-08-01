@@ -107,7 +107,7 @@ const sideBer = true;
 
 <style>
 .main_image {
-    background-image: url("../images/top1.jpg");
+    background-image: url("../../../../public/images/top1.JPG");
     background-size: cover;
     background-position: top;
 }
