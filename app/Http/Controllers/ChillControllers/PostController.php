@@ -50,8 +50,8 @@ class PostController extends Controller
         session()->put('searchWord', $searchWord);
 
         $posts = Post::where('status', 1)
-            ->where('title', 'LIKE', "%${searchWord}%")
-            ->orWhere('content', 'LIKE', "%${searchWord}%")
+            ->where('title', 'LIKE', "%{$searchWord}%")
+            ->orWhere('content', 'LIKE', "%{$searchWord}%")
             ->with('user')->with('images')->with('reviews')
             ->with(['reviews.images'])->withCount('reviews')
             ->with('rating')
