@@ -49,11 +49,6 @@ class ImageController extends Controller
         $path = $directory . $filename;
         $image = $manager->read($image);
         $image->scale(width: 1000);
-
-        // ディレクトリが存在しない場合は作成
-        if (!file_exists($directory)) {
-            mkdir($directory, 666, true);
-        }
         $image->toPng()->save($path);
 
         $imageData = Image::create([
