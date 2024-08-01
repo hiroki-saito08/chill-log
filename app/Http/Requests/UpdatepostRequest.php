@@ -24,10 +24,10 @@ class UpdatepostRequest extends FormRequest
     public function rules()
     {
         return [
-            'status' => ['required', 'boolean'],
-            'title' => ['required', 'string', 'max:20'],
-            'content' => ['required', 'string', 'max:250'],
-            'location' => ['required', 'array']
+            'form.status' => ['required', 'boolean'],
+            'form.title' => ['required', 'string', 'max:20'],
+            'form.content' => ['required', 'string', 'max:250'],
+            'form.location' => ['required', 'array']
         ];
     }
 }
