@@ -45,7 +45,7 @@ class ImageController extends Controller
         // その後インサートした情報を返却する
         $time = strtotime(now());
         $filename = $time . '_' . $image->getClientOriginalName();
-        $directory = '/storage/images/postImages/';
+        $directory = 'storage/images/postImages/';
         $path = $directory . $filename;
         $image = $manager->read($image);
         $image->scale(width: 1000);
@@ -53,7 +53,7 @@ class ImageController extends Controller
 
         $imageData = Image::create([
             'name' => $filename,
-            'path' => $path,
+            'path' => '/' . $path,
             'post_id' => $postId,
             'review_id' => $reviewId
         ]);
@@ -98,7 +98,7 @@ class ImageController extends Controller
         // その後インサートした情報を返却する
         $time = strtotime(now());
         $filename = $time . '_' . $image->getClientOriginalName();
-        $directory = '/storage/images/postImages/';
+        $directory = 'storage/images/postImages/';
         $path = $directory . $filename;
         $image = $manager->read($image);
         $image->scale(width: 1000);
@@ -118,7 +118,7 @@ class ImageController extends Controller
         } else {
             $imageData = Image::create([
                 'name' => $filename,
-                'path' => $path,
+                'path' => '/' . $path,
                 'post_id' => $postId,
                 'review_id' => $reviewId
             ]);
