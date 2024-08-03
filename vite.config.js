@@ -13,7 +13,12 @@ export default defineConfig({
                 transformAssetUrls: {
                     base: null,
                     includeAbsolute: false,
-                    publicPath: null
+                    publicPath: '/chill-log',
+                    devServer: {
+                        historyApiFallback: {
+                            index: '/chill-log/'
+                        }
+                    }
                 },
             },
         }),
