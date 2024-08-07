@@ -13,6 +13,7 @@ import { GoogleMap } from 'vue3-google-map';
 const props = defineProps({
   post: Object,
   user: Array,
+  user_id: Number,
   errors: Object,
   review: Object,
   own_post: Boolean,
@@ -36,14 +37,10 @@ const editPostModalState = ref(false);
 const userId = ref(false)
 const mapModalState = ref(false);
 
-if (props.user !== null) {
-  userId.value = props.user.id
-}
-
 // 非ログインユーザーもいるため初期設定はnull
 const form = useForm({
   post_id: props.post.id,
-  user_id: userId.value,
+  user_id: props.user_id,
   star: null,
   comment_title: null,
   comment_content: null,
@@ -51,7 +48,7 @@ const form = useForm({
 });
 
 const editPostForm = useForm({
-  user_id: userId.value,
+  user_id: props.user_id,
   status: props.post.status,
   title: props.post.title,
   content: props.post.content,
@@ -119,7 +116,7 @@ const canFavorite = () => {
       Inertia.post(route('favorite.store',
         {
           post_id: props.post.id,
-          user_id: userId.value
+          user_id: props.user_id
         }))
     }
   }
@@ -353,7 +350,7 @@ const checkCommentForm = () => {
             <h3 class="text-right text-lg pt-5 pb-5">{{ review.user.name }} さんの投稿</h3>
 
             <!-- ログインユーザーのコメントの時に表示 -->
-            <div v-if="review.user.id == userId.value" class="flex flex-wrap justify-end">
+            <div v-if="props.review.user_id == props.user_id" class="flex flex-wrap justify-end">
               <button @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">編集</button>
               <button @click="deleteReview" class="text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">削除</button>
             </div>

@@ -126,6 +126,7 @@ class PostController extends Controller
             }))->first();
 
         $user = Auth::user();
+        $user_id = Auth::id();
         if (!empty($user)) {
             $favorite = Favorite::where('user_id', $user->id)->where('post_id', $post->id)->first();
 
@@ -149,6 +150,7 @@ class PostController extends Controller
         return Inertia::render('ChillPages/Post-detail', [
             'post' => $post,
             'user' => $user,
+            'user_id' => $user_id,
             'review' => $review,
             'own_post' => $own_post,
             'isFavorite' => $isFavorite,

@@ -22,7 +22,7 @@ console.log(props.posts)
   <!-- 投稿を最新から6件取得して表示する。残りは投稿一覧ページへ誘導する
   表示テンプレートは分けたい -->
   <template v-if="posts">
-    <div class="grid grid-cols-3">
+    <div class="md:grid grid-cols-3">
       <div v-for=" post in posts.data" :key="post.id" class="m-5">
         <Link :href="route('post.show', post.id)">
 
