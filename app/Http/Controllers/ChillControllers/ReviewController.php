@@ -54,7 +54,7 @@ class ReviewController extends Controller
             $ImageController->store($image, null, $reviewData->id);
         }
 
-        return redirect()->back();
+        return redirect()->route('post.show', $request->post_id);
     }
 
     /**
