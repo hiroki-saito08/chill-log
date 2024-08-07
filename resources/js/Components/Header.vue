@@ -9,15 +9,18 @@ import { Link, Head } from '@inertiajs/vue3';
 import { Inertia } from '@inertiajs/inertia';
 
 defineProps({
-  authProps: Array
+  authProps: Array,
+  textColor: String
 })
+
+console.log(textColor)
 </script>
 
 <template>
-  <header class="text-lg font-bold body-font header_text">
+  <header class="text-lg font-bold body-font" :class="textColor">
     <div class="container mx-auto flex flex-wrap flex-col md:flex-row items-center">
       <NavLink href="/" :active="route().current('/')">
-        <ApplicationLogo class="block w-20" />
+        <ApplicationLogo class="block w-20 m-10 md:m-0" />
       </NavLink>
       <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
         <Link :href="route('posts')" class=" mr-5 hover:underline">投稿一覧</Link>
