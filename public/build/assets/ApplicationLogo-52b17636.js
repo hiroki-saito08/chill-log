@@ -1,0 +1,1 @@
+import{o as s,f as r,b as a}from"./app-f05c20dd.js";const _=(o,t)=>{const e=o.__vccOpts||o;for(const[c,n]of t)e[c]=n;return e},l={},i=a("img",{src:"/images/logo.jpg",alt:""},null,-1),p=[i];function f(o,t){return s(),r("div",null,p)}const g=_(l,[["render",f]]);export{g as A};
