@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
-import DangerButton from '@/Components/DangerButton.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
@@ -88,8 +87,6 @@ const closeEditProfileModal = () => {
 const storePost = () => {
   if (checkForm()) {
     Inertia.post(route('post.store'), form);
-    alert('投稿しました');
-    closeModal();
   }
 }
 
@@ -139,8 +136,6 @@ const save = () => {
   if (checkForm()) {
     form.status = 0;
     Inertia.post(route('post.save'), form);
-    alert('下書きに保存しました');
-    closeModal();
   }
 }
 
