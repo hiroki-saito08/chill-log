@@ -24,7 +24,9 @@ class UpdatereviewRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'form.star' => ['required', 'integer'],
+            'form.comment_title' => ['required', 'string', 'max:20'],
+            'form.comment_content' => ['required', 'string', 'max:250']
         ];
     }
 }

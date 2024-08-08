@@ -44,7 +44,8 @@ const form = useForm({
   star: null,
   comment_title: null,
   comment_content: null,
-  image: null
+  image: null,
+  deleteImage: false
 });
 
 const editPostForm = useForm({
@@ -240,10 +241,13 @@ const checkCommentForm = () => {
   errors.value = []
 
   // コメントの場合
-  if (form.comment_title && form.comment_content) {
+  if (form.star && form.comment_title && form.comment_content) {
     return true;
   }
 
+  if (!form.star) {
+    errors.value.push('Starは必須です');
+  }
   if (!form.comment_title) {
     errors.value.push('Titleは必須です');
   }
@@ -472,17 +476,25 @@ const checkCommentForm = () => {
             <textarea id="comment_content" v-model="form.comment_content" type="textarea" placeholder="content" @keyup.enter=false name="comment_content" maxlength="250" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
           </div>
 
-          <input id="image" @change="onImageUploaded" type="file" placeholder="image" name="image">
+          <div class="flex mb-5">
+            <div>
+              <input id="image" @change="onImageUploaded" type="file" placeholder="image" name="image" :disabled="form.deleteImage">
+            </div>
+            <div>
+              <label for="deleteImage" class="leading-7 pr-3">登録済みの画像を削除</label>
+              <input id="deleteImage" v-model="form.deleteImage" @change="onImageUploaded" type="checkbox" name="deleteImage" :disabled="form.image" :class="{ 'opacity-25': form.image }">
+            </div>
+          </div>
 
-          <div class="mt-6 flex justify-end">
-            <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+            <div class="mt-6 flex justify-end">
+              <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
 
-            <PrimaryButton class="ml-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-              投稿する
-            </PrimaryButton>
+              <PrimaryButton class="ml-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                投稿する
+              </PrimaryButton>
+            </div>
           </div>
         </div>
-      </div>
     </form>
   </Modal>
 </template>

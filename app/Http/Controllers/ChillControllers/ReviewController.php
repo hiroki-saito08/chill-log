@@ -7,6 +7,8 @@ use App\Http\Requests\StorereviewRequest;
 use App\Http\Requests\UpdatereviewRequest;
 use App\Models\Review;
 use Inertia\Inertia;
+use App\Models\Image;
+use App\Http\Controllers\ChillControllers\ImageController;
 
 class ReviewController extends Controller
 {
@@ -88,8 +90,14 @@ class ReviewController extends Controller
      */
     public function update(UpdatereviewRequest $request, Review $review)
     {
-        // putをポストにするため、formの階層に配列で入れて送ってる
-        $image = $request->form['image'];
+        $image = null;
+
+        if ($request->form['deleteImage']) {
+            Image::where('post_id', $request->post_id)->delete();
+        }
+        if (isset($request->form['image'])) {
+            $image = $request->form['image'];
+        };
 
         $review->update([
             'star' => $request->form['star'],
@@ -102,7 +110,7 @@ class ReviewController extends Controller
             $ImageController->update($image, null, $review->id);
         }
 
-        return redirect()->back();
+        return redirect()->route('post.show', $review->post_id);
     }
 
     /**
