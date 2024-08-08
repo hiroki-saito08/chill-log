@@ -263,7 +263,7 @@ const checkCommentForm = () => {
   <Header :authProps=props page="post-detail"></Header>
 
   <div class="mt-10 p-2 md:w-9/12 m-auto">
-    <article class="md:p-10 border mb-5">
+    <article class="md:p-10 md:border mb-5">
       <h2 class="text-center text-xl font-bold">「{{ post.title }}」</h2>
       <h3 class="text-right text-lg pt-5 pb-5">{{ post.user.name }} さんの投稿</h3>
 
