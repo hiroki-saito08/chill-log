@@ -143,7 +143,7 @@ const save = () => {
 
 <template>
   <Head title="profile" />
-  <Header :authProps=props></Header>
+  <Header :authProps=props page="profile"></Header>
 
   <div class="w-2/3 md:w-1/2 m-auto mt-10 mb-20">
     <div class="mb-10">

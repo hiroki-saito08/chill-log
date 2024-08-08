@@ -260,7 +260,7 @@ const checkCommentForm = () => {
 <template>
   <Head title="Post-detail" />
   <!-- メインビジュアルは後で写真を設定 -->
-  <Header :authProps=props></Header>
+  <Header :authProps=props page="post-detail"></Header>
 
   <div class="mt-10 p-2 md:w-9/12 m-auto">
     <article class="md:p-10 border mb-5">

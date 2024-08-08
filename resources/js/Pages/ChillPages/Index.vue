@@ -19,7 +19,7 @@ const sideBer = true;
   <Head title="Top" />
   <div class="position: relative h-svh w-full main_image mb-5">
     <div class="inner_musk">
-      <Header :authProps=props></Header>
+      <Header :authProps=props page="top"></Header>
       <!-- 検索バー -->
       <Search></Search>
     </div>
@@ -116,8 +116,5 @@ const sideBer = true;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.3);
-}
-.header_text {
-  color: white;
 }
 </style>
