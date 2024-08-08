@@ -143,12 +143,12 @@ const save = () => {
 
 <template>
   <Head title="profile" />
-  <Header :authProps=props></Header>
+  <Header :authProps=props page="profile"></Header>
 
-  <div class="w-1/2 m-auto mt-10">
+  <div class="w-2/3 md:w-1/2 m-auto mt-10 mb-20">
     <div class="mb-10">
       <h2 class="text-2xl font-bold mb-6">記事の投稿</h2>
-      <button @click="openModal" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">投稿する</button>
+      <button @click="openModal" class="w-full text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">投稿する</button>
     </div>
 
     <div class="mt-10 mb-10">
@@ -159,18 +159,20 @@ const save = () => {
       </ul>
     </div>
 
-    <button @click="openEditProfileModal" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg mb-10">名前を変更する</button>
+    <div class="text-center">
+      <button @click="openEditProfileModal" class="w-full text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg mb-10">名前を変更する</button>
 
-    <div class="mb-10">
-      <Link :href="route('post.own')" class="block text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg w-3/12">自分の投稿一覧</Link>
-    </div>
+      <div class="mb-10">
+        <Link :href="route('post.own')" class="w-full block text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">自分の投稿一覧</Link>
+      </div>
 
-    <div class="mb-10">
-      <Link :href="route('post.savePosts') " class="block text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg w-3/12">下書き一覧</Link>
-    </div>
+      <div class="mb-10">
+        <Link :href="route('post.savePosts') " class="w-full block text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">下書き一覧</Link>
+      </div>
 
-    <div class="mb-10">
-      <Link :href="route('post.favorite') " class="block text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg mb-10 w-1/3">お気に入り投稿一覧</Link>
+      <div class="mb-10">
+        <Link :href="route('post.favorite') " class="w-full block text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg mb-10">お気に入り投稿一覧</Link>
+      </div>
     </div>
   </div>
 

@@ -8,12 +8,11 @@ const props = defineProps({
   posts: Object
 });
 
-console.log(props.posts)
 </script>
 
 <template>
   <Head title="Posts" />
-  <Header :authProps=props></Header>
+  <Header :authProps=props page="posts"></Header>
   <div class="m-5">
     <!-- 検索バー -->
     <Search></Search>
@@ -62,4 +61,4 @@ console.log(props.posts)
 
   <style>
 
-  </style>
+</style>
