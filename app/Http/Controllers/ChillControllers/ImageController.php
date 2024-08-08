@@ -113,12 +113,12 @@ class ImageController extends Controller
         if (!empty($image_record)) {
             $imageData = $image_record->update([
                 'name' => $filename,
-                'path' => $path
+                'path' => '/' . $path
             ]);
         } else {
             $imageData = Image::create([
                 'name' => $filename,
-                'path' => '/' . $path,
+                'path' => $path,
                 'post_id' => $postId,
                 'review_id' => $reviewId
             ]);
