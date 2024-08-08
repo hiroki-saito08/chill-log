@@ -19,18 +19,18 @@ const sideBer = true;
   <Head title="Top" />
   <div class="position: relative h-svh w-full main_image mb-5">
     <div class="inner_musk">
-      <Header :authProps=props></Header>
+      <Header :authProps=props page="top"></Header>
       <!-- 検索バー -->
       <Search></Search>
     </div>
   </div>
 
-  <div class="flex">
+  <div class="md:flex">
     <!-- メインバー -->
     <template v-if="mainBer">
       <div id="main-ber" class="p-5">
         <h2 class="text-2xl font-bold mb-6 pl-3">新規投稿</h2>
-        <div v-if="posts" class="grid grid-cols-2">
+        <div v-if="posts" class="md:grid grid-cols-2">
           <div v-for=" post in posts" :key="post.id" class="m-3">
             <Link :href="route('post.show', post.id)">
 
@@ -116,8 +116,5 @@ const sideBer = true;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.3);
-}
-.header_text {
-  color: white;
 }
 </style>
