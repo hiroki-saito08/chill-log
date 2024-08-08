@@ -114,7 +114,7 @@ class PostController extends Controller
      */
     public function show(int $id)
     {
-        $own_post = false;
+        $ownPost = false;
         $isFavorite = false;
         $favoriteId = null;
 
@@ -126,7 +126,7 @@ class PostController extends Controller
             }))->first();
 
         $user = Auth::user();
-        $user_id = Auth::id();
+        $userId = Auth::id();
         if (!empty($user)) {
             $favorite = Favorite::where('user_id', $user->id)->where('post_id', $post->id)->first();
 
@@ -138,11 +138,11 @@ class PostController extends Controller
 
         // 投稿がログインユーザーのものか判定->編集と削除のボタンを表示する
         if ($post->user_id == Auth::id()) {
-            $own_post = true;
+            $ownPost = true;
         }
 
         // ログインユーザーのコメントがあれば取得する
-        $review = Review::where([
+        $ownReview = Review::where([
             ['post_id', $id],
             ['user_id', Auth::id()],
         ])->first();
@@ -150,9 +150,9 @@ class PostController extends Controller
         return Inertia::render('ChillPages/Post-detail', [
             'post' => $post,
             'user' => $user,
-            'user_id' => $user_id,
-            'review' => $review,
-            'own_post' => $own_post,
+            'userId' => $userId,
+            'ownReview' => $ownReview,
+            'ownPost' => $ownPost,
             'isFavorite' => $isFavorite,
             'favoriteId' => $favoriteId
         ]);
