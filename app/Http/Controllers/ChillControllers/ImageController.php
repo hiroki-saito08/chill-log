@@ -118,7 +118,7 @@ class ImageController extends Controller
         } else {
             $imageData = Image::create([
                 'name' => $filename,
-                'path' => $path,
+                'path' => '/' . $path,
                 'post_id' => $postId,
                 'review_id' => $reviewId
             ]);
