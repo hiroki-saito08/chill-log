@@ -24,7 +24,11 @@ class StorereviewRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'post_id' => ['required', 'integer'],
+            'user_id' => ['required', 'integer'],
+            'star' => ['required', 'integer'],
+            'comment_title' => ['required', 'string', 'max:20'],
+            'comment_content' => ['required', 'string', 'max:250']
         ];
     }
 }
