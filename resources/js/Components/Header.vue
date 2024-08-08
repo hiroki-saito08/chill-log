@@ -17,7 +17,7 @@ defineProps({
   <header class="text-lg font-bold body-font header_text">
     <div class="container mx-auto flex flex-wrap flex-col md:flex-row items-center">
       <NavLink href="/" :active="route().current('/')">
-        <ApplicationLogo class="block w-20" />
+        <ApplicationLogo class="block w-20 mb-10 md:mb-0" />
       </NavLink>
       <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
         <Link :href="route('posts')" class=" mr-5 hover:underline">投稿一覧</Link>

@@ -25,12 +25,12 @@ const sideBer = true;
     </div>
   </div>
 
-  <div class="flex">
+  <div class="md:flex">
     <!-- メインバー -->
     <template v-if="mainBer">
       <div id="main-ber" class="p-5">
         <h2 class="text-2xl font-bold mb-6 pl-3">新規投稿</h2>
-        <div v-if="posts" class="grid grid-cols-2">
+        <div v-if="posts" class="md:grid grid-cols-2">
           <div v-for=" post in posts" :key="post.id" class="m-3">
             <Link :href="route('post.show', post.id)">
 
