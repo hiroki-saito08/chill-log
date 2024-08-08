@@ -13,10 +13,10 @@ import { GoogleMap } from 'vue3-google-map';
 const props = defineProps({
   post: Object,
   user: Array,
-  user_id: Number,
+  userId: Number,
   errors: Object,
-  review: Object,
-  own_post: Boolean,
+  ownReview: Object,
+  ownPost: Boolean,
   isFavorite: Boolean,
   favoriteId: Number
 });
@@ -40,7 +40,7 @@ const mapModalState = ref(false);
 // 非ログインユーザーもいるため初期設定はnull
 const form = useForm({
   post_id: props.post.id,
-  user_id: props.user_id,
+  user_id: props.userId,
   star: null,
   comment_title: null,
   comment_content: null,
@@ -48,7 +48,7 @@ const form = useForm({
 });
 
 const editPostForm = useForm({
-  user_id: props.user_id,
+  user_id: props.userId,
   status: props.post.status,
   title: props.post.title,
   content: props.post.content,
@@ -65,11 +65,10 @@ const canReview = () => {
     Inertia.get(route('login'));
   } else {
     // コメント済みの場合の処理
-    if (props.review != null) {
-      form.star = props.review.star;
-      form.comment_title = props.review.comment_title;
-      form.comment_content = props.review.comment_content;
-      // form.image = props.review.image;
+    if (props.ownReview != null) {
+      form.star = props.ownReview.star;
+      form.comment_title = props.ownReview.comment_title;
+      form.comment_content = props.ownReview.comment_content;
       commented.value = true;
     }
 
@@ -116,7 +115,7 @@ const canFavorite = () => {
       Inertia.post(route('favorite.store',
         {
           post_id: props.post.id,
-          user_id: props.user_id
+          user_id: props.userId
         }))
     }
   }
@@ -128,7 +127,7 @@ const deleteReview = () => {
   let result = confirm('コメントを削除してよろしいですか？');
 
   if (result) {
-    Inertia.delete(route('review.destroy', props.review.id));
+    Inertia.delete(route('review.destroy', props.ownReview.id));
     alert('コメントを削除しました');
   }
 
@@ -140,7 +139,7 @@ const storeComment = () => {
   if (commented.value) {
     // inertiaではputでfileを送れないらしいからこんな感じに変更
     if (checkCommentForm()) {
-      Inertia.post(route('review.update', props.review.id ), {
+      Inertia.post(route('review.update', props.ownReview.id ), {
         _method: 'put',
         form: form,
       });
@@ -291,8 +290,8 @@ const checkCommentForm = () => {
 
       <!-- ログインユーザーの投稿の時に表示 -->
       <div class="flex flex-wrap justify-end">
-        <button v-if="own_post" @click="openEditPostModal" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">編集</button>
-        <button v-if="own_post" @click="deletePost" class="text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">削除</button>
+        <button v-if="ownPost" @click="openEditPostModal" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">編集</button>
+        <button v-if="ownPost" @click="deletePost" class="text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">削除</button>
       </div>
     </article>
 
@@ -312,16 +311,16 @@ const checkCommentForm = () => {
     </div>
 
     <div class="flex">
-      <button v-if="!own_post" @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg ml-auto block">コメントする</button>
+      <button v-if="!ownPost" @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg ml-auto block">コメントする</button>
       <!-- お気に入り -->
-      <button v-if="!own_post" @click="canFavorite">
+      <button v-if="!ownPost" @click="canFavorite">
         <a class="unfavorite-star" :class="{ 'favorite-star': props.isFavorite }">★</a>
       </button>
     </div>
   </div>
 
   <!-- コメントー一覧 -->
-  <div class="mt-10 w-2/3 m-auto">
+  <div class="mt-10 md:w-2/3 m-auto">
     <h3 class="mt-5 mb-10 text-xl font-bold">コメント一覧</h3>
 
     <article>
@@ -350,7 +349,7 @@ const checkCommentForm = () => {
             <h3 class="text-right text-lg pt-5 pb-5">{{ review.user.name }} さんの投稿</h3>
 
             <!-- ログインユーザーのコメントの時に表示 -->
-            <div v-if="props.review.user_id == props.user_id" class="flex flex-wrap justify-end">
+            <div v-if="review.user_id == props.userId" class="flex flex-wrap justify-end">
               <button @click="canReview" class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">編集</button>
               <button @click="deleteReview" class="text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5 block">削除</button>
             </div>
