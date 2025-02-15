@@ -1,0 +1,142 @@
+{
+  "/Users/saitohiroki/programing/フリー/chill-log/serverless.yml": {
+    "versionFramework": "4.6.2",
+    "servicePath": "/Users/saitohiroki/programing/フリー/chill-log/serverless.yml",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "service": "chill-log",
+      "provider": {
+        "name": "aws",
+        "region": "ap-southeast-2",
+        "runtime": "provided.al2",
+        "memorySize": 1024,
+        "timeout": 28,
+        "environment": {
+          "APP_ENV": "production",
+          "APP_KEY": "${ssm:/chill-log/app-key}",
+          "LOG_CHANNEL": "stderr",
+          "DB_CONNECTION": "mysql",
+          "DB_HOST": "${ssm:/chill-log/db-host}",
+          "DB_PORT": 3306,
+          "DB_DATABASE": "${ssm:/chill-log/db-name}",
+          "DB_USERNAME": "${ssm:/chill-log/db-user}",
+          "DB_PASSWORD": "<REDACTED>",
+          "AWS_BUCKET": "${ssm:/chill-log/s3-bucket}",
+          "AWS_REGION": "ap-southeast-2"
+        },
+        "iamRoleStatements": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetObject",
+              "s3:PutObject"
+            ],
+            "Resource": "arn:aws:s3:::${self:provider.environment.AWS_BUCKET}/*"
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "rds:DescribeDBInstances",
+              "rds:Connect"
+            ],
+            "Resource": "*"
+          }
+        ]
+      },
+      "plugins": [
+        "./vendor/bref/bref"
+      ],
+      "functions": {
+        "web": {
+          "handler": "public/index.php",
+          "description": "Chill-log Laravel API",
+          "runtime": "php-82-fpm",
+          "timeout": 28,
+          "events": [
+            {
+              "httpApi": "*"
+            }
+          ],
+          "layers": [
+            "${bref:layer.php-82-fpm}"
+          ]
+        }
+      },
+      "package": {
+        "patterns": [
+          "!node_modules/**",
+          "!tests/**",
+          "!storage/logs/**",
+          "!storage/framework/views/**",
+          "!storage/framework/sessions/**"
+        ]
+      }
+    },
+    "provider": {
+      "name": "aws",
+      "region": "ap-southeast-2",
+      "runtime": "provided.al2",
+      "memorySize": 1024,
+      "timeout": 28,
+      "environment": {
+        "APP_ENV": "production",
+        "APP_KEY": "${ssm:/chill-log/app-key}",
+        "LOG_CHANNEL": "stderr",
+        "DB_CONNECTION": "mysql",
+        "DB_HOST": "${ssm:/chill-log/db-host}",
+        "DB_PORT": 3306,
+        "DB_DATABASE": "${ssm:/chill-log/db-name}",
+        "DB_USERNAME": "${ssm:/chill-log/db-user}",
+        "DB_PASSWORD": "<REDACTED>",
+        "AWS_BUCKET": "${ssm:/chill-log/s3-bucket}",
+        "AWS_REGION": "ap-southeast-2"
+      },
+      "iamRoleStatements": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:GetObject",
+            "s3:PutObject"
+          ],
+          "Resource": "arn:aws:s3:::${self:provider.environment.AWS_BUCKET}/*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "rds:DescribeDBInstances",
+            "rds:Connect"
+          ],
+          "Resource": "*"
+        }
+      ]
+    },
+    "dashboard": {
+      "isEnabledForService": false,
+      "requiredAuthentication": false,
+      "orgFeaturesInUse": null,
+      "orgObservabilityIntegrations": null,
+      "serviceAppId": null,
+      "serviceProvider": null,
+      "instanceParameters": null
+    },
+    "error": {
+      "message": "Cannot resolve '${ssm:/chill-log/db-pass}' variable at 'provider.environment.DB_PASSWORD'. No value is available for this variable, and no default value was provided. Please check your variable definitions or provide a default value.",
+      "stack": "Error: Cannot resolve '${ssm:/chill-log/db-pass}' variable at 'provider.environment.DB_PASSWORD'. No value is available for this variable, and no default value was provided. Please check your variable definitions or provide a default value.\n    at _ResolverManager.resolve (file:///Users/saitohiroki/.serverless/releases/4.6.2/package/dist/sf-core.js:931:32412)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async #handlePlaceholderNode (file:///Users/saitohiroki/.serverless/releases/4.6.2/package/dist/sf-core.js:931:30619)\n    at async file:///Users/saitohiroki/.serverless/releases/4.6.2/package/dist/sf-core.js:931:28483\n    at async processNodeAndHandleCompletion (file:///Users/saitohiroki/.serverless/releases/4.6.2/package/dist/sf-core.js:931:17199)",
+      "code": "MISSING_VARIABLE_RESULT"
+    },
+    "serviceRawFile": "service: chill-log\n\nprovider:\n  name: aws\n  region: ap-southeast-2\n  runtime: provided.al2\n  memorySize: 1024\n  timeout: 28\n  environment:\n    APP_ENV: production\n    APP_KEY: ${ssm:/chill-log/app-key}\n    LOG_CHANNEL: stderr\n    DB_CONNECTION: mysql\n    DB_HOST: ${ssm:/chill-log/db-host}\n    DB_PORT: 3306\n    DB_DATABASE: ${ssm:/chill-log/db-name}\n    DB_USERNAME: ${ssm:/chill-log/db-user}\n    DB_PASSWORD: ${ssm:/chill-log/db-pass}\n    AWS_BUCKET: ${ssm:/chill-log/s3-bucket}\n    AWS_REGION: ap-southeast-2\n  iamRoleStatements:\n    - Effect: Allow\n      Action:\n        - s3:GetObject\n        - s3:PutObject\n      Resource: arn:aws:s3:::${self:provider.environment.AWS_BUCKET}/*\n\n    - Effect: Allow\n      Action:\n        - rds:DescribeDBInstances\n        - rds:Connect\n      Resource: \"*\"\n\nplugins:\n  - ./vendor/bref/bref\n\nfunctions:\n  web:\n    handler: public/index.php\n    description: \"Chill-log Laravel API\"\n    runtime: php-82-fpm\n    timeout: 28\n    events:\n      - httpApi: \"*\"\n    layers:\n      - ${bref:layer.php-82-fpm}\n\n# デプロイ時に除外するファイル\npackage:\n  patterns:\n    - \"!node_modules/**\"\n    - \"!tests/**\"\n    - \"!storage/logs/**\"\n    - \"!storage/framework/views/**\"\n    - \"!storage/framework/sessions/**\"\n",
+    "command": [
+      "info"
+    ],
+    "options": {},
+    "orgId": "062e1c4e-f88b-45b7-92f7-b5df63c38828",
+    "orgName": "hiro08",
+    "userId": "hFHW7rblTXMbWfgsW1",
+    "userName": "hiro08",
+    "serviceProviderAwsCfStackId": null,
+    "serviceProviderAwsCfStackCreated": null,
+    "serviceProviderAwsCfStackUpdated": null,
+    "serviceProviderAwsCfStackStatus": null,
+    "serviceProviderAwsCfStackOutputs": null
+  }
+}
