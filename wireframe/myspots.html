@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chill-log マイスポット</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header {
+      background: #6C7A89;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      position: relative;
+    }
+
+    .menu-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .user-menu {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      display: none;
+    }
+
+    .user-menu a {
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      color: #333;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 800px;
+      margin: 60px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .spot-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .spot {
+      background: white;
+      padding: 15px;
+      margin-top: 10px;
+      border-radius: 10px;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .spot a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .btn {
+      background: #88B04B;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .form-container {
+      display: none;
+      margin-top: 20px;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .map-button {
+      display: block;
+      margin-top: 10px;
+      padding: 8px 15px;
+      background: #6C7A89;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .footer {
+      background: #6C7A89;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" style="color: white; text-decoration: none;">🏠 Chill-log</a>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+  </header>
+
+  <div class="user-menu" id="menu">
+    <a href="myspots.html">マイスポット</a>
+    <a href="profile.html">プロフィール</a>
+    <a href="#">ログアウト</a>
+  </div>
+
+  <div class="container">
+    <h2>マイスポット</h2>
+
+    <div class="section">
+      <h3>お気に入りのスポット</h3>
+      <ul class="spot-list">
+        <li class="spot"><a href="spot-detail.html">🌿 静かな公園</a></li>
+        <li class="spot"><a href="spot-detail.html">☕ 落ち着くカフェ</a></li>
+        <li class="spot"><a href="spot-detail.html">🌊 夕日が綺麗なビーチ</a></li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>自分の投稿</h3>
+      <ul class="spot-list">
+        <li class="spot"><a href="spot-detail.html">🌳 自分が登録した森林公園</a></li>
+        <li class="spot"><a href="spot-detail.html">🛶 穏やかな川辺</a></li>
+      </ul>
+    </div>
+
+    <button class="btn" onclick="toggleForm()">新しいスポットを追加</button>
+    <div class="form-container" id="spotForm">
+      <h3>新しいスポットを追加</h3>
+      <div class="form-group">
+        <label>スポット名</label>
+        <input type="text" placeholder="例: 静かな公園">
+      </div>
+      <div class="form-group">
+        <label>カテゴリ</label>
+        <input type="text" placeholder="例: カフェ、公園、ビーチ">
+      </div>
+      <div class="form-group">
+        <label>所在地（住所）</label>
+        <input type="text" id="address" placeholder="例: 東京都渋谷区○○">
+        <button class="map-button" onclick="openMap()">地図から選択</button>
+      </div>
+      <div class="form-group">
+        <label>訪問推奨時間</label>
+        <select>
+          <option>朝</option>
+          <option>昼</option>
+          <option>夕方</option>
+          <option>夜</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>説明</label>
+        <textarea placeholder="このスポットの魅力を書いてください"></textarea>
+      </div>
+      <div class="form-group">
+        <label>画像アップロード</label>
+        <input type="file">
+      </div>
+      <button class="btn">投稿する</button>
+    </div>
+  </div>
+
+  <footer class="footer">&copy; 2025 Chill-log</footer>
+  <script>
+    function toggleMenu() {
+      let menu = document.getElementById("menu");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+    function toggleForm() {
+      let form = document.getElementById("spotForm");
+      form.style.display = form.style.display === "block" ? "none" : "block";
+    }
+  </script>
+</body>
+</html>
