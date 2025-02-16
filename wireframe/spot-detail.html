@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chill-log 投稿詳細</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header {
+      background: #6C7A89;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      position: relative;
+    }
+
+    .menu-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+
+    .container {
+      width: 80%;
+      max-width: 1000px;
+      margin: 60px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .spot-image {
+      width: 100%;
+      height: 250px;
+      background: #ccc;
+      border-radius: 10px;
+      text-align: center;
+      line-height: 250px;
+      font-size: 18px;
+      color: #666;
+    }
+
+    .spot-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .spot-details {
+      margin-top: 15px;
+      font-size: 16px;
+    }
+
+    .user-menu {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      display: none;
+    }
+
+    .user-menu a {
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      color: #333;
+    }
+
+    .map-container {
+      width: 100%;
+      height: 300px;
+      background: #ddd;
+      border-radius: 10px;
+      text-align: center;
+      line-height: 300px;
+      font-size: 18px;
+      color: #666;
+      margin-top: 20px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      background: #88B04B;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .review-section {
+      margin-top: 40px;
+    }
+
+    .review {
+      background: #f9f9f9;
+      padding: 15px;
+      margin-top: 10px;
+      border-radius: 10px;
+      line-height: 1.6;
+    }
+
+    .review-header {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .review-summary {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    .review-form {
+      margin-top: 30px;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      resize: vertical;
+    }
+
+    .back-button {
+      display: block;
+      margin: 30px auto;
+      text-align: center;
+      background: #ccc;
+      color: #333;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+
+    .footer {
+      background: #6C7A89;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" style="color: white; text-decoration: none;">🏠 Chill-log</a>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+  </header>
+
+  <div class="user-menu" id="menu">
+    <a href="myspots.html">マイスポット</a>
+    <a href="profile.html">プロフィール</a>
+    <a href="#">ログアウト</a>
+  </div>
+
+  <div class="container">
+    <div class="spot-image">画像エリア</div>
+    <h2 class="spot-title">🌿 静かな公園</h2>
+    <p class="spot-details">住所: 東京都渋谷区○○ 1-2-3</p>
+    <p class="spot-details">カテゴリ: 公園</p>
+    <p class="spot-details">説明: 都心にありながら静かにリラックスできる公園です。</p>
+
+    <div class="map-container">Google Maps エリア</div>
+
+    <div class="buttons">
+      <button class="btn">⭐ お気に入りに追加</button>
+      <button class="btn">🔗 シェア</button>
+    </div>
+
+    <div class="review-section">
+      <h3>レビュー</h3>
+      <p class="review-summary">総合評価: ⭐⭐⭐⭐☆ (4.2) | チル度: ⭐⭐⭐⭐⭐ | 安全性: ⭐⭐⭐⭐☆ | 癒し度: ⭐⭐⭐⭐⭐</p>
+      <div class="review">
+        <div class="review-header">⭐⭐⭐⭐⭐ ユーザーA - 2024/02/16</div>
+        <p>最高に落ち着く場所！</p>
+        <p>チル度: ⭐⭐⭐⭐⭐ | 安全性: ⭐⭐⭐⭐☆ | 癒し度: ⭐⭐⭐⭐⭐</p>
+      </div>
+    </div>
+
+    <div class="review-form">
+      <h3>レビューを投稿</h3>
+      <div class="form-group">
+        <label>総合評価</label>
+        <select>
+          <option>⭐⭐⭐⭐⭐</option>
+          <option>⭐⭐⭐⭐</option>
+          <option>⭐⭐⭐</option>
+          <option>⭐⭐</option>
+          <option>⭐</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>チル度</label>
+        <select>
+          <option>⭐⭐⭐⭐⭐</option>
+          <option>⭐⭐⭐⭐</option>
+          <option>⭐⭐⭐</option>
+          <option>⭐⭐</option>
+          <option>⭐</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>安全性</label>
+        <select>
+          <option>⭐⭐⭐⭐⭐</option>
+          <option>⭐⭐⭐⭐</option>
+          <option>⭐⭐⭐</option>
+          <option>⭐⭐</option>
+          <option>⭐</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>癒し度</label>
+        <select>
+          <option>⭐⭐⭐⭐⭐</option>
+          <option>⭐⭐⭐⭐</option>
+          <option>⭐⭐⭐</option>
+          <option>⭐⭐</option>
+          <option>⭐</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>レビュー内容</label>
+        <textarea placeholder="レビューを入力..."></textarea>
+      </div>
+      <button class="btn">投稿</button>
+    </div>
+
+    <a href="index.html" class="back-button">⬅️ 前のページに戻る</a>
+  </div>
+
+  <footer class="footer">&copy; 2025 Chill-log</footer>
+  <script>
+    function toggleMenu() {
+      let menu = document.getElementById("menu");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+  </script>
+</body>
+</html>
