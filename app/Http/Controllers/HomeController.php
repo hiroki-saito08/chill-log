@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\ChillControllers;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
-class IndexController extends Controller
+class HomeController extends Controller
 {
     /**
      * Display a listing of the resource.

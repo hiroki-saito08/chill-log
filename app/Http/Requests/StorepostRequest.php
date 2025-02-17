@@ -24,11 +24,13 @@ class StorepostRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => ['required', 'integer'],
-            'status' => ['required', 'boolean'],
-            'title' => ['required', 'string', 'max:20'],
-            'content' => ['required', 'string', 'max:250'],
-            'location' => ['required', 'array']
+            'name' => 'required|string|max:255',
+            'category' => 'required|string',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'description' => 'nullable|string',
+            'status' => 'required|in:public,private',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
         ];
     }
 }
