@@ -10,6 +10,7 @@ APP_URL: http://localhost:8000/
 
 開発用コマンド
 php artisan migrate:fresh --seed
+php artisan migrate:rollback
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache

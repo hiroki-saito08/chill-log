@@ -17,14 +17,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone')->nullable()->unique();
-            $table->string('password');
-            $table->string('address')->nullable();
-            $table->date('birthday')->nullable();
-            $table->integer('gender')->nullable();
-            $table->rememberToken();
+            $table->string('password')->nullable();
+            $table->string('auth_provider')->default('email'); // "google" or "email"
+            $table->string('auth_id')->nullable(); // Google UID
+            $table->string('profile_image')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

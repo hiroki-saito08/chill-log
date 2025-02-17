@@ -15,12 +15,9 @@ return new class extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('path')->unique();
-            $table->integer('post_id')->nullable();
-            $table->integer('review_id')->nullable();
+            $table->foreignId('post_id')->constrained()->onDelete('cascade');
+            $table->string('image_path'); // S3 or local
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
