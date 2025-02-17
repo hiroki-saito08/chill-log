@@ -15,9 +15,14 @@ return new class extends Migration
     {
         Schema::create('rankings', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('post_id')->constrained()->onDelete('cascade');
+            $table->string('rank_type'); // "weekly" / "monthly" / "yearly"
+            $table->integer('position'); // 順位
+            $table->date('week_start'); // ランキング対象週の開始日
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
