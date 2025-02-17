@@ -10,34 +10,22 @@ class Review extends Model
     use HasFactory;
 
     protected $fillable = [
-        'post_id',
         'user_id',
-        'star',
-        'comment_title',
-        'comment_content',
+        'post_id',
+        'rating_overall',
+        'rating_silence',
+        'rating_relax',
+        'rating_safety',
+        'comment'
     ];
 
-    /**
-     * images
-     */
-    public function images()
-    {
-        return $this->hasMany(Image::class);
-    }
-
-    /**
-     * post
-     */
-    public function post()
-    {
-        return $this->belongsTo(Post::class);
-    }
-
-    /**
-     * user
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
     }
 }
