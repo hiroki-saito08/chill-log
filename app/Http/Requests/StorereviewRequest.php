@@ -4,31 +4,21 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorereviewRequest extends FormRequest
+class StoreReviewRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, mixed>
-     */
     public function rules()
     {
         return [
-            'post_id' => ['required', 'integer'],
-            'user_id' => ['required', 'integer'],
-            'star' => ['required', 'integer'],
-            'comment_title' => ['required', 'string', 'max:20'],
-            'comment_content' => ['required', 'string', 'max:250']
+            'rating_overall' => 'required|integer|min:1|max:5',
+            'rating_silence' => 'required|integer|min:1|max:5',
+            'rating_relax' => 'required|integer|min:1|max:5',
+            'rating_safety' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:500'
         ];
     }
 }

@@ -6,25 +6,17 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRankingRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, mixed>
-     */
     public function rules()
     {
         return [
-            //
+            'post_id' => 'required|exists:posts,id',
+            'rank_type' => 'required|string|in:weekly,monthly,yearly',
+            'position' => 'required|integer|min:1',
         ];
     }
 }

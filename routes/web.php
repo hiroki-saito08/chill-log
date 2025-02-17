@@ -1,55 +1,45 @@
 <?php
 
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use App\Http\Controllers\ChillControllers\ProfileController;
-use App\Http\Controllers\ChillControllers\IndexController;
-use App\Http\Controllers\ChillControllers\PostController;
-use App\Http\Controllers\ChillControllers\ReviewController;
-use App\Http\Controllers\ChillControllers\FavoriteController;
-use App\Http\Controllers\ChillControllers\ImageController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\RankingController;
+use App\Http\Controllers\UserController;
 
-// Route::get('/', function () {
-//     return Inertia::render('Welcome', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
+// ホームページ（一覧表示）
+Route::get('/', [PostController::class, 'index'])->name('home');
 
-// Route::get('/dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::get('/test', function () {
-    return Inertia::render('Test');
-});
-
-Route::get('/', [HomeController::class, 'index']);
-Route::get('/posts', [PostController::class, 'index'])->name('posts');
-Route::get('/posts-search', [PostController::class, 'search'])->name('posts.search');
-Route::post('/posts-search', [PostController::class, 'search'])->name('posts.search');
-Route::get('/post-show/{post}', [PostController::class, 'show'])->name('post.show');
-
+// 投稿関連（一覧・詳細・作成・編集・削除）
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::get('/profile-edit/{profile}', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile-update/{profile}', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile-destroy/{profile}', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/post-own', [PostController::class, 'own'])->name('post.own');
-    Route::get('/post-favorite', [PostController::class, 'favorite'])->name('post.favorite');
-    Route::get('/post-create', [PostController::class, 'create'])->name('post.create');
-    Route::post('/post-store', [PostController::class, 'store'])->name('post.store');
-    Route::post('/post-save', [PostController::class, 'save'])->name('post.save');
-    Route::get('/post-savePosts', [PostController::class, 'savePosts'])->name('post.savePosts');
-    Route::get('/post-edit/{post}', [PostController::class, 'edit'])->name('post.edit');
-    Route::put('/post-update/{post}', [PostController::class, 'update'])->name('post.update');
-    Route::delete('/post-destroy/{post}', [PostController::class, 'destroy'])->name('post.destroy');
-    Route::resource('review', ReviewController::class)->middleware(['auth', 'verified']);
-    Route::resource('favorite', FavoriteController::class)->middleware(['auth', 'verified']);
-    Route::resource('image', ImageController::class)->middleware(['auth', 'verified']);
+    Route::get('/posts', [PostController::class, 'index']);
+    Route::get('/posts/{post}', [PostController::class, 'show']);
+    Route::post('/posts', [PostController::class, 'store']);
+    Route::put('/posts/{post}', [PostController::class, 'update']);
+    Route::delete('/posts/{post}', [PostController::class, 'destroy']);
 });
 
+// レビュー関連（作成・削除・編集）
+Route::middleware('auth')->group(function () {
+    Route::post('/reviews/{post}', [ReviewController::class, 'store']);
+    Route::put('/reviews/{review}', [ReviewController::class, 'update']);
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy']);
+});
+
+// お気に入り機能
+Route::middleware('auth')->group(function () {
+    Route::post('/favorites/{post}/toggle', [FavoriteController::class, 'toggle']);
+    Route::get('/favorites', [FavoriteController::class, 'index']);
+});
+
+// ランキング（週・月・年単位で取得）
+Route::get('/rankings', [RankingController::class, 'index']);
+
+// ユーザープロフィール管理（取得・更新）
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [UserController::class, 'show']);
+    Route::put('/profile', [UserController::class, 'update']);
+});
+
+// 認証関連（Laravelの標準機能を利用）
 require __DIR__ . '/auth.php';

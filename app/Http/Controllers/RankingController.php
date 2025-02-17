@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ranking;
+use App\Services\RankingService;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreRankingRequest;
 
 class RankingController extends Controller
 {
+    protected $rankingService;
+
+    public function __construct(RankingService $rankingService)
+    {
+        $this->rankingService = $rankingService;
+    }
+
     public function index(Request $request)
     {
-        $rank_type = $request->query('type', 'weekly'); // デフォルトは weekly
-        $rankings = Ranking::where('rank_type', $rank_type)
-            ->orderBy('position', 'asc')
-            ->with('post')
-            ->get();
+        return response()->json($this->rankingService->getRanking($request->query('type', 'weekly')));
+    }
 
-        return response()->json($rankings);
+    public function store(StoreRankingRequest $request)
+    {
+        return response()->json($this->rankingService->storeRanking($request->validated()));
     }
 }

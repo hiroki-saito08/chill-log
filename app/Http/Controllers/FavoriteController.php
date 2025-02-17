@@ -2,28 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Favorite;
 use App\Models\Post;
-use Illuminate\Http\Request;
+use App\Services\FavoriteService;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreFavoriteRequest;
 
 class FavoriteController extends Controller
 {
-    public function toggle(Post $post)
-    {
-        $favorite = Auth::user()->favorites()->where('post_id', $post->id)->first();
+    protected $favoriteService;
 
-        if ($favorite) {
-            $favorite->delete();
-            return response()->json(['message' => 'Removed from favorites']);
-        } else {
-            Auth::user()->favorites()->create(['post_id' => $post->id]);
-            return response()->json(['message' => 'Added to favorites']);
-        }
+    public function __construct(FavoriteService $favoriteService)
+    {
+        $this->favoriteService = $favoriteService;
+    }
+
+    public function toggle(StoreFavoriteRequest $request, Post $post)
+    {
+        return response()->json($this->favoriteService->toggleFavorite(Auth::id(), $post->id));
     }
 
     public function index()
     {
-        return response()->json(Auth::user()->favorites()->with('post')->get());
+        return response()->json($this->favoriteService->getUserFavorites(Auth::id()));
     }
 }
