@@ -2,49 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
-use App\Models\Image;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
+use App\Models\Post;
+use App\Services\PostService;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    protected $postService;
+
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
+    }
+
     public function index()
     {
-        return response()->json(Post::with('images')->get());
+        return response()->json($this->postService->getAllPosts());
     }
 
     public function store(StorePostRequest $request)
     {
-        $post = Auth::user()->posts()->create($request->validated());
-
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('posts', 'public');
-                $post->images()->create(['image_path' => $path]);
-            }
-        }
-
-        return response()->json($post->load('images'), 201);
+        return response()->json($this->postService->createPost($request->validated()), 201);
     }
 
     public function show(Post $post)
     {
-        return response()->json($post->load(['images', 'reviews']));
+        return response()->json($this->postService->getPostById($post->id));
+    }
+
+    public function update(UpdatePostRequest $request, Post $post)
+    {
+        return response()->json($this->postService->updatePost($post, $request->validated()));
     }
 
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);
-
-        foreach ($post->images as $image) {
-            Storage::disk('public')->delete($image->image_path);
-            $image->delete();
-        }
-
-        $post->delete();
+        $this->postService->deletePost($post);
 
         return response()->json(['message' => 'Post deleted successfully']);
     }
