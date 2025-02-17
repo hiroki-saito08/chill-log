@@ -27,7 +27,7 @@ Route::get('/test', function () {
     return Inertia::render('Test');
 });
 
-Route::get('/', [IndexController::class, 'index']);
+Route::get('/', [HomeController::class, 'index']);
 Route::get('/posts', [PostController::class, 'index'])->name('posts');
 Route::get('/posts-search', [PostController::class, 'search'])->name('posts.search');
 Route::post('/posts-search', [PostController::class, 'search'])->name('posts.search');
