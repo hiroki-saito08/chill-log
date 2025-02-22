@@ -1,8 +1,9 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
-import Search from '@/Components/Search.vue';
+import Footer from '@/Components/Footer.vue';
 import { ref } from 'vue';
+import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
   posts: Object,
@@ -13,9 +14,7 @@ const props = defineProps({
 <template>
   <Head title="Chill-log" />
   <div class="bg-light min-vh-100">
-    <header class="custom-header text-white text-center rounded-bottom">
-      <a href="#" class="text-white text-decoration-none">Chill-log</a>
-    </header>
+    <Header />
 
     <div class="container mt-4 custom-container">
       <div class="d-flex justify-content-center">
@@ -58,9 +57,7 @@ const props = defineProps({
       </div>
     </div>
 
-    <footer class="custom-footer text-white text-center py-3 mt-5 rounded-top">
-      &copy; 2025 Chill-log
-    </footer>
+    <Footer />
   </div>
 </template>
 
@@ -68,18 +65,6 @@ const props = defineProps({
 .custom-bg-green {
   background-color: #88B04B !important;
   border-radius: 20px;
-}
-
-.custom-header {
-  background-color: #6C7A89 !important;
-  padding: 15px 0;
-  font-size: 1.5rem;
-}
-
-.custom-footer {
-  background-color: #6C7A89 !important;
-  padding: 15px 0;
-  font-size: 1.0rem;
 }
 
 .custom-container {

@@ -1,39 +1,78 @@
 <script setup>
-import { ref } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link, Head } from '@inertiajs/vue3';
-import { Inertia } from '@inertiajs/inertia';
+import { ref, onMounted, onUnmounted } from 'vue';
+import { Link } from '@inertiajs/vue3';
 
-const props = defineProps({
-  authProps: Array,
-  page: String
-})
+const menuOpen = ref(false);
+const toggleMenu = () => {
+  menuOpen.value = !menuOpen.value;
+};
 
+const closeMenu = (event) => {
+  if (!event.target.closest('.menu-toggle') && !event.target.closest('.user-menu')) {
+    menuOpen.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('click', closeMenu);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', closeMenu);
+});
 </script>
 
 <template>
-  <header class="text-lg font-bold body-font">
-    <div class="container mx-auto flex flex-wrap flex-col md:flex-row items-center">
-      <NavLink href="/" :active="route().current('/')">
-        <ApplicationLogo class="block w-20 mb-10 md:mb-0" />
-      </NavLink>
-      <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center"
-        :class="{ 'text-white': props.page == 'top' }">
-        <Link :href="route('posts')" class=" mr-5 hover:underline">投稿一覧</Link>
-        <Link :href="route('profile')" class="mr-5 hover:underline">マイページ</Link>
-        <!-- ログイン -->
-        <Link v-if="$page.props.auth.user" :href="route('logout')" method="post" as="button" class="mr-5 hover:underline">ログアウト
-        </Link>
-        <!-- 未ログイン -->
-        <div v-else>
-          <Link :href="route('login')" class="mr-5 hover:underline">ログイン</Link>
-          <Link :href="route('register')" class="mr-5 hover:underline">新規登録</Link>
-        </div>
-      </nav>
+  <header class="custom-header text-white text-center rounded-bottom position-relative">
+    <a href="#" class="text-white text-decoration-none fs-4">Chill-log</a>
+    <div class="menu-toggle" @click="toggleMenu">☰</div>
+
+    <div v-show="menuOpen" class="user-menu">
+      <Link href="/profile" class="nav-link">Mypage</Link>
+      <Link href="/logout" class="nav-link">Logout</Link>
     </div>
   </header>
 </template>
+
+<style>
+.custom-header {
+  background-color: #6C7A89 !important;
+  padding: 15px 0;
+  font-size: 1.5rem;
+}
+
+.menu-toggle {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.user-menu {
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  background: white;
+  color: #6C7A89;
+  font-size: 16px;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.user-menu a {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  color: #6C7A89;
+  font-weight: bold;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.user-menu a:hover {
+  background-color: #6C7A89;
+  color: white;
+  border-radius: 5px;
+}
+</style>
