@@ -16,6 +16,8 @@ php artisan view:cache
 php artisan config:clear
 php artisan cache:clear
 php artisan route:clear
+php artisan clear-compiled
+composer dump-autoload
 
 ID: test@test.com
 PASS: password
