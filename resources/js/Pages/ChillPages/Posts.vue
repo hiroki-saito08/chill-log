@@ -2,63 +2,64 @@
 import { Head, Link } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
 import Search from '@/Components/Search.vue';
-import Pagination from '@/Components/Pagination.vue'
+import { ref } from 'vue';
 
 const props = defineProps({
-  posts: Object
+  posts: Object,
+  popularPosts: Object
 });
-
 </script>
 
 <template>
-  <Head title="Posts" />
-  <Header :authProps=props page="posts"></Header>
-  <div class="m-5">
-    <!-- 検索バー -->
-    <Search></Search>
-  </div>
+  <Head title="Chill-log" />
+  <div class="bg-light min-vh-100">
+    <header class="bg-secondary text-white py-3 text-center rounded-bottom">
+      <a href="#" class="text-white text-decoration-none fs-3">🏠 Chill-log</a>
+    </header>
 
-  <!-- 投稿を最新から6件取得して表示する。残りは投稿一覧ページへ誘導する
-  表示テンプレートは分けたい -->
-  <template v-if="posts">
-    <div class="md:grid grid-cols-3">
-      <div v-for=" post in posts.data" :key="post.id" class="m-5">
-        <Link :href="route('post.show', post.id)">
-
-        <article class="p-5 border">
-          <div class="pb-2 border-b">
-            <h2 class="text-lg pt-2 pb-2 font-bold">「{{ post.title }}」</h2>
-          </div>
-          <div class="h-80 pt-3 pb-3">
-            <div v-if="post.images.length" class="h-full">
-              <div v-for=" image in post.images" :key="image.id" class="h-full">
-                <img :src="image.path" alt="画像" class="w-full h-full object-cover">
-              </div>
-            </div>
-            <div v-else> 画像なし </div>
-          </div>
-
-          <div class="flex justify-between pt-2 border-t">
-            <div>コメント: {{ post.reviews_count }}件</div>
-            <div>
-              評価:
-              <span v-if="post.rating[0]">{{ post.rating[0].avg_review }}</span>
-              <span v-else> 0.00 </span>
-            </div>
-          </div>
-        </article>
-        </Link>
+    <div class="container mt-4">
+      <div class="d-flex justify-content-center">
+        <input type="text" placeholder="Search for chill spots..." class="form-control w-75 rounded-pill shadow-sm">
       </div>
     </div>
-    <Pagination class="mt-6" :links="posts.links" />
-  </template>
 
-  <div class="m-5 mt-10 mb-10 flex justify-center">
-    <Link class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg" href="/">TOPに戻る</Link>
+    <div class="container mt-5">
+      <div class="card text-white" style="background-color: #88B04B; border-radius: 15px;">
+        <div class="card-body">
+          <h3 class="card-title">🗺 Area Selection (Map & Search)</h3>
+          <div class="bg-light text-dark text-center py-5 rounded" style="border-radius: 10px;">🗺 Map Area (Coming Soon)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mt-5">
+      <div class="card text-white" style="background-color: #88B04B; border-radius: 15px;">
+        <div class="card-body">
+          <h3 class="card-title">🏆 National Ranking</h3>
+          <div class="list-group">
+            <Link v-for="post in popularPosts" :key="post.id" :href="route('post.show', post.id)" class="list-group-item list-group-item-action btn btn-light text-dark rounded-pill my-2">
+            {{ post.title }}
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mt-5">
+      <div class="card text-white" style="background-color: #88B04B; border-radius: 15px;">
+        <div class="card-body">
+          <h3 class="card-title">🆕 New Chill Spots</h3>
+          <div class="list-group">
+            <Link v-for="post in posts" :key="post.id" :href="route('post.show', post.id)" class="list-group-item list-group-item-action btn btn-light text-dark rounded-pill my-2">
+            {{ post.title }}
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-secondary text-white text-center py-3 mt-5 rounded-top">
+      &copy; 2025 Chill-log
+    </footer>
   </div>
-
 </template>
-
-  <style>
-
-</style>

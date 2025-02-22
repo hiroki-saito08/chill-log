@@ -27,7 +27,7 @@ class PostController extends Controller
     public function index()
     {
         // ページネーション
-        $posts = Post::where('status', 1)->with('user')->with('images')->with('reviews')->with(['reviews.images'])->withCount('reviews')->with('rating')->orderBy('posts.created_at', 'DESC')->paginate(6);
+        $posts = Post::where('status', 1)->with('user')->with('images')->with('reviews')->with(['reviews.images'])->withCount('reviews')->with('rating')->orderBy('posts.created_at', 'DESC')->paginate(5);
 
         return Inertia::render('ChillPages/Posts', [
             'posts' => $posts

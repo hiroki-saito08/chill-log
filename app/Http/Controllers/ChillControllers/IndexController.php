@@ -20,7 +20,7 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $posts = Post::where('status', 1)->with('user')->with('images')->with('reviews')->withCount('reviews')->with('rating')->orderBy('posts.created_at', 'DESC')->limit(6)->get();
+        $posts = Post::where('status', 1)->with('user')->with('images')->with('reviews')->withCount('reviews')->with('rating')->orderBy('posts.created_at', 'DESC')->limit(5)->get();
 
         // レビューの高い順かつレビューの数が多い順に並び替え（全体のクエリの並び替えはjoin必須）
         $popularPosts = Post::with('images')
