@@ -29,7 +29,7 @@ onUnmounted(() => {
 
     <div v-show="menuOpen" class="user-menu">
       <Link href="/profile" class="nav-link">Mypage</Link>
-      <Link href="/logout" class="nav-link">Logout</Link>
+      <Link :href="route('logout')" method="post" class="nav-link">Logout</Link>
     </div>
   </header>
 </template>
