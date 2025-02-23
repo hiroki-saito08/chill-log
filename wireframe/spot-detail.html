@@ -138,6 +138,7 @@
       background: #f9f9f9;
       padding: 20px;
       border-radius: 10px;
+      display: none;
     }
 
     .form-group {
@@ -172,6 +173,43 @@
       text-decoration: none;
     }
 
+    .btn-review:hover {
+      background: #0056b3;
+    }
+
+    /* モーダルのスタイル */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+      background-color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      border-radius: 10px;
+      width: 50%;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+
+    .close {
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+
     .footer {
       background: #6C7A89;
       color: white;
@@ -184,16 +222,14 @@
 </head>
 <body>
   <header>
-    <a href="index.html" style="color: white; text-decoration: none;">🏠 Chill-log</a>
+    <a href="index.html" style="color: white; text-decoration: none;">Chill-log</a>
     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
   </header>
 
   <div class="user-menu" id="menu">
-    <a href="myspots.html">マイスポット</a>
-    <a href="profile.html">プロフィール</a>
+    <a href="mypage.html">マイページ</a>
     <a href="#">ログアウト</a>
   </div>
-
   <div class="container">
     <div class="spot-image">画像エリア</div>
     <h2 class="spot-title">🌿 静かな公園</h2>
@@ -208,63 +244,67 @@
       <button class="btn">🔗 シェア</button>
     </div>
 
+    <button class="btn btn-review" onclick="openReviewModal()">💬 レビューを投稿</button>
+    <div id="reviewModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeReviewModal()">&times;</span>
+        <h3>レビューを投稿</h3>
+        <div class="form-group">
+          <label>総合評価</label>
+          <select>
+            <option>⭐⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐</option>
+            <option>⭐⭐</option>
+            <option>⭐</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>チル度</label>
+          <select>
+            <option>⭐⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐</option>
+            <option>⭐⭐</option>
+            <option>⭐</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>安全性</label>
+          <select>
+            <option>⭐⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐</option>
+            <option>⭐⭐</option>
+            <option>⭐</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>癒し度</label>
+          <select>
+            <option>⭐⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐</option>
+            <option>⭐⭐</option>
+            <option>⭐</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>レビュー内容</label>
+          <textarea placeholder="レビューを入力..."></textarea>
+        </div>
+        <button class="btn">投稿</button>
+      </div>
+    </div>
+
     <div class="review-section">
-      <h3>レビュー</h3>
+      <h3>レビュー一覧</h3>
       <p class="review-summary">総合評価: ⭐⭐⭐⭐☆ (4.2) | チル度: ⭐⭐⭐⭐⭐ | 安全性: ⭐⭐⭐⭐☆ | 癒し度: ⭐⭐⭐⭐⭐</p>
       <div class="review">
         <div class="review-header">⭐⭐⭐⭐⭐ ユーザーA - 2024/02/16</div>
         <p>最高に落ち着く場所！</p>
         <p>チル度: ⭐⭐⭐⭐⭐ | 安全性: ⭐⭐⭐⭐☆ | 癒し度: ⭐⭐⭐⭐⭐</p>
       </div>
-    </div>
-
-    <div class="review-form">
-      <h3>レビューを投稿</h3>
-      <div class="form-group">
-        <label>総合評価</label>
-        <select>
-          <option>⭐⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐</option>
-          <option>⭐⭐</option>
-          <option>⭐</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>チル度</label>
-        <select>
-          <option>⭐⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐</option>
-          <option>⭐⭐</option>
-          <option>⭐</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>安全性</label>
-        <select>
-          <option>⭐⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐</option>
-          <option>⭐⭐</option>
-          <option>⭐</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>癒し度</label>
-        <select>
-          <option>⭐⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐</option>
-          <option>⭐⭐</option>
-          <option>⭐</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>レビュー内容</label>
-        <textarea placeholder="レビューを入力..."></textarea>
-      </div>
-      <button class="btn">投稿</button>
     </div>
 
     <a href="index.html" class="back-button">⬅️ 前のページに戻る</a>
@@ -275,6 +315,16 @@
     function toggleMenu() {
       let menu = document.getElementById("menu");
       menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+
+    // モーダルを開く
+    function openReviewModal() {
+      document.getElementById("reviewModal").style.display = "block";
+    }
+
+    // モーダルを閉じる
+    function closeReviewModal() {
+      document.getElementById("reviewModal").style.display = "none";
     }
   </script>
 </body>
