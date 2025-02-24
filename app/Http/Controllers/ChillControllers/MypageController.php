@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\ChillControllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\MypageUpdateRequest;
 use App\Models\Post;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
@@ -13,33 +13,33 @@ use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class ProfileController extends Controller
+class MypageController extends Controller
 {
 
     public function index(Request $request): Response
     {
-        $user = Auth::user();
-
-        return Inertia::render('ChillPages/Profile/Index', [
-            'user' => $user
+        return Inertia::render('ChillPages/Mypage', [
+            'auth' => ['user' => auth()->user()],
+            'posts' => auth()->user()->posts()->latest()->get(),
+            'favorites' => auth()->user()->favorites()->latest()->get(),
         ]);
     }
 
     /**
-     * Display the user's profile form.
+     * Display the user's Mypage form.
      */
     public function edit(Request $request): Response
     {
-        return Inertia::render('ChillPages/Profile/Edit', [
+        return Inertia::render('ChillPages/Mypage', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
         ]);
     }
 
     /**
-     * Update the user's profile information.
+     * Update the user's Mypage information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(MypageUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
 
@@ -49,7 +49,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::to('/profile');
+        return Redirect::to('/Mypage');
     }
 
     /**
