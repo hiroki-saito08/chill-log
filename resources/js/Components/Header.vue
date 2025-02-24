@@ -28,7 +28,7 @@ onUnmounted(() => {
     <div class="menu-toggle" @click="toggleMenu">☰</div>
 
     <div v-show="menuOpen" class="user-menu">
-      <Link href="/profile" class="nav-link">Mypage</Link>
+      <Link :href="route('mypage')" class="nav-link">Mypage</Link>
       <Link :href="route('logout')" method="post" class="nav-link">Logout</Link>
     </div>
   </header>
