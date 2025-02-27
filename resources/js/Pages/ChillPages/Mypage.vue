@@ -6,7 +6,6 @@ import Favorites from '@/Pages/ChillPages/Favorites.vue';
 
 // 初期状態
 const currentSection = ref('profile');
-console.log(usePage().props);
 
 // セクションを切り替える関数
 const navigate = (section) => {
