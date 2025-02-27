@@ -23,13 +23,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header class="custom-header text-white text-center rounded-bottom position-relative">
-    <a href="#" class="text-white text-decoration-none fs-4">Chill-log</a>
+  <header class="custom-header text-white text-center position-relative">
+    <a href="/" class="text-white text-decoration-none fs-4">Chill-log</a>
     <div class="menu-toggle" @click="toggleMenu">☰</div>
 
     <div v-show="menuOpen" class="user-menu">
       <Link :href="route('mypage')" class="nav-link">Mypage</Link>
-      <Link :href="route('logout')" method="post" class="nav-link">Logout</Link>
+      <Link :href="route('logout')" method="post" class="nav-link logout-link">Logout</Link>
     </div>
   </header>
 </template>
@@ -71,6 +71,23 @@ onUnmounted(() => {
 }
 
 .user-menu a:hover {
+  background-color: #6C7A89;
+  color: white;
+  border-radius: 5px;
+}
+
+.logout-link {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  color: #6C7A89;
+  font-weight: bold;
+  background: none;
+  border: none;
+  text-align: left;
+}
+
+.logout-link:hover {
   background-color: #6C7A89;
   color: white;
   border-radius: 5px;
