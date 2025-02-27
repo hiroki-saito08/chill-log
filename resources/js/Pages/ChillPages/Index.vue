@@ -44,7 +44,7 @@ const props = defineProps({
       </div>
     </div>
 
-    <div class="container mt-5 custom-container">
+    <div class="container mt-5 custom-container mb-5">
       <div class="card text-white custom-bg-green">
         <div class="card-body">
           <h3 class="card-title">🆕 New Chill Spots</h3>
