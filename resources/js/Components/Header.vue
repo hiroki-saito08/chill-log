@@ -28,6 +28,7 @@ onUnmounted(() => {
     <div class="menu-toggle" @click="toggleMenu">☰</div>
 
     <div v-show="menuOpen" class="user-menu">
+      <Link href="/" class="nav-link">Home</Link>
       <Link :href="route('mypage')" class="nav-link">Mypage</Link>
       <Link :href="route('logout')" method="post" class="nav-link logout-link">Logout</Link>
     </div>
@@ -59,6 +60,7 @@ onUnmounted(() => {
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: left;
 }
 
 .user-menu a {
