@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const isEditing = ref(null);
 const profile = ref({
@@ -12,10 +12,8 @@ const originalProfile = ref({ ...profile.value });
 
 const toggleEdit = (field) => {
   if (isEditing.value === field) {
-    // Save logic
     originalProfile.value[field] = profile.value[field];
     isEditing.value = null;
-    console.log(`${field} updated:`, profile.value[field]);
   } else {
     isEditing.value = field;
   }
@@ -30,6 +28,14 @@ const showPasswordForm = ref(false);
 const togglePasswordSection = () => {
   showPasswordForm.value = !showPasswordForm.value;
 };
+
+const passwordButtonClass = computed(() => {
+  return showPasswordForm.value ? 'cancel-btn' : 'edit-btn';
+});
+
+const handleProfilePictureChange = () => {
+  console.log('Profile picture change clicked');
+};
 </script>
 
 <template>
@@ -40,35 +46,43 @@ const togglePasswordSection = () => {
     <div id="public-section" class="public-section">
       <div class="form-group">
         <label>Profile Picture</label>
-        <button class="edit-btn">Change</button>
+        <button class="edit-btn" @click="handleProfilePictureChange">Change</button>
       </div>
 
       <div class="form-group">
         <label>Name</label>
         <span v-if="isEditing !== 'name'">{{ profile.name }}</span>
         <input v-if="isEditing === 'name'" v-model="profile.name" type="text">
-        <button v-if="isEditing === 'name'" class="cancel-btn" @click="cancelEdit('name')">Cancel</button>
-        <button class="edit-btn" @click="toggleEdit('name')">{{ isEditing === 'name' ? 'Save' : 'Edit' }}</button>
+        <div class="form-buttons">
+          <button v-if="isEditing === 'name'" class="cancel-btn" @click="cancelEdit('name')">Cancel</button>
+          <button class="edit-btn" @click="toggleEdit('name')">{{ isEditing === 'name' ? 'Save' : 'Edit' }}</button>
+        </div>
       </div>
 
       <div class="form-group">
         <label>Email</label>
         <span v-if="isEditing !== 'email'">{{ profile.email }}</span>
         <input v-if="isEditing === 'email'" v-model="profile.email" type="email">
-        <button v-if="isEditing === 'email'" class="cancel-btn" @click="cancelEdit('email')">Cancel</button>
-        <button class="edit-btn" @click="toggleEdit('email')">{{ isEditing === 'email' ? 'Save' : 'Edit' }}</button>
+        <div class="form-buttons">
+          <button v-if="isEditing === 'email'" class="cancel-btn" @click="cancelEdit('email')">Cancel</button>
+          <button class="edit-btn" @click="toggleEdit('email')">{{ isEditing === 'email' ? 'Save' : 'Edit' }}</button>
+        </div>
       </div>
 
       <div class="form-group">
         <label>Bio</label>
         <span v-if="isEditing !== 'bio'">{{ profile.bio }}</span>
         <textarea v-if="isEditing === 'bio'" v-model="profile.bio"></textarea>
-        <button v-if="isEditing === 'bio'" class="cancel-btn" @click="cancelEdit('bio')">Cancel</button>
-        <button class="edit-btn" @click="toggleEdit('bio')">{{ isEditing === 'bio' ? 'Save' : 'Edit' }}</button>
+        <div class="form-buttons">
+          <button v-if="isEditing === 'bio'" class="cancel-btn" @click="cancelEdit('bio')">Cancel</button>
+          <button class="edit-btn" @click="toggleEdit('bio')">{{ isEditing === 'bio' ? 'Save' : 'Edit' }}</button>
+        </div>
       </div>
     </div>
 
-    <button class="edit-password-btn" @click="togglePasswordSection">Edit Password</button>
+    <button :class="passwordButtonClass" @click="togglePasswordSection">
+      {{ showPasswordForm ? 'Cancel' : 'Edit Password' }}
+    </button>
 
     <div v-if="showPasswordForm" class="password-section">
       <div class="form-group">
@@ -83,7 +97,7 @@ const togglePasswordSection = () => {
         <label for="confirm-password">Confirm Password</label>
         <input type="password" id="confirm-password" placeholder="Confirm Password">
       </div>
-      <button class="save-btn">Save</button>
+      <button type="submit" class="edit-btn">Save</button>
     </div>
   </section>
 </template>
@@ -107,30 +121,23 @@ const togglePasswordSection = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  gap: 10px; /* スペースを開ける */
 }
 
 .form-group label {
-  display: block;
   font-weight: bold;
+  margin-right: 10px;
 }
 
-.form-group span {
-  flex-grow: 1;
-  text-align: left;
-}
-
-.form-group input,
-.form-group textarea {
-  width: 70%;
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+.form-buttons button {
+  margin: 5px
 }
 
 .edit-btn,
 .cancel-btn {
-  padding: 8px 12px;
+  background-color: #6C7A89;
+  color: white;
+  padding: 8px 15px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -141,18 +148,23 @@ const togglePasswordSection = () => {
   color: white;
 }
 
-.cancel-btn {
-  background-color: #6C7A89;
-  color: white;
+.public-section {
+  margin-bottom: 50px;
 }
 
-.edit-password-btn {
+.password-section {
+  margin-top: 15px;
+  margin-bottom: 30px;
+}
+
+.save-btn {
   background: #88B04B;
   color: white;
-  padding: 10px 20px;
+  padding: 10px 15px;
   border-radius: 5px;
+  font-size: 14px;
   cursor: pointer;
-  width: 300px;
-  margin-top: 30px;
+  display: block;
+  margin: auto;
 }
 </style>
