@@ -8,7 +8,7 @@ const toggleMenu = () => {
 };
 
 // `auth.user` を取得して、ログイン状態を判定
-const auth = computed(() => usePage().props.user);
+const auth = computed(() => usePage().props);
 
 const closeMenu = (event) => {
   if (!event.target.closest('.menu-toggle') && !event.target.closest('.user-menu')) {
@@ -34,7 +34,7 @@ onUnmounted(() => {
       <template v-if="auth.user">
         <Link :href="route('home')" class="nav-link">Home</Link>
         <Link :href="route('mypage')" class="nav-link">Mypage</Link>
-        <Link :href="route('logout')" method="post" class="nav-link">Logout</Link>
+        <Link :href="route('logout')" method="post" class="nav-link logout-link">Logout</Link>
       </template>
       <template v-else>
         <Link :href="route('home')" class="nav-link">Home</Link>
@@ -69,6 +69,7 @@ onUnmounted(() => {
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: left;
 }
 
 .user-menu a {
@@ -81,6 +82,23 @@ onUnmounted(() => {
 }
 
 .user-menu a:hover {
+  background-color: #6C7A89;
+  color: white;
+  border-radius: 5px;
+}
+
+.logout-link {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  color: #6C7A89;
+  font-weight: bold;
+  background: none;
+  border: none;
+  text-align: left;
+}
+
+.logout-link:hover {
   background-color: #6C7A89;
   color: white;
   border-radius: 5px;
