@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import Header from '@/Components/Header.vue';
 import Footer from '@/Components/Footer.vue';
 import Profile from '@/Pages/ChillPages/Profile.vue';
+import Newpost from '@/Pages/ChillPages/Newpost.vue';
 import Myposts from '@/Pages/ChillPages/Myposts.vue';
 import Favorites from '@/Pages/ChillPages/Favorites.vue';
 
@@ -27,6 +28,7 @@ const navigate = (section) => {
 
       <main class="content">
         <Profile v-if="activeSection === 'profile-section'" />
+        <Newpost v-if="activeSection === 'new-post-section'" />
         <Myposts v-if="activeSection === 'my-posts-section'" />
         <Favorites v-if="activeSection === 'favorite-section'" />
       </main>
