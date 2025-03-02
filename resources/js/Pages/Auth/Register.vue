@@ -1,73 +1,161 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import { Inertia } from '@inertiajs/inertia'
+import { useForm } from '@inertiajs/vue3';
+import Header from '@/Components/Header.vue';
+import Footer from '@/Components/Footer.vue';
 
 const form = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
-    terms: false,
+  name: '',
+  email: '',
+  password: '',
+  password_confirmation: ''
 });
 
-const submit = () => {
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
-    });
+const submitRegister = () => {
+  form.post(route('register'), {
+    onFinish: () => form.reset('password', 'password_confirmation')
+  });
 };
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Register" />
+  <Header />
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
+  <div class="register-container">
+    <div class="register-box">
+      <h2>Sign Up</h2>
 
-                <TextInput id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus autocomplete="name" />
+      <form @submit.prevent="submitRegister">
+        <div class="form-group">
+          <label for="name">Username</label>
+          <input type="text" id="name" v-model="form.name" placeholder="Enter your username" required>
+          <span v-if="form.errors.name" class="error">{{ form.errors.name }}</span>
+        </div>
 
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" v-model="form.email" placeholder="Enter your email" required>
+          <span v-if="form.errors.email" class="error">{{ form.errors.email }}</span>
+        </div>
 
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" v-model="form.password" placeholder="Enter your password" required>
+          <span v-if="form.errors.password" class="error">{{ form.errors.password }}</span>
+        </div>
 
-                <TextInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autocomplete="username" />
+        <div class="form-group">
+          <label for="password_confirmation">Confirm Password</label>
+          <input type="password" id="password_confirmation" v-model="form.password_confirmation" placeholder="Confirm your password" required>
+          <span v-if="form.errors.password_confirmation" class="error">{{ form.errors.password_confirmation }}</span>
+        </div>
 
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
+        <button type="submit" class="btn" :disabled="form.processing">Sign Up</button>
+      </form>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+      <a :href="route('login')" class="link">Already have an account? Log in</a>
+    </div>
+  </div>
 
-                <TextInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="new-password" />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-
-                <TextInput id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" required autocomplete="new-password" />
-
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Already registered?
-                </Link>
-
-                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
-                </PrimaryButton>
-            </div>
-        </form>
-    </GuestLayout>
+  <Footer />
 </template>
+
+
+<style scoped>
+/* 背景・レイアウト */
+.register-container {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  color: #333;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ヘッダー */
+.register-header {
+  width: 100%;
+  background: #6C7A89;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  font-size: 24px;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+/* ロゴリンク */
+.logo {
+  color: white;
+  text-decoration: none;
+}
+
+/* 登録ボックス */
+.register-box {
+  width: 95%;
+  max-width: 600px;
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* フォーム */
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+}
+
+/* ボタン */
+.btn {
+  background: #88B04B;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn:hover {
+  background: #76A03A;
+}
+
+.btn:disabled {
+  background: gray;
+  cursor: not-allowed;
+}
+
+/* リンク */
+.link {
+  margin-top: 10px;
+  display: block;
+  text-decoration: none;
+  color: #6C7A89;
+}
+</style>
