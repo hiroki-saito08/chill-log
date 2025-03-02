@@ -4,7 +4,7 @@
 <template>
   <footer class="footer-container text-white">
     <div class="footer-content">
-      <a href="/" class="text-white text-decoration-none fs-4">Chill-log</a>
+      <a :href="route('home')" class="text-white text-decoration-none fs-4">Chill-log</a>
       <nav class="footer-nav">
         <a href="/about" class="footer-link">About</a>
         <a href="/contact" class="footer-link">Contact</a>
