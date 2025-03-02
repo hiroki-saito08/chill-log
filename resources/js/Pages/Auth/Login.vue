@@ -6,7 +6,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { usePage } from "@inertiajs/inertia-vue3";
+import { usePage } from '@inertiajs/vue3';
 import { Inertia } from '@inertiajs/inertia'
 
 defineProps({
@@ -15,7 +15,6 @@ defineProps({
 })
 
 const page = usePage()
-const urlPrev = page.props.value.urlPrev
 const form = useForm({
     email: '',
     password: '',
@@ -28,13 +27,6 @@ const submit = () => {
     })
 }
 
-const back = () => {
-    if (urlPrev !== 'empty') {
-        Inertia.visit(urlPrev)
-    } else {
-        Inertia.visit('/')
-    }
-}
 </script>
 
 <template>
@@ -82,7 +74,7 @@ const back = () => {
         </form>
         <div>
             <button @click="back" class="mr-10 text-gray-600 hover:text-gray-900">戻る</button>
-            <a :href="route('register')" class="mr-10 text-gray-600 hover:text-gray-900" :urlPrev=urlPrev target="_blank">新規登録はこちら</a>
+            <a :href="route('register')" class="mr-10 text-gray-600 hover:text-gray-900" target="_blank">新規登録はこちら</a>
         </div>
     </GuestLayout>
 </template>
