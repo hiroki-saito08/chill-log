@@ -1,21 +1,103 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { usePage } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
-const favorites = ref([]);
+const favorites = ref([
+  {
+    id: 1,
+    title: 'Tranquil Garden',
+    date: '2025-02-18',
+    image: '/images/spot-placeholder.png'
+  },
+  {
+    id: 2,
+    title: 'Cozy Café',
+    date: '2025-02-10',
+    image: '/images/spot-placeholder.png'
+  }
+]);
 
-onMounted(() => {
-  favorites.value = usePage().props.favorites || [];
-});
+const removeFavorite = (id) => {
+  console.log(`Remove favorite: ${id}`);
+  favorites.value = favorites.value.filter(fav => fav.id !== id);
+};
 </script>
 
 <template>
-  <div>
-    <h2>Favorites</h2>
-    <ul>
-      <li v-for="fav in favorites" :key="fav.id">
-        <a :href="`/posts/${fav.id}`">{{ fav.title }}</a>
-      </li>
-    </ul>
-  </div>
+  <section id="favorite-section" class="section">
+    <h2>Favorite Spots</h2>
+
+    <div class="favorite-list">
+      <div v-for="favorite in favorites" :key="favorite.id" class="favorite-card">
+        <img :src="favorite.image" alt="Spot Thumbnail" class="favorite-image">
+        <div class="favorite-info">
+          <h3>{{ favorite.title }}</h3>
+          <p class="favorite-date">{{ favorite.date }}</p>
+        </div>
+        <div class="favorite-actions">
+          <button class="remove-btn" @click="removeFavorite(favorite.id)">Remove</button>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
+
+<style scoped>
+/* 見出し */
+h2 {
+  text-align: center;
+}
+
+/* お気に入りリスト */
+.favorite-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* お気に入りカード */
+.favorite-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.favorite-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.favorite-info {
+  flex-grow: 1;
+  padding-left: 15px;
+}
+
+.favorite-info h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.favorite-date {
+  font-size: 14px;
+  color: gray;
+}
+
+/* ボタン */
+.favorite-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.remove-btn {
+  background: #dc3545;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+</style>
