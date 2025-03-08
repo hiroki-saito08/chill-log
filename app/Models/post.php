@@ -34,7 +34,7 @@ class Post extends Model
     // 画像
     public function images()
     {
-        return $this->hasMany(PostImage::class);
+        return $this->hasMany(Image::class);
     }
 
     // レビュー
