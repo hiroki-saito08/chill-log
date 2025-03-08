@@ -15,15 +15,9 @@ return new class extends Migration
     {
         Schema::create('favorites', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('post_id')
-                ->constrained()
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-            $table->foreignId('user_id')
-                ->constrained()
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-            $table->timestamps();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('post_id')->constrained()->onDelete('cascade');
+            $table->timestamps(); // updated_at を追加
         });
     }
 
@@ -34,13 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        // Schema::dropIfExists('favorites');
-        Schema::table('favorites', function (Blueprint $table) {
-            // 追加 (外部キー名は{テーブル名}_{カラム名}_foreign)
-            $table->dropForeign('favorites_post_id_foreign');
-            $table->dropForeign('favorites_user_id_foreign');
-            $table->dropColumn('post_id');
-            $table->dropColumn('user_id');
-        });
+        Schema::dropIfExists('favorites');
     }
 };
