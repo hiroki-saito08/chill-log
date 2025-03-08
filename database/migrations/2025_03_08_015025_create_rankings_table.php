@@ -13,15 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('reviews', function (Blueprint $table) {
+        Schema::create('rankings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('post_id')->constrained()->onDelete('cascade');
-            $table->tinyInteger('rating_overall');
-            $table->tinyInteger('rating_silence')->nullable();
-            $table->tinyInteger('rating_relax')->nullable();
-            $table->tinyInteger('rating_safety')->nullable();
-            $table->text('comment')->nullable();
+            $table->string('rank_type'); // "weekly" / "monthly" / "yearly"
+            $table->integer('position');
+            $table->date('ranking_date'); // week_start → ranking_date に変更
             $table->timestamps();
         });
     }
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reviews');
+        Schema::dropIfExists('rankings');
     }
 };
