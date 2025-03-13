@@ -3,50 +3,44 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\ChillControllers\MypageController;
-use App\Http\Controllers\ChillControllers\IndexController;
-use App\Http\Controllers\ChillControllers\PostController;
-use App\Http\Controllers\ChillControllers\ReviewController;
-use App\Http\Controllers\ChillControllers\FavoriteController;
-use App\Http\Controllers\ChillControllers\ImageController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\MypageController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\FavoriteController;
 
-// Route::get('/', function () {
-//     return Inertia::render('Welcome', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
-
-// Route::get('/dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
+// テストページ
 Route::get('/test', function () {
     return Inertia::render('Test');
 });
 
-Route::get('/', [IndexController::class, 'index'])->name('home');
+// ホーム & 投稿一覧
+Route::get('/', [PostController::class, 'index'])->name('home');
 Route::get('/posts', [PostController::class, 'index'])->name('posts');
-Route::get('/posts-search', [PostController::class, 'search'])->name('posts.search');
-Route::post('/posts-search', [PostController::class, 'search'])->name('post_posts.search');
-Route::get('/post-show/{post}', [PostController::class, 'show'])->name('post.show');
+Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 
-Route::middleware(['web', 'auth'])->group(function () {
+// 認証ユーザーのみアクセス可能なルート
+Route::middleware(['auth'])->group(function () {
+    // マイページ関連
     Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
-    Route::get('/post-own', [PostController::class, 'own'])->name('post.own');
-    Route::get('/post-favorite', [PostController::class, 'favorite'])->name('post.favorite');
-    Route::get('/post-create', [PostController::class, 'create'])->name('post.create');
-    Route::post('/post-store', [PostController::class, 'store'])->name('post.store');
-    Route::post('/post-save', [PostController::class, 'save'])->name('post.save');
-    Route::get('/post-savePosts', [PostController::class, 'savePosts'])->name('post.savePosts');
-    Route::get('/post-edit/{post}', [PostController::class, 'edit'])->name('post.edit');
-    Route::put('/post-update/{post}', [PostController::class, 'update'])->name('post.update');
-    Route::delete('/post-destroy/{post}', [PostController::class, 'destroy'])->name('post.destroy');
-    Route::resource('review', ReviewController::class)->middleware(['auth', 'verified']);
-    Route::resource('favorite', FavoriteController::class)->middleware(['auth', 'verified']);
-    Route::resource('image', ImageController::class)->middleware(['auth', 'verified']);
+
+    // 投稿関連
+    Route::prefix('posts')->group(function () {
+        Route::post('/', [PostController::class, 'store'])->name('posts.store');
+        Route::get('/own', [PostController::class, 'own'])->name('posts.own');
+        Route::get('/favorites', [PostController::class, 'favorite'])->name('posts.favorite');
+        Route::put('/{post}', [PostController::class, 'update'])->name('posts.update');
+        Route::delete('/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+    });
+
+    // レビュー関連
+    Route::prefix('reviews')->group(function () {
+        Route::post('/', [ReviewController::class, 'store'])->name('reviews.store');
+        Route::delete('/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
+    });
+
+    // お気に入り関連
+    Route::post('/favorites', [FavoriteController::class, 'store'])->name('favorites.store');
+    Route::delete('/favorites/{favorite}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
 });
 
 require __DIR__ . '/auth.php';
