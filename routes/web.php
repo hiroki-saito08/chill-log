@@ -14,9 +14,11 @@ Route::get('/test', function () {
 });
 
 // ホーム & 投稿一覧
-Route::get('/', [PostController::class, 'index'])->name('home');
-Route::get('/posts', [PostController::class, 'index'])->name('posts');
-Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+Route::get('/', [PostController::class, 'index'])->name('home'); // トップページ
+Route::get('/posts', [PostController::class, 'posts'])->name('posts'); // 投稿一覧
+Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show'); // 投稿詳細
+Route::post('/posts', [PostController::class, 'store'])->name('posts.store'); // 投稿作成
+
 
 // 認証ユーザーのみアクセス可能なルート
 Route::middleware(['auth'])->group(function () {

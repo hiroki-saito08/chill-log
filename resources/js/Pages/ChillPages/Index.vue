@@ -1,14 +1,16 @@
 <script setup>
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
 import Footer from '@/Components/Footer.vue';
-import { ref } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 const props = defineProps({
   posts: Object,
   popularPosts: Object
 });
+
+// ページネーションのリンク
+const paginationLinks = computed(() => props.posts.links);
 </script>
 
 <template>
@@ -22,44 +24,28 @@ const props = defineProps({
       </div>
     </div>
 
-    <div class="container mt-5 custom-container">
-      <div class="card text-white custom-bg-green">
-        <div class="card-body">
-          <h3 class="card-title">🗺 Area Selection (Map & Search)</h3>
-          <div class="bg-light text-dark text-center py-5 rounded" style="border-radius: 15px;">🗺 Map Area (Coming Soon)</div>
-        </div>
+    <div class="container mt-5">
+      <h3>🏆 Popular Chill Spots</h3>
+      <div class="list-group">
+        <Link v-for="post in popularPosts" :key="post.id" :href="route('posts.show', post.id)" class="list-group-item">
+          {{ post.title }}
+        </Link>
       </div>
     </div>
 
-    <div class="container mt-5 custom-container">
-      <div class="card text-white custom-bg-green">
-        <div class="card-body">
-          <h3 class="card-title">🏆 National Ranking</h3>
-          <div class="list-group mt-3 rounded-list">
-            <Link v-for="post in popularPosts" :key="post.id" :href="route('post.show', post.id)" class="list-group-item list-group-item-action custom-list-item text-dark fw-bold my-2">
-            {{ post.title }}
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container mt-5 custom-container mb-5">
-      <div class="card text-white custom-bg-green">
-        <div class="card-body">
-          <h3 class="card-title">🆕 New Chill Spots</h3>
-          <div class="list-group mt-3 rounded-list">
-            <Link v-for="post in posts" :key="post.id" :href="route('post.show', post.id)" class="list-group-item list-group-item-action custom-list-item text-dark fw-bold my-2">
-            {{ post.title }}
-            </Link>
-          </div>
-        </div>
+    <div class="container mt-5">
+      <h3>🆕 New Chill Spots</h3>
+      <div class="list-group">
+        <Link v-for="post in posts.data" :key="post.id" :href="route('posts.show', post.id)" class="list-group-item">
+          {{ post.title }}
+        </Link>
       </div>
     </div>
 
     <Footer />
   </div>
 </template>
+
 
 <style>
 .custom-bg-green {

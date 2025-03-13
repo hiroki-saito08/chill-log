@@ -1,75 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\ChillControllers;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\MypageUpdateRequest;
-use App\Models\Post;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
-use Inertia\Response;
+use App\Services\MypageService;
 
 class MypageController extends Controller
 {
+    protected $mypageService;
 
-    public function index(Request $request): Response
+    public function __construct(MypageService $mypageService)
     {
-        return Inertia::render('ChillPages/Mypage', [
-            'auth' => ['user' => auth()->user()],
-            'posts' => auth()->user()->posts()->latest()->get(),
-            'favorites' => auth()->user()->favorites()->latest()->get(),
-        ]);
+        $this->mypageService = $mypageService;
     }
 
     /**
-     * Display the user's Mypage form.
+     * マイページデータを取得（自分の投稿 & お気に入り）
      */
-    public function edit(Request $request): Response
+    public function index()
     {
-        return Inertia::render('ChillPages/Mypage', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'status' => session('status'),
-        ]);
-    }
-
-    /**
-     * Update the user's Mypage information.
-     */
-    public function update(MypageUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
-
-        // if ($request->user()->isDirty('email')) {
-        //     $request->user()->email_verified_at = null;
-        // }
-
-        $request->user()->save();
-
-        return Redirect::to('/Mypage');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'password' => ['required', 'current-password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return Inertia::render('ChillPages/Mypage', $this->mypageService->getMypageData());
     }
 }
