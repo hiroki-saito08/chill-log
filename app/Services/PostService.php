@@ -2,28 +2,34 @@
 
 namespace App\Services;
 
-use App\Models\Post;
+use App\Repositories\PostRepository;
 
 class PostService
 {
-  public function getAllPosts()
+  protected $postRepository;
+
+  public function __construct(PostRepository $postRepository)
   {
-    return Post::where('status', 'public')
-      ->with(['user', 'images', 'reviews'])
-      ->latest()
-      ->paginate(10);
+    $this->postRepository = $postRepository;
   }
 
-  public function createPost($user, $validatedData)
+  public function getPopularPosts()
   {
-    $post = $user->posts()->create($validatedData);
+    return $this->postRepository->getPopularPosts();
+  }
 
-    if (isset($validatedData['image'])) {
-      $post->images()->create([
-        'image_path' => $validatedData['image']->store('uploads', 'public')
-      ]);
-    }
+  public function getAllPosts()
+  {
+    return $this->postRepository->getAllPosts();
+  }
 
-    return $post;
+  public function getPostById($id)
+  {
+    return $this->postRepository->getPostById($id);
+  }
+
+  public function createPost($user, array $data)
+  {
+    return $this->postRepository->createPost($user, $data);
   }
 }

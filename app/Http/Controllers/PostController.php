@@ -17,12 +17,33 @@ class PostController extends Controller
   }
 
   /**
-   * 投稿を一覧取得
+   * トップページ（Index.vue）
    */
   public function index()
   {
+    return Inertia::render('ChillPages/Index', [
+      'popularPosts' => $this->postService->getPopularPosts(),
+      'posts' => $this->postService->getAllPosts()
+    ]);
+  }
+
+  /**
+   * 投稿一覧ページ（Posts.vue）
+   */
+  public function posts()
+  {
     return Inertia::render('ChillPages/Posts', [
       'posts' => $this->postService->getAllPosts()
+    ]);
+  }
+
+  /**
+   * 投稿詳細ページ（PostDetail.vue）
+   */
+  public function show($id)
+  {
+    return Inertia::render('ChillPages/PostDetail', [
+      'post' => $this->postService->getPostById($id)
     ]);
   }
 
