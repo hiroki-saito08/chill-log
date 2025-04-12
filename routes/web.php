@@ -8,10 +8,6 @@ use App\Http\Controllers\MypageController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\FavoriteController;
 
-// テストページ
-Route::get('/test', function () {
-    return Inertia::render('Test');
-});
 
 // ホーム & 投稿一覧
 Route::get('/', [PostController::class, 'index'])->name('home'); // トップページ

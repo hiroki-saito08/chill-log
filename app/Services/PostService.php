@@ -30,6 +30,7 @@ class PostService
 
   public function createPost($user, array $data)
   {
-    return $this->postRepository->createPost($user, $data);
+    $data['user_id'] = $user->id;
+    return $this->postRepository->createPost($data);
   }
 }
