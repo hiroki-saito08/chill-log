@@ -8,7 +8,8 @@ const toggleMenu = () => {
 };
 
 // `auth.user` を取得して、ログイン状態を判定
-const auth = computed(() => usePage().props);
+const auth = computed(() => usePage().props.auth);
+console.log(auth.value.user);
 
 const closeMenu = (event) => {
   if (!event.target.closest('.menu-toggle') && !event.target.closest('.user-menu')) {
