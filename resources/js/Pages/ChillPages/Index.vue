@@ -25,8 +25,8 @@ const paginationLinks = computed(() => props.posts.links);
     </div>
 
     <div class="search-map">
-      <h3>🗺 エリア選択（地図 & 検索）</h3>
-      <div class="map-container">🗺 地図エリア（実装予定）</div>
+      <h3>🗺 Area selection (Map & Search)</h3>
+      <div class="map-container">🗺 Map area (to be implemented)</div>
     </div>
 
     <div class="container custom-container">
