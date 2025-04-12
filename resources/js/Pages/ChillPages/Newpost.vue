@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { router } from '@inertiajs/vue3';
 
 const newPost = ref({
   name: '',
@@ -15,7 +16,23 @@ const handleFileUpload = (event) => {
 };
 
 const submitPost = () => {
-  console.log('Submitting new post:', newPost.value);
+  router.post('/posts', {
+    title: newPost.value.name,
+    category: newPost.value.category,
+    description: newPost.value.description,
+    visit_time: newPost.value.visitTime.toLowerCase(),
+    status: 'public',
+    latitude: null,
+    longitude: null,
+    image: newPost.value.image,
+  }, {
+    onSuccess: () => {
+      alert('投稿が完了しました！');
+    },
+    onError: (errors) => {
+      console.log(errors);
+    }
+  });
 };
 </script>
 

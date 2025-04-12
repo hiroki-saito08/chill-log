@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
             $table->text('description')->nullable();
-            $table->enum('visit_time', ['朝', '昼', '夕方', '夜'])->nullable();
+            $table->enum('visit_time', ['morning', 'afternoon', 'evening', 'night'])->nullable();
             $table->enum('status', ['public', 'private'])->default('public');
             $table->timestamps();
         });
