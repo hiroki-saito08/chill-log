@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Post;
+use App\Models\Review;
 
 class PostRepository
 {
@@ -24,9 +25,18 @@ class PostRepository
 
   public function getPostById($id)
   {
-    return Post::where('id', $id)
+    $post = Post::where('id', $id)
       ->with(['user', 'images', 'reviews.user'])
       ->firstOrFail();
+
+    $user = auth()->user();
+    $myReview = $user
+      ? Review::where('post_id', $id)->where('user_id', $user->id)->first()
+      : null;
+
+    $post->my_review = $myReview;
+
+    return $post;
   }
 
   public function createPost(array $data)

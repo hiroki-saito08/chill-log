@@ -33,6 +33,7 @@ Route::middleware(['auth'])->group(function () {
     // レビュー関連
     Route::prefix('reviews')->group(function () {
         Route::post('/', [ReviewController::class, 'store'])->name('reviews.store');
+        Route::put('/{review}', [ReviewController::class, 'update'])->name('reviews.update');
         Route::delete('/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
     });
 
