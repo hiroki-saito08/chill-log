@@ -1,40 +1,33 @@
 <script setup>
-import { ref } from 'vue';
+import { computed } from 'vue';
+import { router, usePage } from '@inertiajs/vue3';
 
-const favorites = ref([
-  {
-    id: 1,
-    title: 'Tranquil Garden',
-    date: '2025-02-18',
-    image: '/images/spot-placeholder.png'
-  },
-  {
-    id: 2,
-    title: 'Cozy Café',
-    date: '2025-02-10',
-    image: '/images/spot-placeholder.png'
-  }
-]);
+const favorites = computed(() => usePage().props.favorites);
 
-const removeFavorite = (id) => {
-  console.log(`Remove favorite: ${id}`);
-  favorites.value = favorites.value.filter(fav => fav.id !== id);
+const removeFavorite = (postId) => {
+  console.log(postId)
+  router.delete(route('favorite.destroy', postId));
 };
 </script>
 
 <template>
   <section id="favorite-section" class="section">
-    <h2>Favorite Spots</h2>
+    <h2>Favorite Posts</h2>
 
-    <div class="favorite-list">
-      <div v-for="favorite in favorites" :key="favorite.id" class="favorite-card">
-        <img :src="favorite.image" alt="Spot Thumbnail" class="favorite-image">
-        <div class="favorite-info">
-          <h3>{{ favorite.title }}</h3>
-          <p class="favorite-date">{{ favorite.date }}</p>
-        </div>
-        <div class="favorite-actions">
-          <button class="remove-btn" @click="removeFavorite(favorite.id)">Remove</button>
+    <div v-if="favorites.length === 0">
+      No Posts
+    </div>
+    <div v-else>
+      <div class="favorite-list">
+        <div v-for="favorite in favorites" :key="favorite.id" class="favorite-card">
+          <img :src="favorite.image" alt="Spot Thumbnail" class="favorite-image">
+          <div class="favorite-info">
+            <h3>{{ favorite.title }}</h3>
+            <p class="favorite-date">{{ favorite.date }}</p>
+          </div>
+          <div class="favorite-actions">
+            <button class="remove-btn" @click="removeFavorite(favorite.post_id)">Remove</button>
+          </div>
         </div>
       </div>
     </div>

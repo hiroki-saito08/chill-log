@@ -6,6 +6,7 @@ use App\Http\Requests\PostRequest;
 use App\Services\PostService;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Post;
 
 class PostController extends Controller
 {
@@ -42,8 +43,15 @@ class PostController extends Controller
    */
   public function show($id)
   {
+    $user = auth()->user();
+    $post = $this->postService->getPostById($id);
+
+    $post->is_favorited = $user
+      ? $user->favorites->pluck('post_id')->contains($post->id)
+      : false;
+
     return Inertia::render('ChillPages/PostDetail', [
-      'post' => $this->postService->getPostById($id)
+      'post' => $post
     ]);
   }
 
@@ -54,5 +62,12 @@ class PostController extends Controller
   {
     $this->postService->createPost(Auth::user(), $request->validated());
     return redirect()->route('posts');
+  }
+
+  public function destroy(Post $post)
+  {
+    $post->delete();
+
+    return back(303)->with('message', 'Removed post.');
   }
 }

@@ -3,96 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorefavoriteRequest;
-use App\Http\Requests\UpdatefavoriteRequest;
 use App\Models\Favorite;
+use App\Models\Post;
 use Inertia\Inertia;
 
 class FavoriteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function store(Post $post)
     {
-        //
+        $user = auth()->user();
+        $user->favorites()->firstOrCreate(['post_id' => $post->id]);
+
+        return back(303)->with('message', 'Added to favorites!');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function destroy(Post $post)
     {
-        //
-    }
+        $user = auth()->user();
+        $user->favorites()->where('post_id', $post->id)->delete();
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StorefavoriteRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StorefavoriteRequest $request)
-    {
-        $postId = $request->post_id;
-        $userId = $request->user_id;
-
-        Favorite::create([
-            'post_id' => $postId,
-            'user_id' => $userId
-        ]);
-
-        return redirect()->route('post.show', $postId);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Favorite  $favorite
-     * @return \Illuminate\Http\Response
-     */
-    public function show(favorite $favorite)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\favorite  $favorite
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Favorite $favorite)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdatefavoriteRequest  $request
-     * @param  \App\Models\Favorite  $favorite
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdatefavoriteRequest $request, Favorite $favorite)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Favorite  $favorite
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Favorite $favorite)
-    {
-        $postId = $favorite->post_id;
-        $favorite->delete();
-        return redirect()->route('post.show', $postId);
+        return back(303)->with('message', 'Removed from favorites.');
     }
 }

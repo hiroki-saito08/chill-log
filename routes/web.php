@@ -37,8 +37,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // お気に入り関連
-    Route::post('/favorites', [FavoriteController::class, 'store'])->name('favorites.store');
-    Route::delete('/favorites/{favorite}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
+    Route::post('/favorite/{post}', [FavoriteController::class, 'store'])->name('favorite.store');
+    Route::delete('/favorite/{post}', [FavoriteController::class, 'destroy'])->name('favorite.destroy');
 });
 
 require __DIR__ . '/auth.php';

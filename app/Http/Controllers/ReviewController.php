@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorereviewRequest;
-use App\Http\Requests\UpdatereviewRequest;
+use App\Http\Requests\StoreReviewRequest;
 use App\Models\Review;
 use Inertia\Inertia;
 use App\Models\Image;
@@ -12,82 +11,16 @@ use App\Http\Controllers\ChillControllers\ImageController;
 
 class ReviewController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function store(StoreReviewRequest $request)
     {
-        //
+        $validated = $request->validated();
+        $validated['user_id'] = auth()->id();
+
+        Review::create($validated);
+
+        return redirect()->back();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StorereviewRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StorereviewRequest $request)
-    {
-        $image = $request->file('image');
-
-        $reviewData = Review::create([
-            'post_id' => $request->post_id,
-            'user_id' => $request->user_id,
-            'star' => $request->star,
-            'comment_title' => $request->comment_title,
-            'comment_content' => $request->comment_content
-        ]);
-
-        if (!is_null($image)) {
-            // imageコントローラーで画像のインサートを行う
-            $ImageController =  new ImageController();
-            $ImageController->store($image, null, $reviewData->id);
-        }
-
-        return redirect()->route('post.show', $request->post_id);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Review  $review
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Review $review)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\review  $review
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Review $review)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdatereviewRequest  $request
-     * @param  \App\Models\Review  $review
-     * @return \Illuminate\Http\Response
-     */
     public function update(UpdatereviewRequest $request, Review $review)
     {
         $image = null;
