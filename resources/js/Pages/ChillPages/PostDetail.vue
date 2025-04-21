@@ -3,10 +3,10 @@ import { computed, ref } from 'vue';
 import { router, usePage, useForm } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
 import Footer from '@/Components/Footer.vue';
+import ShareMenu from '@/Components/ShareMenu.vue';
 
 const post = computed(() => usePage().props.post);
 
-console.log(post)
 // お気に入り
 const isFavorited = computed(() => post.value.is_favorited);
 const toggleFavorite = () => {
@@ -108,7 +108,8 @@ const formatDate = (dateStr) => {
         <button class="btn" @click="toggleFavorite">
           {{ isFavorited ? '★' : '☆' }}
         </button>
-        <button class="btn btn-secondary">Share</button>
+
+        <ShareMenu />
       </div>
       <div class="review-button-wrapper">
         <button class="btn" @click="toggleReviewForm">
@@ -258,11 +259,6 @@ const formatDate = (dateStr) => {
   font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
-}
-
-.btn-secondary {
-  background-color: #ccc;
-  color: #333;
 }
 
 .review-section {
