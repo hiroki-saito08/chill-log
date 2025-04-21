@@ -1,204 +1,278 @@
 <script setup>
-import { ref, computed } from 'vue';
-import { usePage } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
+import { router, usePage, useForm } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
 import Footer from '@/Components/Footer.vue';
 
 const post = computed(() => usePage().props.post);
-const isFavorite = ref(false);
-const isReviewModalOpen = ref(false);
-
+console.log(post)
+// お気に入り
+const isFavorited = computed(() => post.value.is_favorited);
 const toggleFavorite = () => {
-  isFavorite.value = !isFavorite.value;
+  console.log(post.value.id)
+  if (isFavorited.value) {
+    router.delete(route('favorite.destroy', post.value.id));
+  } else {
+    router.post(route('favorite.store', post.value.id));
+  }
 };
 
-const openReviewModal = () => {
-  isReviewModalOpen.value = true;
+// レビュー
+const showReviewForm = ref(false);
+const toggleReviewForm = () => {
+  showReviewForm.value = !showReviewForm.value;
 };
 
-const closeReviewModal = () => {
-  isReviewModalOpen.value = false;
-};
+const reviewForm = useForm({
+  post_id: post.value.id,
+  rating_overall: '',
+  rating_silence: '',
+  rating_relax: '',
+  rating_safety: '',
+  comment: '',
+});
 
 const submitReview = () => {
-  console.log("レビューを投稿しました");
-  closeReviewModal();
+  reviewForm.post(route('reviews.store'), {
+    onSuccess: () => {
+      toggleReviewForm(); // モーダル閉じる
+      reviewForm.reset();
+    },
+    onError: (errors) => {
+      console.error('Validation failed:', errors);
+    }
+  });
 };
+
+// 総合レビュー計算
+const averageRatings = computed(() => {
+  const reviews = post.value.reviews;
+  if (!reviews.length) return null;
+
+  const avg = (key) =>
+    reviews.reduce((sum, r) => sum + r[key], 0) / reviews.length;
+
+  return {
+    overall: avg('rating_overall'),
+    relax: avg('rating_relax'),
+    safety: avg('rating_safety'),
+    silence: avg('rating_silence'),
+  };
+});
+
+// 評価を星に変換
+const stars = (score) => {
+  const full = Math.floor(score);
+  const half = score % 1 >= 0.5 ? 1 : 0;
+  return '⭐'.repeat(full) + (half ? '☆' : '');
+};
+
+const formatDate = (dateStr) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString();
+};
+
 </script>
 
 <template>
   <Header />
 
   <div class="container">
-    <div class="spot-image">
-      <img :src="post.image" alt="Spot Image" class="spot-image">
+    <div class="section">
+      <div class="spot-header">
+        <h2>{{ post.title }}</h2>
+        <div class="category">{{ post.category }}</div>
+      </div>
+      <div class="image-area">Image Placeholder</div>
+      <div class="spot-meta">
+        Address: {{ post.address }} ・ Best time: {{ post.visit_time }}
+      </div>
+      <p class="description">
+        {{ post.description }}
+      </p>
+      <div class="map-area">Map Placeholder</div>
+      <div class="buttons">
+        <button class="btn" @click="toggleFavorite">
+          {{ isFavorited ? '★' : '☆' }}
+        </button>
+        <button class="btn btn-secondary">🔗 Share</button>
+      </div>
+      <div class="review-button-wrapper">
+        <button class="btn" @click="toggleReviewForm">💬 Leave a Review</button>
+      </div>
     </div>
-    <h2 class="spot-title">🌿 {{ post.title }}</h2>
-    <p class="spot-details">📍 {{ post.address }}</p>
-    <p class="spot-details">📌 {{ post.category }}</p>
-    <p class="spot-details">{{ post.description }}</p>
 
-    <div class="map-container">
-      Google Maps エリア
-    </div>
+    <div class="section review-section">
+      <h3>Reviews</h3>
+      <p v-if="!post.reviews.length">No reviews yet.</p>
 
-    <div class="buttons">
-      <button class="btn" @click="toggleFavorite">
-        {{ isFavorite ? '⭐ お気に入り済み' : '⭐ お気に入りに追加' }}
-      </button>
-      <button class="btn">🔗 シェア</button>
-    </div>
+      <p class="review-summary" v-else-if="averageRatings">
+        Overall: {{ stars(averageRatings.overall) }} ({{ averageRatings.overall.toFixed(1) }}) 【
+        Relax: {{ stars(averageRatings.relax) }} ・
+        Safety: {{ stars(averageRatings.safety) }} ・
+        Silence: {{ stars(averageRatings.silence) }} 】
+      </p>
 
-    <button class="btn btn-review" @click="openReviewModal">💬 レビューを投稿</button>
+      <div class="review" v-for="review in post.reviews" :key="review.id">
+        <div class="review-header"> {{ review.user.name }} - {{ formatDate(review.created_at) }}</div>
+        <p>Overall {{ stars(review.rating_overall) }} 【 Relax: {{ stars(review.rating_relax) }} ・ Safety: {{ stars(review.rating_safety) }} ・ Silence: {{ stars(review.rating_silence) }} 】 </p>
+        <p class="review-text">{{ review.comment }}</p>
+      </div>
 
-    <div v-if="isReviewModalOpen" class="modal">
-      <div class="modal-content">
-        <span class="close" @click="closeReviewModal">&times;</span>
-        <h3>レビューを投稿</h3>
-        <div class="form-group">
-          <label>総合評価</label>
-          <select>
-            <option>⭐⭐⭐⭐⭐</option>
-            <option>⭐⭐⭐⭐</option>
-            <option>⭐⭐⭐</option>
-            <option>⭐⭐</option>
-            <option>⭐</option>
+      <div class="review-form" v-show="showReviewForm" id="reviewForm">
+        <div class="form-group" v-for="field in ['rating_overall', 'rating_relax', 'rating_safety', 'rating_silence']" :key="field">
+          <label>{{ field.replace('rating_', '').charAt(0).toUpperCase() + field.replace('rating_', '').slice(1) }}</label>
+          <select v-model="reviewForm[field]">
+            <option :value="5">⭐⭐⭐⭐⭐</option>
+            <option :value="4">⭐⭐⭐⭐</option>
+            <option :value="3">⭐⭐⭐</option>
+            <option :value="2">⭐⭐</option>
+            <option :value="1">⭐</option>
           </select>
         </div>
         <div class="form-group">
-          <label>レビュー内容</label>
-          <textarea placeholder="レビューを入力..."></textarea>
+          <label>Comment</label>
+          <textarea v-model="reviewForm.comment" rows="4" placeholder="Write your review...(max 500 characters)"></textarea>
         </div>
-        <button class="btn" @click="submitReview">投稿</button>
+        <p>{{ reviewForm.comment.length }} / 500 characters</p>
+
+        <button class="btn" @click="submitReview">Submit</button>
+        <p v-if="reviewForm.errors.comment" class="text-danger">
+          {{ reviewForm.errors.comment }}
+        </p>
       </div>
     </div>
-
-    <div class="review-section">
-      <h3>レビュー一覧</h3>
-      <p class="review-summary">総合評価: ⭐⭐⭐⭐☆ (4.2)</p>
-      <div v-for="review in post.reviews" :key="review.id" class="review">
-        <div class="review-header">
-          {{ review.rating }} ⭐ {{ review.user }} - {{ review.date }}
-        </div>
-        <p>{{ review.comment }}</p>
-      </div>
-    </div>
-
-    <router-link :to="'/'" class="back-button">⬅️ 前のページに戻る</router-link>
   </div>
 
   <Footer />
 </template>
 
 <style scoped>
-/* レイアウト */
 .container {
-  width: 80%;
   max-width: 1000px;
-  margin: 60px auto;
+  margin: 0 auto;
+  margin-top: 40px;
+  margin-bottom: 40px;
   background: white;
-  padding: 30px;
+  padding: 40px;
   border-radius: 15px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* 画像エリア */
-.spot-image {
-  width: 100%;
-  height: 250px;
+.section {
+  background: #f4f4f4;
+  padding: 30px;
+  border-left: 10px solid #88B04B;
   border-radius: 10px;
-  text-align: center;
-  object-fit: cover;
+  margin-bottom: 40px;
 }
 
-/* タイトル・詳細 */
-.spot-title {
-  font-size: 24px;
-  font-weight: bold;
+.spot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.spot-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.category {
+  background: #88B04B;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.spot-meta {
+  margin: 10px 0;
+  color: #555;
+  font-style: italic;
+}
+
+.image-area {
+  height: 250px;
+  background: #ddd;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+}
+
+.map-area {
+  height: 250px;
+  background: #bbb;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #444;
+}
+
+.description {
+  margin: 10px 0 20px;
+  color: #333;
+  line-height: 1.6;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
   margin-top: 20px;
+  flex-wrap: wrap;
 }
 
-.spot-details {
-  font-size: 16px;
+.review-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
   margin-top: 10px;
 }
 
-/* マップエリア */
-.map-container {
-  width: 100%;
-  height: 300px;
-  background: #ddd;
-  border-radius: 10px;
-  text-align: center;
-  line-height: 300px;
-  font-size: 18px;
-  color: #666;
-  margin-top: 20px;
-}
-
-/* ボタン */
-.buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
-
 .btn {
-  background: #88B04B;
+  background-color: #88B04B;
   color: white;
+  border: none;
   padding: 10px 20px;
   font-size: 16px;
-  border: none;
   border-radius: 5px;
   cursor: pointer;
-  text-align: center;
 }
 
-.btn:hover {
-  background: #76A03A;
+.btn-secondary {
+  background-color: #ccc;
+  color: #333;
 }
 
-/* モーダル */
-.modal {
-  display: flex;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 50%;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.close {
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* レビュー */
 .review-section {
   margin-top: 40px;
 }
 
+.review-summary {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
 .review {
-  background: #f9f9f9;
+  background: #fff;
   padding: 15px;
   margin-top: 10px;
   border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   line-height: 1.6;
+}
+
+.review-text {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .review-header {
@@ -206,16 +280,30 @@ const submitReview = () => {
   margin-bottom: 5px;
 }
 
-/* 戻るボタン */
-.back-button {
+.review-form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
   display: block;
-  margin: 30px auto;
-  text-align: center;
-  background: #ccc;
-  color: #333;
-  padding: 10px 20px;
-  font-size: 16px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
   border-radius: 5px;
-  text-decoration: none;
+  border: 1px solid #ccc;
+  font-size: 16px;
 }
 </style>

@@ -15,18 +15,18 @@ const navigate = (section) => {
 </script>
 
 <template>
-  <div class="main-container">
+  <div class="mypage-main-container">
     <Header />
 
-    <div class="content-container">
-      <nav class="sidebar">
+    <div class="mypage-content-container">
+      <nav class="mypage-sidebar">
         <a @click="navigate('profile-section')" :class="{ active: activeSection === 'profile-section' }">Profile</a>
         <a @click="navigate('new-post-section')" :class="{ active: activeSection === 'new-post-section' }">New post</a>
         <a @click="navigate('my-posts-section')" :class="{ active: activeSection === 'my-posts-section' }">My posts</a>
         <a @click="navigate('favorite-section')" :class="{ active: activeSection === 'favorite-section' }">Favorite</a>
       </nav>
 
-      <main class="content">
+      <main class="mypage-content">
         <Profile v-if="activeSection === 'profile-section'" />
         <Newpost v-if="activeSection === 'new-post-section'" />
         <Myposts v-if="activeSection === 'my-posts-section'" />
@@ -40,7 +40,7 @@ const navigate = (section) => {
 
 <style scoped>
 /* レイアウト全体を調整 */
-.main-container {
+.mypage-main-container {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -48,13 +48,13 @@ const navigate = (section) => {
 }
 
 /* ヘッダーの影響を回避するための調整 */
-.content-container {
+.mypage-content-container {
   display: flex;
   flex-grow: 1;
 }
 
 /* サイドバーの調整 */
-.sidebar {
+.mypage-sidebar {
   width: 200px;
   background-color: #88B04B;
   padding: 20px;
@@ -63,7 +63,7 @@ const navigate = (section) => {
   gap: 15px;
 }
 
-.sidebar a {
+.mypage-sidebar a {
   color: white;
   text-decoration: none;
   padding: 10px;
@@ -77,7 +77,7 @@ const navigate = (section) => {
 }
 
 /* コンテンツエリアの調整 */
-.content {
+.mypage-content {
   flex-grow: 1;
   max-width: 800px; /* フォームが横幅いっぱいにならないように */
   margin: auto;

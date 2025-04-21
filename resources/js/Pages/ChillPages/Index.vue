@@ -58,21 +58,8 @@ const paginationLinks = computed(() => props.posts.links);
 <style>
 
   .container {
-    width: 95%;
-    max-width: 1000px;
-    margin: 60px auto;
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  }
-
-  .section {
-    background: #88B04B;
-    color: white;
-    padding: 20px;
-    margin-top: 30px;
-    border-radius: 10px;
+    margin-top: 60px;
+    margin-bottom: 60px;
   }
 
   .search-bar input {

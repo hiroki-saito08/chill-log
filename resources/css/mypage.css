@@ -1,7 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+/* 共通セクション */
 
 .container {
   max-width: 1000px;

@@ -1,22 +1,10 @@
 <script setup>
 import { ref, computed } from 'vue';
+import { router, usePage } from '@inertiajs/vue3';
+
+const posts = computed(() => usePage().props.posts);
 
 const sortOption = ref('newest');
-const posts = ref([
-  {
-    id: 1,
-    title: 'Peaceful Forest Park',
-    date: '2025-02-20',
-    image: '/images/spot-placeholder.png'
-  },
-  {
-    id: 2,
-    title: 'Calm Riverside',
-    date: '2025-02-15',
-    image: '/images/spot-placeholder.png'
-  }
-]);
-
 const sortedPosts = computed(() => {
   return [...posts.value].sort((a, b) => {
     return sortOption.value === 'newest'
@@ -30,7 +18,7 @@ const editPost = (id) => {
 };
 
 const deletePost = (id) => {
-  console.log(`Delete post: ${id}`);
+  router.delete(route('posts.destroy', id));
 };
 </script>
 
@@ -38,23 +26,28 @@ const deletePost = (id) => {
   <section id="my-posts-section" class="section">
     <h2>My Posts</h2>
 
-    <div class="filter-container">
-      <select id="sort" v-model="sortOption">
-        <option value="newest">Newest First</option>
-        <option value="oldest">Oldest First</option>
-      </select>
+    <div v-if="posts.length === 0">
+      No Posts
     </div>
+    <div v-else>
+      <div class="filter-container">
+        <select id="sort" v-model="sortOption">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+        </select>
+      </div>
 
-    <div class="post-list">
-      <div v-for="post in sortedPosts" :key="post.id" class="post-card">
-        <img :src="post.image" alt="Spot Thumbnail" class="post-image">
-        <div class="post-info">
-          <h3>{{ post.title }}</h3>
-          <p class="post-date">{{ post.date }}</p>
-        </div>
-        <div class="post-actions">
-          <button class="edit-btn" @click="editPost(post.id)">Edit</button>
-          <button class="delete-btn" @click="deletePost(post.id)">Delete</button>
+      <div class="post-list">
+        <div v-for="post in sortedPosts" :key="post.id" class="post-card">
+          <img :src="post.image" alt="Spot Thumbnail" class="post-image">
+          <div class="post-info">
+            <h3>{{ post.title }}</h3>
+            <p class="post-date">{{ post.date }}</p>
+          </div>
+          <div class="post-actions">
+            <button class="edit-btn" @click="editPost(post.id)">Edit</button>
+            <button class="delete-btn" @click="deletePost(post.id)">Delete</button>
+          </div>
         </div>
       </div>
     </div>
