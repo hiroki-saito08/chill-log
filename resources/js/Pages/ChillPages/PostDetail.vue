@@ -5,6 +5,7 @@ import Header from '@/Components/Header.vue';
 import Footer from '@/Components/Footer.vue';
 
 const post = computed(() => usePage().props.post);
+
 console.log(post)
 // お気に入り
 const isFavorited = computed(() => post.value.is_favorited);
@@ -18,6 +19,7 @@ const toggleFavorite = () => {
 };
 
 // レビュー
+const isReviewed = computed(() => post.value.my_review !== null);
 const showReviewForm = ref(false);
 const toggleReviewForm = () => {
   showReviewForm.value = !showReviewForm.value;
@@ -25,23 +27,34 @@ const toggleReviewForm = () => {
 
 const reviewForm = useForm({
   post_id: post.value.id,
-  rating_overall: '',
-  rating_silence: '',
-  rating_relax: '',
-  rating_safety: '',
-  comment: '',
+  rating_overall: post.value.my_review?.rating_overall || 5,
+  rating_silence: post.value.my_review?.rating_silence || 5,
+  rating_safety: post.value.my_review?.rating_safety || 5,
+  rating_relax: post.value.my_review?.rating_relax || 5,
+  comment: post.value.my_review?.comment || ''
 });
 
 const submitReview = () => {
-  reviewForm.post(route('reviews.store'), {
-    onSuccess: () => {
-      toggleReviewForm(); // モーダル閉じる
-      reviewForm.reset();
-    },
-    onError: (errors) => {
-      console.error('Validation failed:', errors);
-    }
-  });
+  if (isReviewed.value) {
+    reviewForm.put(route('reviews.update', post.value.my_review.id), {
+      onSuccess: () => {
+        toggleReviewForm();
+      },
+      onError: (errors) => {
+        console.error('Validation failed:', errors);
+      }
+    });
+  } else {
+    reviewForm.post(route('reviews.store'), {
+      onSuccess: () => {
+        toggleReviewForm();
+        reviewForm.reset();
+      },
+      onError: (errors) => {
+        console.error('Validation failed:', errors);
+      }
+    });
+  }
 };
 
 // 総合レビュー計算
@@ -95,10 +108,12 @@ const formatDate = (dateStr) => {
         <button class="btn" @click="toggleFavorite">
           {{ isFavorited ? '★' : '☆' }}
         </button>
-        <button class="btn btn-secondary">🔗 Share</button>
+        <button class="btn btn-secondary">Share</button>
       </div>
       <div class="review-button-wrapper">
-        <button class="btn" @click="toggleReviewForm">💬 Leave a Review</button>
+        <button class="btn" @click="toggleReviewForm">
+          {{ isReviewed ? 'Edit Review' : 'Leave a Review' }}
+        </button>
       </div>
     </div>
 

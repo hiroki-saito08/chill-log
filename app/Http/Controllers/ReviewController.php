@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReviewRequest;
+use App\Http\Requests\UpdateReviewRequest;
 use App\Models\Review;
 use Inertia\Inertia;
 use App\Models\Image;
@@ -18,32 +19,15 @@ class ReviewController extends Controller
 
         Review::create($validated);
 
-        return redirect()->back();
+        return redirect()->back()->with('message', 'Review stored successfully!');
     }
 
-    public function update(UpdatereviewRequest $request, Review $review)
+    public function update(UpdateReviewRequest $request, Review $review)
     {
-        $image = null;
+        $this->authorize('update', $review);
 
-        if ($request->form['deleteImage']) {
-            Image::where('post_id', $request->post_id)->delete();
-        }
-        if (isset($request->form['image'])) {
-            $image = $request->form['image'];
-        };
-
-        $review->update([
-            'star' => $request->form['star'],
-            'comment_title' => $request->form['comment_title'],
-            'comment_content' => $request->form['comment_content']
-        ]);
-
-        if (!is_null($image)) {
-            $ImageController =  new ImageController();
-            $ImageController->update($image, null, $review->id);
-        }
-
-        return redirect()->route('post.show', $review->post_id);
+        $review->update($request->validated());
+        return redirect()->back()->with('message', 'Review updated successfully!');
     }
 
     /**
@@ -55,6 +39,6 @@ class ReviewController extends Controller
     public function destroy(Review $review)
     {
         $review->delete();
-        return redirect()->back();
+        return redirect()->back()->with('message', 'Review destroyed successfully!');
     }
 }
