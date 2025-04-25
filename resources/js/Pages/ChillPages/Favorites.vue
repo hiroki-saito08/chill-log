@@ -4,7 +4,7 @@ import { router, usePage } from '@inertiajs/vue3';
 
 const favorites = computed(() => usePage().props.favorites);
 
-const removeFavorite = (postId) => {
+const deletePost = (postId) => {
   console.log(postId)
   router.delete(route('favorite.destroy', postId));
 };
@@ -26,7 +26,7 @@ const removeFavorite = (postId) => {
             <p class="favorite-date">{{ favorite.date }}</p>
           </div>
           <div class="favorite-actions">
-            <button class="remove-btn" @click="removeFavorite(favorite.post_id)">Remove</button>
+            <button class="delete-btn" @click="deletePost(favorite.post_id)">Delete</button>
           </div>
         </div>
       </div>
@@ -86,10 +86,11 @@ h2 {
   gap: 10px;
 }
 
-.remove-btn {
+.delete-btn {
   background: #dc3545;
   color: white;
   padding: 5px 10px;
+  border: none;
   border-radius: 5px;
   cursor: pointer;
 }

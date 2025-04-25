@@ -17,6 +17,7 @@ class MypageService
   public function getMypageData()
   {
     return [
+      'user' => Auth::user(),
       'posts' => $this->mypageRepository->getUserPosts(Auth::id()),
       'favorites' => $this->mypageRepository->getUserFavorites(Auth::id())
     ];

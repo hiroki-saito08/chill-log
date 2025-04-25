@@ -167,6 +167,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $name
+ * @property string|null $bio
  * @property string $email
  * @property string|null $password
  * @property string|null $auth_provider
@@ -188,6 +189,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
  * @method static \Illuminate\Database\Eloquent\Builder|User whereAuthId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereAuthProvider($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereBio($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
