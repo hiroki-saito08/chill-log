@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Services\MypageService;
 use App\Http\Requests\UpdateProfileRequest;
+use Illuminate\Support\Facades\Hash;
 
 class MypageController extends Controller
 {
@@ -26,10 +27,15 @@ class MypageController extends Controller
     public function update(UpdateProfileRequest $request)
     {
         $user = auth()->user();
-        $user->bio = $request->input('bio');
 
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+        if ($request->boolean('clear_bio')) {
+            $user->bio = '';
+        } elseif ($request->filled('bio')) {
+            $user->bio = $request->input('bio');
+        }
+
+        if ($request->filled('new_password')) {
+            $user->password = Hash::make($request->input('new_password'));
         }
 
         if ($request->hasFile('profile_image')) {
@@ -39,6 +45,6 @@ class MypageController extends Controller
 
         $user->save();
 
-        return back()->with('success', 'Profile updated successfully.');
+        return back()->with('message', 'Profile updated successfully.');
     }
 }
