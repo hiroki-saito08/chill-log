@@ -47,8 +47,8 @@ function closeModal() {
 <template>
   <div>
     <h3>Profile</h3>
-      <div v-if="user.profile_image_url" class="text-center mt-3">
-        <img :src="user.profile_image_url" alt="Profile Image" class="profile-pic" />
+      <div v-if="user.profile_image" class="text-center mt-5">
+        <img :src="`/storage/${user.profile_image}`" alt="Profile Image" class="profile-pic" />
       </div>
       <div v-else class="profile-pic text-center mt-3"></div>
 
