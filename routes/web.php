@@ -20,6 +20,7 @@ Route::post('/posts', [PostController::class, 'store'])->name('posts.store'); //
 Route::middleware(['auth'])->group(function () {
     // マイページ関連
     Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
+    Route::patch('/mypage', [MypageController::class, 'update'])->name('mypage.update');
 
     // 投稿関連
     Route::prefix('posts')->group(function () {

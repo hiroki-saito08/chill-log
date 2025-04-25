@@ -14,7 +14,7 @@ const sortedPosts = computed(() => {
 });
 
 const editPost = (id) => {
-  console.log(`Edit post: ${id}`);
+  router.get(route('posts.show', id));
 };
 
 const deletePost = (id) => {
