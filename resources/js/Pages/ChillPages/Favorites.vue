@@ -5,8 +5,9 @@ import { router, usePage } from '@inertiajs/vue3';
 const favorites = computed(() => usePage().props.favorites);
 
 const deletePost = (postId) => {
-  console.log(postId)
-  router.delete(route('favorite.destroy', postId));
+  if (confirm('Are you sure you want to remove this post?')) {
+    router.delete(route('favorite.destroy', postId));
+  }
 };
 </script>
 

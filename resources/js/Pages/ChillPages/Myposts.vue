@@ -18,7 +18,9 @@ const editPost = (id) => {
 };
 
 const deletePost = (id) => {
-  router.delete(route('posts.destroy', id));
+  if (confirm('Are you sure you want to remove this post?')) {
+    router.delete(route('posts.destroy', id));
+  }
 };
 </script>
 
