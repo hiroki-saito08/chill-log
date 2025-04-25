@@ -1,105 +1,135 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { watch, computed, ref } from 'vue'
+import { useForm, usePage } from '@inertiajs/vue3'
 
-const isEditing = ref(null);
-const profile = ref({
-  name: 'John Doe',
-  email: 'user@example.com',
-  bio: 'Lover of peaceful spots and cozy cafes.',
-});
+const user = computed(() => usePage().props.auth.user);
+const showModal = ref(false)
 
-const originalProfile = ref({ ...profile.value });
+const flashMessage = ref(null)
 
-const toggleEdit = (field) => {
-  if (isEditing.value === field) {
-    originalProfile.value[field] = profile.value[field];
-    isEditing.value = null;
-  } else {
-    isEditing.value = field;
-  }
-};
+watch(
+  () => usePage().props.flash?.message,
+  (newMsg) => {
+    flashMessage.value = newMsg
+    if (newMsg) {
+      setTimeout(() => {
+        flashMessage.value = null
+      }, 3000)
+    }
+  },
+  { immediate: true }
+)
+const form = useForm({
+  bio: user.bio ?? '',
+  clear_bio: false,
+  profile_image: null,
+  new_password: '',
+  new_password_confirmation: ''
+})
 
-const cancelEdit = (field) => {
-  profile.value[field] = originalProfile.value[field];
-  isEditing.value = null;
-};
-
-const showPasswordForm = ref(false);
-const togglePasswordSection = () => {
-  showPasswordForm.value = !showPasswordForm.value;
-};
-
-const passwordButtonClass = computed(() => {
-  return showPasswordForm.value ? 'cancel-btn' : 'edit-btn';
-});
-
-const handleProfilePictureChange = () => {
-  console.log('Profile picture change clicked');
-};
+function handleFileChange(e) {
+  form.profile_image = e.target.files[0]
+}
+function submit() {
+  form.post(route('mypage.update'), {
+    forceFormData: true,
+    onSuccess: () => {
+      showModal.value = false
+    },
+  })
+}
+function closeModal() {
+  showModal.value = false
+  form.reset()
+}
 </script>
 
 <template>
-  <section id="profile-section" class="profile-section section">
-    <h2>Account Settings</h2>
-    <div class="profile-pic"></div>
-
-    <div id="public-section" class="public-section">
-      <div class="form-group">
-        <label>Profile Picture</label>
-        <button class="edit-btn" @click="handleProfilePictureChange">Change</button>
+  <div>
+    <h3>Profile</h3>
+      <div v-if="user.profile_image_url" class="text-center mt-3">
+        <img :src="user.profile_image_url" alt="Profile Image" class="profile-pic" />
       </div>
+      <div v-else class="profile-pic text-center mt-3"></div>
 
-      <div class="form-group">
-        <label>Name</label>
-        <span v-if="isEditing !== 'name'">{{ profile.name }}</span>
-        <input v-if="isEditing === 'name'" v-model="profile.name" type="text">
-        <div class="form-buttons">
-          <button v-if="isEditing === 'name'" class="cancel-btn" @click="cancelEdit('name')">Cancel</button>
-          <button class="edit-btn" @click="toggleEdit('name')">{{ isEditing === 'name' ? 'Save' : 'Edit' }}</button>
+    <div class="d-flex justify-content-center">
+      <div class="card p-4 w-100" style="max-width: 600px;">
+        <div class="row mb-2">
+          <div class="col-4 fw-bold text-start">Name:</div>
+          <div class="col-8 text-start">{{ user.name }}</div>
         </div>
-      </div>
-
-      <div class="form-group">
-        <label>Email</label>
-        <span v-if="isEditing !== 'email'">{{ profile.email }}</span>
-        <input v-if="isEditing === 'email'" v-model="profile.email" type="email">
-        <div class="form-buttons">
-          <button v-if="isEditing === 'email'" class="cancel-btn" @click="cancelEdit('email')">Cancel</button>
-          <button class="edit-btn" @click="toggleEdit('email')">{{ isEditing === 'email' ? 'Save' : 'Edit' }}</button>
+        <div class="row mb-2">
+          <div class="col-4 fw-bold text-start">Email:</div>
+          <div class="col-8 text-start">{{ user.email }}</div>
         </div>
-      </div>
+        <div class="row mb-2">
+          <div class="col-4 fw-bold text-start">Bio:</div>
+          <div class="col-8 text-start">{{ user.bio }}</div>
+        </div>
 
-      <div class="form-group">
-        <label>Bio</label>
-        <span v-if="isEditing !== 'bio'">{{ profile.bio }}</span>
-        <textarea v-if="isEditing === 'bio'" v-model="profile.bio"></textarea>
-        <div class="form-buttons">
-          <button v-if="isEditing === 'bio'" class="cancel-btn" @click="cancelEdit('bio')">Cancel</button>
-          <button class="edit-btn" @click="toggleEdit('bio')">{{ isEditing === 'bio' ? 'Save' : 'Edit' }}</button>
+        <div v-if="user.profile_image_url" class="mb-3">
+          <img :src="user.profile_image_url" class="img-thumbnail" alt="Profile Image" style="max-width: 200px;" />
+        </div>
+
+        <button class="btn mt-5" @click="showModal = true">Edit Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <div v-if="flashMessage" class="alert alert-success text-center mt-3">
+    {{ flashMessage }}
+  </div>
+  <!-- 編集モーダル -->
+  <div v-if="showModal" class="modal-backdrop-custom">
+    <div class="modal d-block" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Profile</h5>
+            <button type="button" class="btn-close" @click="closeModal"></button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="submit" enctype="multipart/form-data">
+              <div class="mb-3">
+                <label class="form-label">Bio</label>
+                <textarea v-model="form.bio" class="form-control" rows="3"></textarea>
+                <div class="form-check mt-1">
+                  <label class="form-check-label" for="clearBio">Clear bio (delete)</label>
+                  <input type="checkbox" class="form-check-input" id="clearBio" v-model="form.clear_bio">
+                </div>
+                <div class="text-danger" v-if="form.errors.bio">{{ form.errors.bio }}</div>
+              </div>
+
+              <div class="mb-4">
+                <h4 class="form-label">Profile Image</h4>
+                <input type="file" @change="handleFileChange" class="form-control" />
+                <div class="text-danger" v-if="form.errors.profile_image">{{ form.errors.profile_image }}</div>
+              </div>
+
+              <div class="password-edit mt-4">
+                <h4>Password</h4>
+                <div class="mt-4 mb-4">
+                  <label class="form-label">New Password</label>
+                  <input type="password" v-model="form.new_password" class="form-control" />
+                  <div class="text-danger" v-if="form.errors.new_password">{{ form.errors.new_password }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Confirm Password</label>
+                  <input type="password" v-model="form.new_password_confirmation" class="form-control" />
+                </div>
+              </div>
+
+              <div class="modal-footer px-0">
+                <button type="button" class="btn btn-secondary" @click="closeModal">Cancel</button>
+                <button type="submit" class="btn btn-success">Save Changes</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-
-    <button :class="passwordButtonClass" @click="togglePasswordSection">
-      {{ showPasswordForm ? 'Cancel' : 'Edit Password' }}
-    </button>
-
-    <div v-if="showPasswordForm" class="password-section">
-      <div class="form-group">
-        <label for="current-password">Current Password</label>
-        <input type="password" id="current-password" placeholder="Current Password">
-      </div>
-      <div class="form-group">
-        <label for="new-password">New Password</label>
-        <input type="password" id="new-password" placeholder="New Password">
-      </div>
-      <div class="form-group">
-        <label for="confirm-password">Confirm Password</label>
-        <input type="password" id="confirm-password" placeholder="Confirm Password">
-      </div>
-      <button type="submit" class="edit-btn">Save</button>
-    </div>
-  </section>
+  </div>
 </template>
 
 <style scoped>
@@ -107,7 +137,17 @@ const handleProfilePictureChange = () => {
   text-align: center;
 }
 
+.public-section {
+  margin-bottom: 50px;
+}
+
+.password-section {
+  margin-top: 15px;
+  margin-bottom: 30px;
+}
+
 .profile-pic {
+  margin: 0 auto;
   width: 100px;
   height: 100px;
   border-radius: 50%;
@@ -116,24 +156,6 @@ const handleProfilePictureChange = () => {
   margin-bottom: 30px;
 }
 
-.form-group {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px; /* スペースを開ける */
-}
-
-.form-group label {
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-.form-buttons button {
-  margin: 5px
-}
-
-.edit-btn,
 .cancel-btn {
   background-color: #6C7A89;
   color: white;
@@ -146,25 +168,20 @@ const handleProfilePictureChange = () => {
 .edit-btn {
   background-color: #88B04B;
   color: white;
-}
-
-.public-section {
-  margin-bottom: 50px;
-}
-
-.password-section {
-  margin-top: 15px;
-  margin-bottom: 30px;
-}
-
-.save-btn {
-  background: #88B04B;
-  color: white;
-  padding: 10px 15px;
+  padding: 8px 15px;
+  border: none;
   border-radius: 5px;
-  font-size: 14px;
   cursor: pointer;
-  display: block;
-  margin: auto;
+}
+
+/* モーダルの背景 */
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1050;
 }
 </style>

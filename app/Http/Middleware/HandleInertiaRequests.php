@@ -36,8 +36,12 @@ class HandleInertiaRequests extends Middleware
                     'id' => $request->user()->id,
                     'name' => $request->user()->name,
                     'email' => $request->user()->email,
+                    'bio' => $request->user()->bio,
                     'profile_image' => $request->user()->profile_image,
                 ] : null,
+            ],
+            'flash' => [
+                'message' => fn() => $request->session()->get('message'),
             ],
         ]);
     }

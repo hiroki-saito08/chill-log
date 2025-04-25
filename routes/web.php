@@ -20,14 +20,14 @@ Route::post('/posts', [PostController::class, 'store'])->name('posts.store'); //
 Route::middleware(['auth'])->group(function () {
     // マイページ関連
     Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
-    Route::patch('/mypage', [MypageController::class, 'update'])->name('mypage.update');
+    Route::post('/mypage', [MypageController::class, 'update'])->name('mypage.update');
 
     // 投稿関連
     Route::prefix('posts')->group(function () {
         Route::post('/', [PostController::class, 'store'])->name('posts.store');
         Route::get('/own', [PostController::class, 'own'])->name('posts.own');
         Route::get('/favorites', [PostController::class, 'favorite'])->name('posts.favorite');
-        Route::put('/{post}', [PostController::class, 'update'])->name('posts.update');
+        Route::post('/{post}', [PostController::class, 'update'])->name('posts.update');
         Route::delete('/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     });
 
