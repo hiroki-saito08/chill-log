@@ -32,19 +32,63 @@ const paginationLinks = computed(() => props.posts.links);
     <div class="container custom-container">
 
       <div class="section">
-        <h3>🏆 Popular Chill Spots</h3>
-        <div class="list-group">
-          <Link v-for="post in popularPosts" :key="post.id" :href="route('posts.show', post.id)" class="list-group-item">
-            {{ post.title }}
+        <h3 class="mb-4">🏆 Popular Chill Spots</h3>
+        <div v-for="post in popularPosts" :key="post.id" class="mb-3">
+          <Link
+            :href="route('posts.show', { post: post.id })"
+            class="text-decoration-none text-dark"
+          >
+            <div class="card">
+              <div class="row g-0">
+                <div class="col-4 d-flex align-items-center justify-content-center p-3">
+                  <img
+                    v-if="post.images.length"
+                    :src="`/storage/${post.images[0].image_path}`"
+                    alt="Post Image"
+                    class="img-fluid rounded"
+                    style="height: 120px; object-fit: cover;"
+                  />
+                  <div v-else class="text-muted small">No Image</div>
+                </div>
+                <div class="col-8">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.description }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </Link>
         </div>
       </div>
 
       <div class="section">
-        <h3>🆕 New Chill Spots</h3>
-        <div class="list-group">
-          <Link v-for="post in posts.data" :key="post.id" :href="route('posts.show', post.id)" class="list-group-item">
-            {{ post.title }}
+        <h3 class="mb-4">🆕 New Chill Spots</h3>
+        <div v-for="post in posts" :key="post.id" class="mb-3">
+          <Link
+            :href="route('posts.show', { post: post.id })"
+            class="text-decoration-none text-dark"
+          >
+            <div class="card">
+              <div class="row g-0">
+                <div class="col-4 d-flex align-items-center justify-content-center p-3">
+                  <img
+                    v-if="post.images.length"
+                    :src="`/storage/${post.images[0].image_path}`"
+                    alt="Post Image"
+                    class="img-fluid rounded"
+                    style="height: 120px; object-fit: cover;"
+                  />
+                  <div v-else class="text-muted small">No Image</div>
+                </div>
+                <div class="col-8">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.description }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </Link>
         </div>
       </div>

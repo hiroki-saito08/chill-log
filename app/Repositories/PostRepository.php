@@ -9,8 +9,19 @@ class PostRepository
 {
   public function getPopularPosts()
   {
-    return Post::withCount('reviews')
+    return Post::where('status', 'public')
+      ->with(['user', 'images', 'reviews'])
+      ->withCount('reviews')
       ->orderByDesc('reviews_count')
+      ->take(5)
+      ->get();
+  }
+
+  public function getNewPosts()
+  {
+    return Post::where('status', 'public')
+      ->with(['user', 'images', 'reviews'])
+      ->latest()
       ->take(5)
       ->get();
   }

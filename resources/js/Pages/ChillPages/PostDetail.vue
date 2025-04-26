@@ -96,7 +96,21 @@ const formatDate = (dateStr) => {
         <h2>{{ post.title }}</h2>
         <div class="category">{{ post.category }}</div>
       </div>
-      <div class="image-area">Image Placeholder</div>
+
+      <div class="mb-4">
+        <div
+          v-for="image in post.images"
+          :key="image.id"
+          class="mb-3"
+        >
+          <img
+            :src="`/storage/${image.image_path}`"
+            alt="Post Image"
+            class="img-fluid w-100 rounded"
+          />
+        </div>
+      </div>
+
       <div class="spot-meta">
         Address: {{ post.address }} ・ Best time: {{ post.visit_time }}
       </div>

@@ -21,6 +21,11 @@ class PostService
     return $this->postRepository->getPopularPosts();
   }
 
+  public function getNewPosts()
+  {
+    return $this->postRepository->getNewPosts();
+  }
+
   public function getAllPosts()
   {
     return $this->postRepository->getAllPosts();

@@ -21,10 +21,19 @@ const deletePost = (postId) => {
     <div v-else>
       <div class="favorite-list">
         <div v-for="favorite in favorites" :key="favorite.id" class="favorite-card">
-          <img :src="favorite.image" alt="Spot Thumbnail" class="favorite-image">
+          <div class="col-4 d-flex align-items-center justify-content-center">
+            <img
+              v-if="favorite.post.images.length"
+              :src="`/storage/${favorite.post.images[0].image_path}`"
+              alt="Favorite Image"
+              class="img-fluid rounded"
+              style="height: 120px; object-fit: cover;"
+            />
+            <div v-else class="text-muted small">No Image</div>
+          </div>
           <div class="favorite-info">
-            <h3>{{ favorite.title }}</h3>
-            <p class="favorite-date">{{ favorite.date }}</p>
+            <h3>{{ favorite.post.title }}</h3>
+            <p class="favorite-date">{{ favorite.post.description }}</p>
           </div>
           <div class="favorite-actions">
             <button class="delete-btn" @click="deletePost(favorite.post_id)">Delete</button>
