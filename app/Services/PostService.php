@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Repositories\PostRepository;
 use App\Models\Image;
+use App\Models\Post;
+use Illuminate\Support\Facades\Storage;
 
 class PostService
 {
@@ -49,5 +51,16 @@ class PostService
     }
 
     return $post;
+  }
+
+  public function deletePost(Post $post)
+  {
+    // 紐づく画像を全削除
+    foreach ($post->images as $image) {
+      Storage::disk('public')->delete($image->image_path);
+      $image->delete();
+    }
+
+    $post->delete();
   }
 }
