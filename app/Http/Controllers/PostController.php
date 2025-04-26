@@ -60,14 +60,14 @@ class PostController extends Controller
    */
   public function store(PostRequest $request)
   {
-    $this->postService->createPost(Auth::user(), $request->validated());
-    return redirect()->route('posts');
+    $post = $this->postService->createPost(Auth::user(), $request->validated());
+    return redirect()->route('posts.show', ['post' => $post->id]);
   }
 
   public function destroy(Post $post)
   {
     $post->delete();
 
-    return back(303)->with('message', 'Removed post.');
+    return back(303)->with('message', 'Removed post');
   }
 }
