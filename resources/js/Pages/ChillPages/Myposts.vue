@@ -41,10 +41,19 @@ const deletePost = (id) => {
 
       <div class="post-list">
         <div v-for="post in sortedPosts" :key="post.id" class="post-card">
-          <img :src="post.image" alt="Spot Thumbnail" class="post-image">
+          <div class="col-4 d-flex align-items-center justify-content-center">
+            <img
+              v-if="post.images.length"
+              :src="`/storage/${post.images[0].image_path}`"
+              alt="Post Image"
+              class="img-fluid rounded"
+              style="height: 120px; object-fit: cover;"
+            />
+            <div v-else class="text-muted small">No Image</div>
+          </div>
           <div class="post-info">
             <h3>{{ post.title }}</h3>
-            <p class="post-date">{{ post.date }}</p>
+            <p class="post-date">{{ post.description }}</p>
           </div>
           <div class="post-actions">
             <button class="edit-btn" @click="editPost(post.id)">Edit</button>

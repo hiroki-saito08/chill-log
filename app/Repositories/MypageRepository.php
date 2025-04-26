@@ -18,7 +18,7 @@ class MypageRepository
   public function getUserFavorites($userId)
   {
     return Favorite::where('user_id', $userId)
-      ->with('post')
+      ->with('post.images')
       ->get();
   }
 }

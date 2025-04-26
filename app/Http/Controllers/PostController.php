@@ -24,7 +24,7 @@ class PostController extends Controller
   {
     return Inertia::render('ChillPages/Index', [
       'popularPosts' => $this->postService->getPopularPosts(),
-      'posts' => $this->postService->getAllPosts()
+      'posts' => $this->postService->getNewPosts()
     ]);
   }
 
