@@ -16,12 +16,18 @@ const newPost = useForm({
   images: [],
 });
 
-const handleFileUpload = (event) => {
-  newPost.images = event.target.files[0];
+const handleFileUpload = (e) => {
+  if (e.target.files.length) {
+    newPost.images = Array.from(e.target.files);
+  } else {
+    newPost.images = [];
+  }
 };
 
 const submitPost = () => {
+  console.log(newPost)
   newPost.post('/posts', {
+    forceFormData: true,
     onSuccess: () => {
       console.log('Post store successfully');
     },
