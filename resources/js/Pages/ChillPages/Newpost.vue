@@ -1,49 +1,47 @@
 <script setup>
-import { ref } from 'vue';
-import { router } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
+import { ref } from 'vue'
+import Toast from '@/Components/Toast.vue'
 
-const newPost = ref({
-  name: '',
-  category: 'Café',
-  location: '',
-  visitTime: 'Morning',
+const toast = ref(null)
+const newPost = useForm({
+  title: '',
+  category: '',
+  location_name: '',
+  latitude: '',
+  longitude: '',
   description: '',
-  image: null
+  visit_time: '',
+  status: 'public',
+  images: [],
 });
 
 const handleFileUpload = (event) => {
-  newPost.value.image = event.target.files[0];
+  newPost.images = event.target.files[0];
 };
 
 const submitPost = () => {
-  router.post('/posts', {
-    title: newPost.value.name,
-    category: newPost.value.category,
-    description: newPost.value.description,
-    visit_time: newPost.value.visitTime.toLowerCase(),
-    status: 'public',
-    latitude: null,
-    longitude: null,
-    image: newPost.value.image,
-  }, {
+  newPost.post('/posts', {
     onSuccess: () => {
-      alert('投稿が完了しました！');
+      console.log('Post store successfully');
     },
     onError: (errors) => {
-      console.log(errors);
-    }
+      toast.value.triggerToast(errors, 'error');
+    },
   });
 };
 </script>
 
 <template>
+  <Toast ref="toast" />
+
   <section id="new-post-section" class="section">
     <h2>Add a New Spot</h2>
 
     <div class="form-container">
       <div class="form-group">
-        <label for="spot-name">Spot Name</label>
-        <input type="text" id="spot-name" v-model="newPost.name" placeholder="e.g., Quiet Park">
+        <label for="title">Title</label>
+        <input type="text" id="title" v-model="newPost.title" placeholder="e.g., Quiet Park">
       </div>
 
       <div class="form-group">
@@ -58,9 +56,9 @@ const submitPost = () => {
       </div>
 
       <div class="form-group">
-        <label for="location">Location (Address)</label>
+        <label for="location_name">Location (Address)</label>
         <div class="address-container">
-          <input type="text" id="location" v-model="newPost.location" placeholder="e.g., Shibuya, Tokyo">
+          <input type="text" id="location_name" v-model="newPost.location_name" placeholder="e.g., Shibuya, Tokyo">
           <button class="map-button" @click="openMap()">Select from Map</button>
         </div>
       </div>
@@ -68,10 +66,11 @@ const submitPost = () => {
       <div class="form-group">
         <label for="visit-time">Recommended Visit Time</label>
         <select id="visit-time" v-model="newPost.visitTime">
-          <option>Morning</option>
-          <option>Afternoon</option>
-          <option>Evening</option>
-          <option>Night</option>
+          <option value="morning">Morning</option>
+          <option value="afternoon">Afternoon</option>
+          <option value="evening">Evening</option>
+          <option value="night">Night</option>
+          <option value="all_time">Anytime</option>
         </select>
       </div>
 

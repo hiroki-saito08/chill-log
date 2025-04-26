@@ -1,24 +1,12 @@
 <script setup>
 import { watch, computed, ref } from 'vue'
 import { useForm, usePage } from '@inertiajs/vue3'
+import Toast from '@/Components/Toast.vue'
 
 const user = computed(() => usePage().props.auth.user);
 const showModal = ref(false)
+const toast = ref(null)
 
-const flashMessage = ref(null)
-
-watch(
-  () => usePage().props.flash?.message,
-  (newMsg) => {
-    flashMessage.value = newMsg
-    if (newMsg) {
-      setTimeout(() => {
-        flashMessage.value = null
-      }, 3000)
-    }
-  },
-  { immediate: true }
-)
 const form = useForm({
   bio: user.bio ?? '',
   clear_bio: false,
@@ -30,11 +18,16 @@ const form = useForm({
 function handleFileChange(e) {
   form.profile_image = e.target.files[0]
 }
+
 function submit() {
   form.post(route('mypage.update'), {
     forceFormData: true,
     onSuccess: () => {
       showModal.value = false
+      toast.value.triggerToast('Profile updated successfully');
+    },
+    onError: (errors) => {
+      toast.value.triggerToast(errors, 'error');
     },
   })
 }
@@ -45,6 +38,8 @@ function closeModal() {
 </script>
 
 <template>
+  <Toast ref="toast" />
+
   <div>
     <h3>Profile</h3>
       <div v-if="user.profile_image" class="text-center mt-5">
@@ -76,9 +71,6 @@ function closeModal() {
     </div>
   </div>
 
-  <div v-if="flashMessage" class="alert alert-success text-center mt-3">
-    {{ flashMessage }}
-  </div>
   <!-- 編集モーダル -->
   <div v-if="showModal" class="modal-backdrop-custom">
     <div class="modal d-block" tabindex="-1">
