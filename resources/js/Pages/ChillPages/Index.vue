@@ -2,6 +2,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
 import Footer from '@/Components/Footer.vue';
+import PostCard from '@/Components/PostCard.vue';
 import { computed } from 'vue';
 
 const props = defineProps({
@@ -33,64 +34,12 @@ const paginationLinks = computed(() => props.posts.links);
 
       <div class="section">
         <h3 class="mb-4">🏆 Popular Chill Spots</h3>
-        <div v-for="post in popularPosts" :key="post.id" class="mb-3">
-          <Link
-            :href="route('posts.show', { post: post.id })"
-            class="text-decoration-none text-dark"
-          >
-            <div class="card">
-              <div class="row g-0">
-                <div class="col-4 d-flex align-items-center justify-content-center p-3">
-                  <img
-                    v-if="post.images.length"
-                    :src="`/storage/${post.images[0].image_path}`"
-                    alt="Post Image"
-                    class="img-fluid rounded"
-                    style="height: 120px; object-fit: cover;"
-                  />
-                  <div v-else class="text-muted small">No Image</div>
-                </div>
-                <div class="col-8">
-                  <div class="card-body">
-                    <h5 class="card-title">{{ post.title }}</h5>
-                    <p class="card-text">{{ post.description }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Link>
-        </div>
+        <PostCard v-for="post in popularPosts" :key="post.id" :post="post" />
       </div>
 
       <div class="section">
         <h3 class="mb-4">🆕 New Chill Spots</h3>
-        <div v-for="post in posts" :key="post.id" class="mb-3">
-          <Link
-            :href="route('posts.show', { post: post.id })"
-            class="text-decoration-none text-dark"
-          >
-            <div class="card">
-              <div class="row g-0">
-                <div class="col-4 d-flex align-items-center justify-content-center p-3">
-                  <img
-                    v-if="post.images.length"
-                    :src="`/storage/${post.images[0].image_path}`"
-                    alt="Post Image"
-                    class="img-fluid rounded"
-                    style="height: 120px; object-fit: cover;"
-                  />
-                  <div v-else class="text-muted small">No Image</div>
-                </div>
-                <div class="col-8">
-                  <div class="card-body">
-                    <h5 class="card-title">{{ post.title }}</h5>
-                    <p class="card-text">{{ post.description }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Link>
-        </div>
+        <PostCard v-for="post in posts" :key="post.id" :post="post" />
       </div>
     </div>
 
@@ -128,37 +77,5 @@ const paginationLinks = computed(() => props.posts.links);
     border-radius: 10px;
     font-size: 18px;
     color: #555;
-  }
-
-  .custom-list-item {
-    display: flex;
-    align-items: center;
-    padding: 15px 20px;
-    border-radius: 15px;
-    background: #ffffff;
-    transition: all 0.2s ease-in-out;
-    font-size: 1.1rem;
-    font-weight: bold;
-  }
-
-  .custom-list-item:hover {
-    background: #f8f9fa;
-    transform: translateY(-2px);
-  }
-
-  /* リストの上部と下部の丸みを適用 */
-  .rounded-list {
-    border-radius: 15px !important;
-    overflow: hidden;
-  }
-
-  .list-group-item:first-child {
-    border-top-left-radius: 15px !important;
-    border-top-right-radius: 15px !important;
-  }
-
-  .list-group-item:last-child {
-    border-bottom-left-radius: 15px !important;
-    border-bottom-right-radius: 15px !important;
   }
 </style>
