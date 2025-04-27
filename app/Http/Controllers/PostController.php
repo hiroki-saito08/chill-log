@@ -7,6 +7,7 @@ use App\Services\PostService;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -31,10 +32,13 @@ class PostController extends Controller
   /**
    * 投稿一覧ページ（Posts.vue）
    */
-  public function posts()
+  public function posts(Request $request)
   {
+    $posts = $this->postService->getFilteredPosts($request);
+
     return Inertia::render('ChillPages/Posts', [
-      'posts' => $this->postService->getAllPosts()
+      'posts' => $posts,
+      'filters' => $request->only('keyword', 'category'),
     ]);
   }
 

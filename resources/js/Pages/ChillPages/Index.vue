@@ -1,17 +1,26 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
+import { ref } from 'vue';
+import { Link, router } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
 import Footer from '@/Components/Footer.vue';
 import PostCard from '@/Components/PostCard.vue';
-import { computed } from 'vue';
 
 const props = defineProps({
   posts: Object,
   popularPosts: Object
 });
 
-// ページネーションのリンク
-const paginationLinks = computed(() => props.posts.links);
+const filters = ref({
+  keyword: '',
+  category: '',
+})
+
+function searchPosts() {
+  router.get(route('posts'), {
+    keyword: filters.value.keyword,
+    category: filters.value.category,
+  })
+}
 </script>
 
 <template>
@@ -19,15 +28,24 @@ const paginationLinks = computed(() => props.posts.links);
   <div class="bg-light min-vh-100">
     <Header />
 
-    <div class="m-5">
-      <div class="d-flex justify-content-center">
-        <input type="text" placeholder="Search for chill spots..." class="form-control w-75 rounded-pill shadow-sm">
-      </div>
-    </div>
-
-    <div class="search-map">
-      <h3>🗺 Area selection (Map & Search)</h3>
-      <div class="map-container">🗺 Map area (to be implemented)</div>
+    <!-- 検索フォーム -->
+    <div class="search-wrapper">
+      <input
+        type="text"
+        v-model="filters.keyword"
+        placeholder="Search by keyword..."
+        class="form-control mb-2"
+      />
+      <select v-model="filters.category" class="form-select mb-3">
+        <option value="">All Categories</option>
+        <option value="Park">Park</option>
+        <option value="Cafe">Cafe</option>
+        <option value="Beach">Beach</option>
+        <option value="Other">Other</option>
+      </select>
+      <button @click="searchPosts" class="btn btn-success w-100">
+        Search
+      </button>
     </div>
 
     <div class="container custom-container">
@@ -55,27 +73,11 @@ const paginationLinks = computed(() => props.posts.links);
     margin-bottom: 60px;
   }
 
-  .search-bar input {
-    width: 70%;
-    padding: 12px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-
-  .search-map {
-    width: 70%;
-    margin: 0 auto;
-  }
-
-  .map-container {
-    width: 100%;
-    height: 300px;
-    background: #d3d3d3;
+  .search-wrapper {
+    max-width: 800px;
     text-align: center;
-    line-height: 300px;
-    border-radius: 10px;
-    font-size: 18px;
-    color: #555;
+    margin: 0 auto;
+    margin-top: 40px;
+    margin-bottom: 40px;
   }
 </style>

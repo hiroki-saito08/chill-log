@@ -6,6 +6,7 @@ use App\Repositories\PostRepository;
 use App\Models\Image;
 use App\Models\Post;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class PostService
 {
@@ -24,6 +25,25 @@ class PostService
   public function getNewPosts()
   {
     return $this->postRepository->getNewPosts();
+  }
+
+  public function getFilteredPosts(Request $request)
+  {
+    $query = Post::where('status', 'public')
+      ->with(['user', 'images', 'reviews']);
+
+    if ($request->filled('keyword')) {
+      $query->where(function ($q) use ($request) {
+        $q->where('title', 'like', '%' . $request->keyword . '%')
+          ->orWhere('description', 'like', '%' . $request->keyword . '%');
+      });
+    }
+
+    if ($request->filled('category')) {
+      $query->where('category', $request->category);
+    }
+
+    return $query->latest()->paginate(10);
   }
 
   public function getAllPosts()
