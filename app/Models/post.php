@@ -13,6 +13,7 @@ class Post extends Model
         'user_id',
         'title',
         'category',
+        'location_name',
         'latitude',
         'longitude',
         'description',

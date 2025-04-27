@@ -64,6 +64,17 @@ class PostController extends Controller
     return redirect()->route('posts.show', ['post' => $post->id]);
   }
 
+  /**
+   * 投稿を更新
+   */
+  public function update(PostRequest $request, Post $post)
+  {
+    $this->authorize('update', $post);
+    $post = $this->postService->updatePost($post, $request->validated());
+
+    return redirect()->route('posts.show', $post)->with('message', 'Post updated successfully.');
+  }
+
   public function destroy(Post $post)
   {
     $this->postService->deletePost($post);

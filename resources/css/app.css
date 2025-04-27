@@ -35,6 +35,16 @@
   color: #333;
 }
 
+.cancel-btn {
+  background-color: #6C7A89;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 h2 {
   text-align: center;
   margin-bottom: 1rem;

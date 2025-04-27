@@ -4,13 +4,65 @@ import { router, usePage, useForm } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
 import Footer from '@/Components/Footer.vue';
 import ShareMenu from '@/Components/ShareMenu.vue';
+import Toast from '@/Components/Toast.vue'
 
 const post = computed(() => usePage().props.post);
+const user = usePage().props.auth.user
+const toast = ref(null)
+
+// 編集
+const showEditModal = ref(false);
+function openEditModal() {
+  editForm.title = post.value.title
+  editForm.category = post.value.category
+  editForm.location_name = post.value.location_name
+  editForm.latitude = post.value.latitude
+  editForm.longitude = post.value.longitude
+  editForm.description = post.value.description
+  editForm.visit_time = post.value.visit_time
+  showEditModal.value = true
+}
+
+const editForm = useForm({
+  title: '',
+  category: '',
+  location_name: '',
+  latitude: '',
+  longitude: '',
+  description: '',
+  visit_time: '',
+  status: 'public',
+  images: [],
+})
+const handleFileUpload = (e) => {
+  if (e.target.files.length) {
+    editForm.images = Array.from(e.target.files);
+  } else {
+    editForm.images = [];
+  }
+};
+
+function closeEditModal() {
+  showEditModal.value = false
+  editForm.reset()
+}
+function submitEdit() {
+  console.log(editForm)
+  editForm.post(route('posts.update', post.value.id), {
+    forceFormData: true,
+    onSuccess: () => {
+      showEditModal.value = false
+      location.reload();
+    },
+    onError: (errors) => {
+      toast.value.triggerToast(errors, 'error');
+    },
+  })
+}
 
 // お気に入り
 const isFavorited = computed(() => post.value.is_favorited);
 const toggleFavorite = () => {
-  console.log(post.value.id)
   if (isFavorited.value) {
     router.delete(route('favorite.destroy', post.value.id));
   } else {
@@ -88,6 +140,8 @@ const formatDate = (dateStr) => {
 </script>
 
 <template>
+  <Toast ref="toast" />
+
   <Header />
 
   <div class="container">
@@ -112,10 +166,10 @@ const formatDate = (dateStr) => {
       </div>
 
       <div class="spot-meta">
-        Address: {{ post.address }} ・ Best time: {{ post.visit_time }}
+        <span class="fw-bold"> ・ Address:</span> {{ post.location_name }} <span class="fw-bold"> ・ Best time:</span> {{ post.visit_time }}
       </div>
       <p class="description">
-        {{ post.description }}
+        <span class="fw-bold"> ・ description:</span> {{ post.description }}
       </p>
       <div class="map-area">Map Placeholder</div>
       <div class="buttons">
@@ -125,13 +179,88 @@ const formatDate = (dateStr) => {
 
         <ShareMenu />
       </div>
-      <div class="review-button-wrapper">
+
+      <!-- 編集ボタン（本人だけ見える） -->
+      <div v-if="user && user.id === post.user_id" class="text-end mt-3">
+        <button class="btn" @click="openEditModal()">
+          Edit
+        </button>
+      </div>
+      <div v-else class="review-button-wrapper">
         <button class="btn" @click="toggleReviewForm">
           {{ isReviewed ? 'Edit Review' : 'Leave a Review' }}
         </button>
       </div>
     </div>
 
+    <!-- 編集モーダル -->
+    <div v-if="showEditModal" class="modal-backdrop-custom">
+      <div class="modal d-block" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Edit Post</h5>
+              <button type="button" class="btn-close" @click="closeEditModal"></button>
+            </div>
+            <div class="modal-body">
+
+              <div class="form-container">
+                <div class="form-group">
+                  <label for="title">Title</label>
+                  <input type="text" id="title" v-model="editForm.title" placeholder="e.g., Quiet Park">
+                </div>
+
+                <div class="form-group">
+                  <label for="category">Category</label>
+                  <select id="category" v-model="editForm.category">
+                    <option value="cafe">Cafe</option>
+                    <option value="park">Park</option>
+                    <option value="beach">Beach</option>
+                    <option value="Sauna">Sauna</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="location_name">Location (Address)</label>
+                  <div class="address-container">
+                    <input type="text" id="location_name" v-model="editForm.location_name" placeholder="e.g., Shibuya, Tokyo">
+                    <button class="map-button" @click="openMap()">Select from Map</button>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="visit-time">Recommended Visit Time</label>
+                  <select id="visit-time" v-model="editForm.visit_time">
+                    <option value="morning">Morning</option>
+                    <option value="afternoon">Afternoon</option>
+                    <option value="evening">Evening</option>
+                    <option value="night">Night</option>
+                    <option value="all_time">Anytime</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="description">Description</label>
+                  <textarea id="description" v-model="editForm.description" placeholder="Describe the charm of this spot"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="image-upload">Image Upload</label>
+                  <input type="file" id="image-upload" @change="handleFileUpload">
+                </div>
+                <div class="buttons mt-4">
+                  <button type="button" class="btn cancel-btn" @click="closeEditModal">Cancel</button>
+                  <button class="btn" @click="submitEdit">Save Changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- レビューセクション -->
     <div class="section review-section">
       <h3>Reviews</h3>
       <p v-if="!post.reviews.length">No reviews yet.</p>
@@ -149,6 +278,7 @@ const formatDate = (dateStr) => {
         <p class="review-text">{{ review.comment }}</p>
       </div>
 
+      <!-- レビューフォーム -->
       <div class="review-form" v-show="showReviewForm" id="reviewForm">
         <div class="form-group" v-for="field in ['rating_overall', 'rating_relax', 'rating_safety', 'rating_silence']" :key="field">
           <label>{{ field.replace('rating_', '').charAt(0).toUpperCase() + field.replace('rating_', '').slice(1) }}</label>
@@ -265,16 +395,6 @@ const formatDate = (dateStr) => {
   margin-top: 10px;
 }
 
-.btn {
-  background-color: #88B04B;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
 .review-section {
   margin-top: 40px;
 }
@@ -330,5 +450,82 @@ const formatDate = (dateStr) => {
   border-radius: 5px;
   border: 1px solid #ccc;
   font-size: 16px;
+}
+
+/* モーダルの背景 */
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.modal-content {
+  padding: 2rem;
+}
+
+.form-container {
+  margin-top: 20px;
+  background: #f9f9f9;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.map-button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  background: #6C7A89;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.btn-success {
+  background: #88B04B;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.btn-success:hover {
+  background: #76A03A;
 }
 </style>
