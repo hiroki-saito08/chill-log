@@ -113,8 +113,8 @@ function closeModal() {
               </div>
 
               <div class="modal-footer px-0">
-                <button type="button" class="btn btn-secondary" @click="closeModal">Cancel</button>
-                <button type="submit" class="btn btn-success">Save Changes</button>
+                <button type="button" class="btn cancel-btn" @click="closeModal">Cancel</button>
+                <button type="submit" class="btn">Save Changes</button>
               </div>
             </form>
           </div>
@@ -146,15 +146,6 @@ function closeModal() {
   background: #ccc;
   display: inline-block;
   margin-bottom: 30px;
-}
-
-.cancel-btn {
-  background-color: #6C7A89;
-  color: white;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 .edit-btn {

@@ -53,7 +53,7 @@ class PostPolicy
      */
     public function update(User $user, post $post)
     {
-        //
+        return $user->id === $post->user_id;
     }
 
     /**

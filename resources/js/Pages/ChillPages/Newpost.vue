@@ -53,11 +53,11 @@ const submitPost = () => {
       <div class="form-group">
         <label for="category">Category</label>
         <select id="category" v-model="newPost.category">
-          <option>Café</option>
-          <option>Park</option>
-          <option>Beach</option>
-          <option>Sauna</option>
-          <option>Other</option>
+          <option value="cafe">Cafe</option>
+          <option value="park">Park</option>
+          <option value="beach">Beach</option>
+          <option value="Sauna">Sauna</option>
+          <option value="other">Other</option>
         </select>
       </div>
 
@@ -71,7 +71,7 @@ const submitPost = () => {
 
       <div class="form-group">
         <label for="visit-time">Recommended Visit Time</label>
-        <select id="visit-time" v-model="newPost.visitTime">
+        <select id="visit-time" v-model="newPost.visit_time">
           <option value="morning">Morning</option>
           <option value="afternoon">Afternoon</option>
           <option value="evening">Evening</option>
