@@ -1,0 +1,38 @@
+/* 共通セクション */
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.section {
+  background: #f4f4f4;
+  padding: 30px;
+  border-left: 10px solid #88B04B;
+  border-radius: 10px;
+  margin-bottom: 40px;
+}
+
+.btn {
+  background-color: #88B04B;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background-color: #ccc;
+  color: #333;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}

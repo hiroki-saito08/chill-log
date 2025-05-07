@@ -4,57 +4,55 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'status',
         'title',
-        'content',
-        'location'
+        'category',
+        'location_name',
+        'latitude',
+        'longitude',
+        'description',
+        'visit_time',
+        'status',
     ];
 
-    /**
-     * images
-     */
-    public function images()
-    {
-        return $this->hasMany(Image::class);
-    }
+    protected $casts = [
+        'latitude' => 'decimal:7',
+        'longitude' => 'decimal:7',
+    ];
 
-    /**
-     * reviews
-     */
-    public function reviews()
-    {
-        return $this->hasMany(Review::class);
-    }
-
-    /**
-     * favorites
-     */
-    public function favorites()
-    {
-        return $this->hasMany(Favorite::class);
-    }
-
-    /**
-     * user
-     */
+    // 投稿者
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * ratings
-     */
-    public function rating()
+    // 画像
+    public function images()
     {
-        return $this->reviews()->selectRaw('post_id, ROUND(avg(star), 2) AS avg_review')->groupBy('post_id');
+        return $this->hasMany(Image::class);
+    }
+
+    // レビュー
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    // お気に入り
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    // ランキング
+    public function rankings()
+    {
+        return $this->hasMany(Ranking::class);
     }
 }

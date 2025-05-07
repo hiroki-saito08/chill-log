@@ -53,7 +53,7 @@ class ReviewPolicy
      */
     public function update(User $user, review $review)
     {
-        //
+        return $user->id === $review->user_id;
     }
 
     /**

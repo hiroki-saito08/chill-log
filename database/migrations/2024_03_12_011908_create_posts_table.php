@@ -15,16 +15,15 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
-                ->constrained()
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-            $table->integer('status')->default(0);
-            $table->string('title');
-            $table->string('content')->nullable();
-            $table->string('location');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('title'); // name → title に変更
+            $table->string('category')->nullable();
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
+            $table->text('description')->nullable();
+            $table->enum('visit_time', ['morning', 'afternoon', 'evening', 'night'])->nullable();
+            $table->enum('status', ['public', 'private'])->default('public');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -35,11 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        // Schema::dropIfExists('posts');
-        Schema::table('posts', function (Blueprint $table) {
-            // 追加 (外部キー名は{テーブル名}_{カラム名}_foreign)
-            $table->dropForeign('posts_user_id_foreign');
-            $table->dropColumn('user_id');
-        });
+        Schema::dropIfExists('posts');
     }
 };

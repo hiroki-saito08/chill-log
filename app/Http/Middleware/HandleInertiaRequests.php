@@ -28,25 +28,21 @@ class HandleInertiaRequests extends Middleware
      *
      * @return array<string, mixed>
      */
-    public function share(Request $request): array
+    public function share(Request $request)
     {
         return array_merge(parent::share($request), [
-            'appName' => config('app.name'),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $request->user() ? [
+                    'id' => $request->user()->id,
+                    'name' => $request->user()->name,
+                    'email' => $request->user()->email,
+                    'bio' => $request->user()->bio,
+                    'profile_image' => $request->user()->profile_image,
+                ] : null,
             ],
-            'ziggy' => function () use ($request) {
-                return array_merge((new Ziggy)->toArray(), [
-                    'location' => $request->url(),
-                ]);
-            },
-            'urlPrev' => function () {
-                if (url()->previous() && url()->previous() !== '' && url()->previous() !== url()->current()) {
-                    return url()->previous();
-                } else {
-                    return 'empty'; // used in javascript to disable back button behavior
-                }
-            },
+            'flash' => [
+                'message' => fn() => $request->session()->get('message'),
+            ],
         ]);
     }
 }

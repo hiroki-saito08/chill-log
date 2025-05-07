@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chill-log 投稿詳細</title>
+  <title>Spot Detail</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: #f4f4f4;
       margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-      color: #333;
+      padding: 20px;
     }
 
     header {
@@ -30,148 +29,6 @@
       cursor: pointer;
     }
 
-
-    .container {
-      width: 80%;
-      max-width: 1000px;
-      margin: 60px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .spot-image {
-      width: 100%;
-      height: 250px;
-      background: #ccc;
-      border-radius: 10px;
-      text-align: center;
-      line-height: 250px;
-      font-size: 18px;
-      color: #666;
-    }
-
-    .spot-title {
-      font-size: 24px;
-      font-weight: bold;
-      margin-top: 20px;
-    }
-
-    .spot-details {
-      margin-top: 15px;
-      font-size: 16px;
-    }
-
-    .user-menu {
-      position: absolute;
-      top: 60px;
-      right: 20px;
-      background: white;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-      display: none;
-    }
-
-    .user-menu a {
-      display: block;
-      padding: 10px;
-      text-decoration: none;
-      color: #333;
-    }
-
-    .map-container {
-      width: 100%;
-      height: 300px;
-      background: #ddd;
-      border-radius: 10px;
-      text-align: center;
-      line-height: 300px;
-      font-size: 18px;
-      color: #666;
-      margin-top: 20px;
-    }
-
-    .buttons {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .btn {
-      background: #88B04B;
-      color: white;
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .review-section {
-      margin-top: 40px;
-    }
-
-    .review {
-      background: #f9f9f9;
-      padding: 15px;
-      margin-top: 10px;
-      border-radius: 10px;
-      line-height: 1.6;
-    }
-
-    .review-header {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    .review-summary {
-      margin-top: 20px;
-      font-size: 18px;
-    }
-
-    .review-form {
-      margin-top: 30px;
-      background: #f9f9f9;
-      padding: 20px;
-      border-radius: 10px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      resize: vertical;
-    }
-
-    .back-button {
-      display: block;
-      margin: 30px auto;
-      text-align: center;
-      background: #ccc;
-      color: #333;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 5px;
-      text-decoration: none;
-    }
-
     .footer {
       background: #6C7A89;
       color: white;
@@ -180,102 +37,256 @@
       position: relative;
       margin-top: 50px;
     }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      margin-top: 40px;
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .section {
+      background: #f4f4f4;
+      padding: 30px;
+      border-left: 10px solid #88B04B;
+      border-radius: 10px;
+      margin-bottom: 40px;
+    }
+
+    .spot-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .spot-header h2 {
+      margin: 0;
+      color: #333;
+    }
+
+    .category {
+      background: #88B04B;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .spot-meta {
+      margin: 10px 0;
+      color: #555;
+      font-style: italic;
+    }
+
+    .image-area {
+      height: 250px;
+      background: #ddd;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+    }
+
+    .map-area {
+      height: 250px;
+      background: #bbb;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #444;
+    }
+
+    .description {
+      margin: 10px 0 20px;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .review-button-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    .btn {
+      background-color: #88B04B;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn-secondary {
+      background-color: #ccc;
+      color: #333;
+    }
+
+    .review-section {
+      margin-top: 40px;
+    }
+
+    .review-summary {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .review {
+      background: #fff;
+      padding: 15px;
+      margin-top: 10px;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      line-height: 1.6;
+    }
+
+    .review-header {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .review-form {
+      display: none;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
   </style>
+  <script>
+    function toggleReviewForm() {
+      const form = document.getElementById('reviewForm');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+  </script>
 </head>
 <body>
   <header>
-    <a href="index.html" style="color: white; text-decoration: none;">🏠 Chill-log</a>
+    <a href="index.html" style="color: white; text-decoration: none;">Chill-log</a>
     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
   </header>
-
-  <div class="user-menu" id="menu">
-    <a href="myspots.html">マイスポット</a>
-    <a href="profile.html">プロフィール</a>
-    <a href="#">ログアウト</a>
-  </div>
-
   <div class="container">
-    <div class="spot-image">画像エリア</div>
-    <h2 class="spot-title">🌿 静かな公園</h2>
-    <p class="spot-details">住所: 東京都渋谷区○○ 1-2-3</p>
-    <p class="spot-details">カテゴリ: 公園</p>
-    <p class="spot-details">説明: 都心にありながら静かにリラックスできる公園です。</p>
-
-    <div class="map-container">Google Maps エリア</div>
-
-    <div class="buttons">
-      <button class="btn">⭐ お気に入りに追加</button>
-      <button class="btn">🔗 シェア</button>
+    <div class="section">
+      <div class="spot-header">
+        <h2>Calm Park</h2>
+        <div class="category">Park</div>
+      </div>
+      <div class="image-area">Image Area</div>
+      <div class="spot-meta">
+        Address: 1-2-3 Shibuya, Tokyo ・ Best time: Morning
+      </div>
+      <p class="description">
+        A relaxing park in the middle of the city.
+      </p>
+      <div class="map-area">Map Area (Placeholder)</div>
+      <div class="buttons">
+        <button class="btn">⭐ Favorite</button>
+        <button class="btn btn-secondary">🔗 Share</button>
+      </div>
+      <div class="review-button-wrapper">
+        <button class="btn" onclick="toggleReviewForm()">💬 Leave a Review</button>
+      </div>
     </div>
 
-    <div class="review-section">
-      <h3>レビュー</h3>
-      <p class="review-summary">総合評価: ⭐⭐⭐⭐☆ (4.2) | チル度: ⭐⭐⭐⭐⭐ | 安全性: ⭐⭐⭐⭐☆ | 癒し度: ⭐⭐⭐⭐⭐</p>
+    <div class="section review-section">
+      <h3>Reviews</h3>
+      <p class="review-summary">
+        Overall: ⭐⭐⭐⭐☆ (4.2) ・ Chill: ⭐⭐⭐⭐⭐ ・ Safety: ⭐⭐⭐⭐☆ ・ Healing: ⭐⭐⭐⭐⭐
+      </p>
       <div class="review">
-        <div class="review-header">⭐⭐⭐⭐⭐ ユーザーA - 2024/02/16</div>
-        <p>最高に落ち着く場所！</p>
-        <p>チル度: ⭐⭐⭐⭐⭐ | 安全性: ⭐⭐⭐⭐☆ | 癒し度: ⭐⭐⭐⭐⭐</p>
+        <div class="review-header">⭐⭐⭐⭐⭐ User A - 2024/02/16</div>
+        <p>Great place to relax!</p>
+        <p>Chill: ⭐⭐⭐⭐⭐ ・ Safety: ⭐⭐⭐⭐☆ ・ Healing: ⭐⭐⭐⭐⭐</p>
+      </div>
+
+      <div class="review-form" id="reviewForm">
+        <div class="form-group">
+          <label>Overall</label>
+          <select>
+            <option>⭐⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐</option>
+            <option>⭐⭐</option>
+            <option>⭐</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Chill</label>
+          <select>
+            <option>⭐⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐</option>
+            <option>⭐⭐</option>
+            <option>⭐</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Safety</label>
+          <select>
+            <option>⭐⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐</option>
+            <option>⭐⭐</option>
+            <option>⭐</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Healing</label>
+          <select>
+            <option>⭐⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐</option>
+            <option>⭐⭐</option>
+            <option>⭐</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Comment</label>
+          <textarea rows="4" placeholder="Write your review..."></textarea>
+        </div>
+        <button class="btn">Submit</button>
       </div>
     </div>
-
-    <div class="review-form">
-      <h3>レビューを投稿</h3>
-      <div class="form-group">
-        <label>総合評価</label>
-        <select>
-          <option>⭐⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐</option>
-          <option>⭐⭐</option>
-          <option>⭐</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>チル度</label>
-        <select>
-          <option>⭐⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐</option>
-          <option>⭐⭐</option>
-          <option>⭐</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>安全性</label>
-        <select>
-          <option>⭐⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐</option>
-          <option>⭐⭐</option>
-          <option>⭐</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>癒し度</label>
-        <select>
-          <option>⭐⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐⭐</option>
-          <option>⭐⭐⭐</option>
-          <option>⭐⭐</option>
-          <option>⭐</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>レビュー内容</label>
-        <textarea placeholder="レビューを入力..."></textarea>
-      </div>
-      <button class="btn">投稿</button>
-    </div>
-
-    <a href="index.html" class="back-button">⬅️ 前のページに戻る</a>
   </div>
-
   <footer class="footer">&copy; 2025 Chill-log</footer>
-  <script>
-    function toggleMenu() {
-      let menu = document.getElementById("menu");
-      menu.style.display = menu.style.display === "block" ? "none" : "block";
-    }
-  </script>
 </body>
 </html>

@@ -44,6 +44,11 @@
             border-radius: 5px;
         }
 
+        .search-map {
+            width: 70%;
+            margin: 0 auto;
+        }
+
         .user-menu {
             position: absolute;
             top: 60px;
@@ -118,13 +123,12 @@
 </head>
 <body>
     <header>
-        <a href="#" style="color: white; text-decoration: none;">🏠 Chill-log</a>
+        <a href="#" style="color: white; text-decoration: none;">Chill-log</a>
         <div class="menu-toggle" onclick="toggleMenu()">☰</div>
     </header>
 
     <div class="user-menu" id="menu">
-        <a href="myspots.html">マイスポット</a>
-        <a href="profile.html">プロフィール</a>
+        <a href="mypage.html">マイページ</a>
         <a href="#">ログアウト</a>
     </div>
 
@@ -132,11 +136,12 @@
         <input type="text" placeholder="チルスポットを検索...">
     </div>
 
+    <div class="search-map">
+        <h3>🗺 エリア選択（地図 & 検索）</h3>
+        <div class="map-container">🗺 地図エリア（実装予定）</div>
+    </div>
+
     <div class="container">
-        <div class="section">
-            <h3>🗺 エリア選択（地図 & 検索）</h3>
-            <div class="map-container">🗺 地図エリア（実装予定）</div>
-        </div>
         <div class="section">
             <h3>🏆 全国ランキング</h3>
             <div class="spot"><a href="spot-detail.html">🌿 静かな公園</a></div>

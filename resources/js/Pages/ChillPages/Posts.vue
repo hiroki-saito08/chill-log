@@ -1,64 +1,108 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
-import Header from '@/Components/Header.vue';
-import Search from '@/Components/Search.vue';
-import Pagination from '@/Components/Pagination.vue'
+import { Link } from '@inertiajs/vue3'
+import Header from '@/Components/Header.vue'
+import Footer from '@/Components/Footer.vue'
+import PostCard from '@/Components/PostCard.vue';
 
-const props = defineProps({
+defineProps({
   posts: Object
-});
-
+})
+function formatPaginationLabel(label) {
+  console.log(label)
+  if (label === 'pagination.previous') {
+    return '«'; // ← 左矢印
+  } else if (label === 'pagination.next') {
+    return '»'; // → 右矢印
+  }
+  return label;
+}
 </script>
 
 <template>
-  <Head title="Posts" />
-  <Header :authProps=props page="posts"></Header>
-  <div class="m-5">
-    <!-- 検索バー -->
-    <Search></Search>
-  </div>
+  <div>
+    <Header />
 
-  <!-- 投稿を最新から6件取得して表示する。残りは投稿一覧ページへ誘導する
-  表示テンプレートは分けたい -->
-  <template v-if="posts">
-    <div class="md:grid grid-cols-3">
-      <div v-for=" post in posts.data" :key="post.id" class="m-5">
-        <Link :href="route('post.show', post.id)">
+    <div class="container">
+      <div v-if="posts.data.length">
 
-        <article class="p-5 border">
-          <div class="pb-2 border-b">
-            <h2 class="text-lg pt-2 pb-2 font-bold">「{{ post.title }}」</h2>
-          </div>
-          <div class="h-80 pt-3 pb-3">
-            <div v-if="post.images.length" class="h-full">
-              <div v-for=" image in post.images" :key="image.id" class="h-full">
-                <img :src="image.path" alt="画像" class="w-full h-full object-cover">
-              </div>
-            </div>
-            <div v-else> 画像なし </div>
-          </div>
+        <PostCard v-for="post in posts.data" :key="post.id" :post="post" />
 
-          <div class="flex justify-between pt-2 border-t">
-            <div>コメント: {{ post.reviews_count }}件</div>
-            <div>
-              評価:
-              <span v-if="post.rating[0]">{{ post.rating[0].avg_review }}</span>
-              <span v-else> 0.00 </span>
-            </div>
-          </div>
-        </article>
-        </Link>
+        <!-- ページネーション -->
+        <div class="pagination-wrapper">
+          <ul class="pagination">
+            <li
+              v-for="link in posts.links"
+              :key="link.label"
+              :class="['page-item', { active: link.active, disabled: !link.url }]"
+            >
+              <Link
+                v-if="link.url"
+                :href="link.url"
+                class="page-link"
+                v-html="formatPaginationLabel(link.label)"
+              />
+              <span v-else class="page-link" v-html="formatPaginationLabel(link.label)"></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 投稿がない場合 -->
+      <div v-else class="no-posts">
+        <p>No posts available.</p>
       </div>
     </div>
-    <Pagination class="mt-6" :links="posts.links" />
-  </template>
 
-  <div class="m-5 mt-10 mb-10 flex justify-center">
-    <Link class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg" href="/">TOPに戻る</Link>
+    <Footer />
   </div>
-
 </template>
 
-  <style>
+<style scoped>
+.container {
+  max-width: 1000px;
+  margin: 80px auto;
+  padding: 20px;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.pagination .page-item {
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.pagination .page-link {
+  background: #6C7A89; /* サブカラー */
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s;
+  font-weight: bold;
+}
+
+.pagination .page-item.active .page-link {
+  background: #88B04B; /* メインカラー */
+}
+
+.pagination .page-link:hover {
+  background: #88B04B;
+}
+
+.pagination .page-item.disabled .page-link {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.no-posts {
+  text-align: center;
+  margin-top: 80px;
+  color: #6C7A89;
+  font-size: 18px;
+}
 
 </style>

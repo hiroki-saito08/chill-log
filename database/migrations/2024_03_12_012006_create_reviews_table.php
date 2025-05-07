@@ -15,17 +15,13 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('post_id')
-                ->constrained()
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-            $table->foreignId('user_id')
-                ->constrained()
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-            $table->integer('star');
-            $table->string('comment_title');
-            $table->string('comment_content')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('post_id')->constrained()->onDelete('cascade');
+            $table->tinyInteger('rating_overall');
+            $table->tinyInteger('rating_silence')->nullable();
+            $table->tinyInteger('rating_relax')->nullable();
+            $table->tinyInteger('rating_safety')->nullable();
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
     }
@@ -37,13 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        // Schema::dropIfExists('reviews');
-        Schema::table('reviews', function (Blueprint $table) {
-            // 追加 (外部キー名は{テーブル名}_{カラム名}_foreign)
-            $table->dropForeign('reviews_post_id_foreign');
-            $table->dropForeign('reviews_user_id_foreign');
-            $table->dropColumn('post_id');
-            $table->dropColumn('user_id');
-        });
+        Schema::dropIfExists('reviews');
     }
 };

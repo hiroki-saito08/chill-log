@@ -1,88 +1,143 @@
 <script setup>
-import Checkbox from '@/Components/Checkbox.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import { usePage } from "@inertiajs/inertia-vue3";
-import { Inertia } from '@inertiajs/inertia'
+import { useForm } from '@inertiajs/vue3';
+import Header from '@/Components/Header.vue';
+import Footer from '@/Components/Footer.vue';
 
-defineProps({
-    canResetPassword: Boolean,
-    status: String,
-})
-
-const page = usePage()
-const urlPrev = page.props.value.urlPrev
 const form = useForm({
-    email: '',
-    password: '',
-    remember: false,
-})
+  email: '',
+  password: '',
+  remember: false
+});
 
-const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => form.reset('password'),
-    })
-}
-
-const back = () => {
-    if (urlPrev !== 'empty') {
-        Inertia.visit(urlPrev)
-    } else {
-        Inertia.visit('/')
-    }
-}
+const submitLogin = () => {
+  form.post(route('login'), {
+    onFinish: () => form.reset('password')
+  });
+};
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Log in" />
+  <Header />
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Login</h2>
+
+      <form @submit.prevent="submitLogin">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" v-model="form.email" placeholder="Enter your email" required>
+          <span v-if="form.errors.email" class="error">{{ form.errors.email }}</span>
         </div>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus autocomplete="username" />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="current-password" />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="block mt-4">
-                <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ml-2 text-sm text-gray-600">ログイン情報を記録</span>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <div class="">
-                    <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    パスワードを忘れた
-                    </Link>
-                    <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                        ログイン
-                    </PrimaryButton>
-                </div>
-            </div>
-        </form>
-        <div>
-            <button @click="back" class="mr-10 text-gray-600 hover:text-gray-900">戻る</button>
-            <a :href="route('register')" class="mr-10 text-gray-600 hover:text-gray-900" :urlPrev=urlPrev target="_blank">新規登録はこちら</a>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" v-model="form.password" placeholder="Enter your password" required>
+          <span v-if="form.errors.password" class="error">{{ form.errors.password }}</span>
         </div>
-    </GuestLayout>
+
+        <div class="form-group remember-me">
+          <input type="checkbox" id="remember" v-model="form.remember">
+          <label for="remember">Remember Me</label>
+        </div>
+
+        <button type="submit" class="btn" :disabled="form.processing">Login</button>
+      </form>
+
+      <a :href="route('register')" class="link">Create an account</a>
+      <a :href="route('password.request')" class="link">Forgot your password?</a>
+    </div>
+  </div>
+
+  <Footer />
 </template>
+
+<style scoped>
+/* 背景・レイアウト */
+.login-container {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  color: #333;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ヘッダー */
+.login-header {
+  width: 100%;
+  background: #6C7A89;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  font-size: 24px;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+/* ロゴリンク */
+.logo {
+  color: white;
+  text-decoration: none;
+}
+
+/* ログインボックス */
+.login-box {
+  width: 95%;
+  max-width: 400px;
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* フォーム */
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* ボタン */
+.btn {
+  background: #88B04B;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn:hover {
+  background: #76A03A;
+}
+
+/* リンク */
+.link {
+  margin-top: 10px;
+  display: block;
+  text-decoration: none;
+  color: #6C7A89;
+}
+</style>

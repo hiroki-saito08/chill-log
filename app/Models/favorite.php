@@ -10,21 +10,17 @@ class Favorite extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'post_id',
-        'user_id'
     ];
 
-    /**
-     * user
-     */
+    // お気に入り登録したユーザー
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * post
-     */
+    // お気に入り登録されたスポット
     public function post()
     {
         return $this->belongsTo(Post::class);

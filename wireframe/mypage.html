@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Page - Chill-log</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header {
+      background: #6C7A89;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      position: relative;
+    }
+
+    .section {
+      margin-bottom: 30px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .user-menu {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      display: none;
+    }
+
+    .user-menu a {
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      color: #333;
+    }
+
+    .main-container {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 240px;
+      background-color: #88B04B;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 5px;
+      transition: background 0.3s;
+      cursor: pointer;
+    }
+
+    .sidebar a:hover {
+      background: #57636f;
+    }
+
+    .content {
+      flex-grow: 1;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    /* profile-section */
+    .profile-section {
+      text-align: center;
+    }
+
+    .profile-pic {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #ccc;
+      display: inline-block;
+      margin-bottom: 30px;
+    }
+
+    #profile-section .form-group {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    #profile-section .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    #profile-section .form-group input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #public-section .form-group input,
+    .form-group textarea {
+      width: 70%;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      display: none;
+      flex-grow: 1;
+      margin-right: 10px;
+      margin-left: 10px;
+    }
+
+    #profile-section .form-group button {
+      margin-left: 5px;
+      /* ボタン間のスペースを確保 */
+    }
+
+    .edit-password-btn {
+      background: #88B04B;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 300px;
+      margin-top: 30px;
+    }
+
+    .edit-btn,
+    .save-btn {
+      background-color: #88B04B;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .cancel-btn {
+      background-color: #6C7A89;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .delete-account-btn {
+      background-color: #dc3545;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    .delete-account-btn:hover {
+      opacity: 1;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .password-section {
+      display: none;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    /* new-post-section */
+
+    #new-post-section {
+      text-align: left;
+    }
+
+    #new-post-section .btn {
+      background: #88B04B;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #new-post-section .form-container {
+      margin-top: 20px;
+      background: #f9f9f9;
+      padding: 100px;
+      border-radius: 10px;
+    }
+
+    #new-post-section .form-group {
+      margin-bottom: 30px;
+    }
+
+    #new-post-section .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    #new-post-section .form-group input,
+    #new-post-section .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #new-post-section .map-button {
+      display: block;
+      margin-top: 10px;
+      padding: 8px 15px;
+      background: #6C7A89;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    /* my posts & favorite */
+    /* フィルターコンテナ */
+    .filter-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .filter-dropdown {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+      background: white;
+      cursor: pointer;
+    }
+
+    /* 投稿リスト */
+    .spot-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+
+    }
+
+    .spot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 10px;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .spot:hover {
+      transform: translateY(-2px);
+    }
+
+    /* サムネイル画像 */
+    .spot-thumbnail {
+      width: 50px;
+      height: 50px;
+      border-radius: 5px;
+      object-fit: cover;
+      margin-right: 15px;
+    }
+
+    /* 投稿情報 */
+    .spot-info {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .spot-title {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .spot-date {
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* アクションボタン */
+    .spot-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .edit-btn,
+    .delete-btn {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .spot-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      flex-grow: 1;
+    }
+
+    .spot-link:hover {
+      border-radius: 8px;
+      transition: 0.2s ease-in-out;
+    }
+
+    .edit-btn {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .edit-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+
+    /* お気に入り解除ボタン */
+    #favorite-section .delete-btn {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    #favorite-section .delete-btn:hover {
+      background-color: #c82333;
+    }
+
+
+    /* footer */
+    .footer {
+      background: #6C7A89;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" style="color: white; text-decoration: none;">Chill-log</a>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+  </header>
+
+  <div class="user-menu" id="menu">
+    <a href="mypage.html">マイページ</a>
+    <a href="#">ログアウト</a>
+  </div>
+
+  <div class="main-container">
+    <nav class="sidebar">
+      <a onclick="navigate('profile-section')">Profile</a>
+      <a onclick="navigate('new-post-section')">New post</a>
+      <a onclick="navigate('my-posts-section')">My posts</a>
+      <a onclick="navigate('favorite-section')">Favorite</a>
+    </nav>
+
+    <main class="content">
+
+      <section id="profile-section" class="profile-section section">
+        <h2>Account Settings</h2>
+        <div class="profile-pic"></div>
+
+        <div id="public-section" class="public-section">
+
+          <div class="form-group">
+            <label>Profile Picture</label>
+            <button class="edit-btn">Change</button>
+          </div>
+
+          <div class="form-group">
+            <label>Name</label>
+            <span id="name-text">John Doe</span>
+            <input type="text" id="name" value="John Doe">
+            <button class="cancel-btn" onclick="cancelEdit('name')" style="display: none;">Cancel</button>
+            <button class="edit-btn" onclick="toggleEdit('name')">Edit</button>
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <span id="email-text">user@example.com</span>
+            <input type="email" id="email" value="user@example.com">
+            <button class="cancel-btn" onclick="cancelEdit('email')" style="display: none;">Cancel</button>
+            <button class="edit-btn" onclick="toggleEdit('email')">Edit</button>
+          </div>
+
+          <div class="form-group">
+            <label>Bio</label>
+            <span id="bio-text">Lover of peaceful spots and cozy cafes.</span>
+            <textarea id="bio">Lover of peaceful spots and cozy cafes.</textarea>
+            <button class="cancel-btn" onclick="cancelEdit('bio')" style="display: none;">Cancel</button>
+            <button class="edit-btn" onclick="toggleEdit('bio')">Edit</button>
+          </div>
+        </div>
+
+        <button class="cancel-btn" onclick="togglePasswordSection()" style="display: none;">Cancel</button>
+        <button class="edit-password-btn" onclick="togglePasswordSection()">Edit Password</button>
+
+        <div id="password-section" class="password-section">
+          <form>
+            <div class="form-group">
+              <label for="current-password">Current Password</label>
+              <input type="password" id="current-password" placeholder="Current Password" required>
+            </div>
+            <div class="form-group">
+              <label for="new-password">New Password</label>
+              <input type="password" id="new-password" placeholder="New Password" required>
+            </div>
+            <div class="form-group">
+              <label for="confirm-password">Confirm Password</label>
+              <input type="password" id="confirm-password" placeholder="Confirm Password" required>
+            </div>
+            <button type="submit" class="save-btn">Save</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="new-post-section" class="section">
+        <h2>Add a New Spot</h2>
+
+        <div class="form-container" id="spotForm">
+          <div class="form-group">
+            <label>Spot Name</label>
+            <input type="text" placeholder="e.g., Quiet Park">
+          </div>
+
+          <div class="form-group">
+            <label>Category</label>
+            <select>
+              <option>Café</option>
+              <option>Park</option>
+              <option>Beach</option>
+              <option>Sauna</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Location (Address)</label>
+            <div class="address-container">
+              <input type="text" id="address" placeholder="e.g., Shibuya, Tokyo">
+              <button class="map-button btn-secondary" onclick="openMap()">Select from Map</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Recommended Visit Time</label>
+            <select>
+              <option>Morning</option>
+              <option>Afternoon</option>
+              <option>Evening</option>
+              <option>Night</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea placeholder="Describe the charm of this spot"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Image Upload</label>
+            <input type="file">
+          </div>
+
+          <button class="btn btn-success">Submit</button>
+        </div>
+      </section>
+
+
+      <section id="my-posts-section" class="section">
+        <h2>My Posts</h2>
+
+        <!-- フィルター & ソート -->
+        <div class="filter-container">
+          <select class="filter-dropdown">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+          </select>
+        </div>
+
+        <!-- 投稿リスト -->
+        <ul class="spot-list">
+          <li class="spot">
+            <a href="spot-detail.html" class="spot-link">
+              <img src="example.jpg" class="spot-thumbnail" alt="Spot Thumbnail">
+              <div class="spot-info">
+                <span class="spot-title">Peaceful Forest Park</span>
+                <span class="spot-date">2025-02-20</span>
+              </div>
+            </a>
+            <div class="spot-actions">
+              <button class="edit-btn">Edit</button>
+              <button class="delete-btn">Delete</button>
+            </div>
+          </li>
+
+          <li class="spot">
+            <a href="spot-detail.html" class="spot-link">
+              <img src="example.jpg" class="spot-thumbnail" alt="Spot Thumbnail">
+              <div class="spot-info">
+                <span class="spot-title">Calm Riverside</span>
+                <span class="spot-date">2025-02-15</span>
+              </div>
+            </a>
+            <div class="spot-actions">
+              <button class="edit-btn">Edit</button>
+              <button class="delete-btn">Delete</button>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+
+      <section id="favorite-section" class="section">
+        <h2>Favorite Spots</h2>
+
+        <!-- お気に入りリスト -->
+        <ul class="spot-list">
+          <li class="spot">
+            <a href="spot-detail.html" class="spot-link">
+              <img src="example.jpg" class="spot-thumbnail" alt="Spot Thumbnail">
+              <div class="spot-info">
+                <span class="spot-title">Tranquil Garden</span>
+                <span class="spot-date">2025-02-18</span>
+              </div>
+            </a>
+            <div class="spot-actions">
+              <button class="delete-btn">Remove</button>
+            </div>
+          </li>
+
+          <li class="spot">
+            <a href="spot-detail.html" class="spot-link">
+              <img src="example.jpg" class="spot-thumbnail" alt="Spot Thumbnail">
+              <div class="spot-info">
+                <span class="spot-title">Cozy Café</span>
+                <span class="spot-date">2025-02-10</span>
+              </div>
+            </a>
+            <div class="spot-actions">
+              <button class="delete-btn">Remove</button>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+
+    </main>
+  </div>
+
+  <footer class="footer">&copy; 2025 Chill-log</footer>
+
+
+  <script>
+    function navigate(sectionId) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => section.style.display = 'none'); // 全セクションを非表示
+
+      const targetSection = document.getElementById(sectionId);
+      if (targetSection) targetSection.style.display = 'block'; // クリックしたセクションを表示
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      navigate('profile-section'); // 初期表示
+    });
+
+    function toggleEdit(field) {
+      let textElement = document.getElementById(field + "-text");
+      let inputElement = document.getElementById(field);
+      let cancelButton = inputElement.nextElementSibling;
+      let editButton = cancelButton.nextElementSibling;
+
+      if (inputElement.style.display === "none") {
+        // 編集モードに切り替え
+        inputElement.dataset.originalValue = inputElement.value || textElement.textContent;
+        inputElement.value = textElement.textContent.trim();
+        inputElement.style.display = "inline-block";
+        textElement.style.display = "none";
+
+        editButton.textContent = "Save";
+        cancelButton.style.display = "inline-block"; // Cancel ボタン表示
+      } else {
+        // 保存処理
+        textElement.textContent = inputElement.value;
+        inputElement.style.display = "none";
+        textElement.style.display = "inline-block";
+
+        editButton.textContent = "Edit";
+        cancelButton.style.display = "none"; // Cancel ボタン非表示
+      }
+    }
+
+    function cancelEdit(field) {
+      let textElement = document.getElementById(field + "-text");
+      let inputElement = document.getElementById(field);
+      let cancelButton = inputElement.nextElementSibling;
+      let editButton = cancelButton.nextElementSibling;
+
+      inputElement.value = inputElement.dataset.originalValue; // 元の値に戻す
+      textElement.textContent = inputElement.dataset.originalValue; // テキストも更新
+
+      inputElement.style.display = "none";
+      textElement.style.display = "inline-block";
+
+      editButton.textContent = "Edit";
+      cancelButton.style.display = "none"; // Cancel ボタン非表示
+    }
+
+
+
+    function togglePasswordSection() {
+      let section = document.getElementById("password-section");
+      let editButton = section.previousElementSibling;
+      let cancelButton = editButton.previousElementSibling;
+
+      if (section.style.display === "none" || section.style.display === "") {
+        // 開く
+        section.style.display = "block";
+        editButton.style.display = "none"; // Edit を隠す
+        cancelButton.style.display = "inline-block"; // Cancel を表示
+      } else {
+        // 閉じる
+        section.style.display = "none";
+        editButton.style.display = "inline-block"; // Edit を再表示
+        cancelButton.style.display = "none"; // Cancel を隠す
+      }
+    }
+
+    function toggleMenu() {
+      let menu = document.getElementById("menu");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+  </script>
+
+</body>
+</html>
