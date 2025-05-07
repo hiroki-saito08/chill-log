@@ -22,7 +22,7 @@ class PostRequest extends FormRequest
       'description' => ['nullable', 'string'],
       'visit_time' => 'nullable|in:morning,afternoon,evening,night,anytime',
       'status' => ['required', 'in:public,private'],
-      'images.*' => ['nullable', 'image'],
+      'images.*' => ['nullable', 'image', 'max:2048'],
     ];
   }
 }

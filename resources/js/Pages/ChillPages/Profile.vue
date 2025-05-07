@@ -93,7 +93,7 @@ function closeModal() {
               </div>
 
               <div class="mb-4">
-                <h4 class="form-label">Profile Image</h4>
+                <h4 class="form-label">Profile Image (Max:2MB)</h4>
                 <input type="file" @change="handleFileChange" class="form-control" />
                 <div class="text-danger" v-if="form.errors.profile_image">{{ form.errors.profile_image }}</div>
               </div>
