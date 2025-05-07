@@ -12,7 +12,8 @@ class PostRepository
     return Post::where('status', 'public')
       ->with(['user', 'images', 'reviews'])
       ->withCount('reviews')
-      ->orderByDesc('reviews_count')
+      ->withAvg('reviews', 'rating_overall')
+      ->orderByDesc('reviews_avg_rating_overall')
       ->take(5)
       ->get();
   }

@@ -166,12 +166,17 @@ const formatDate = (dateStr) => {
       </div>
 
       <div class="spot-meta">
-        <span class="fw-bold"> ・ Address:</span> {{ post.location_name }} <span class="fw-bold"> ・ Best time:</span> {{ post.visit_time }}
+        <p>
+          <span class="fw-bold">・ Address:</span> {{ post.location_name }}
+        </p>
+        <p>
+          <span class="fw-bold"> ・ Best time:</span> {{ post.visit_time }}
+        </p>
+        <p>
+          <span class="fw-bold"> ・ description:</span> {{ post.description }}
+        </p>
       </div>
-      <p class="description">
-        <span class="fw-bold"> ・ description:</span> {{ post.description }}
-      </p>
-      <div class="map-area">Map Placeholder</div>
+      <!-- <div class="map-area">Map Placeholder</div> -->
       <div class="buttons">
         <button class="btn" @click="toggleFavorite">
           {{ isFavorited ? '★' : '☆' }}
