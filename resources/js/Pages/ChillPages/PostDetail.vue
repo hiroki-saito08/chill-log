@@ -251,7 +251,7 @@ const formatDate = (dateStr) => {
                 </div>
 
                 <div class="form-group">
-                  <label for="image-upload">Image Upload</label>
+                  <label for="image-upload">Image Upload (Max:2MB)</label>
                   <input type="file" id="image-upload" @change="handleFileUpload">
                 </div>
                 <div class="buttons mt-4">
