@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('auth_id')->nullable(); // Google認証用ID
             $table->string('profile_image')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

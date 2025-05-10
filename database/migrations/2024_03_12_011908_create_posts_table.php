@@ -24,6 +24,7 @@ return new class extends Migration
             $table->enum('visit_time', ['morning', 'afternoon', 'evening', 'night'])->nullable();
             $table->enum('status', ['public', 'private'])->default('public');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
