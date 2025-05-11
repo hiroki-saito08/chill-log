@@ -14,7 +14,7 @@ return new class extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE posts MODIFY visit_time ENUM('morning', 'afternoon', 'evening', 'night', 'all_time')");
+        DB::statement("ALTER TABLE posts MODIFY visit_time ENUM('morning', 'afternoon', 'evening', 'night', 'anytime')");
     }
 
     /**
