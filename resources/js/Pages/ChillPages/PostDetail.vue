@@ -241,7 +241,7 @@ const formatDate = (dateStr) => {
                     <option value="afternoon">Afternoon</option>
                     <option value="evening">Evening</option>
                     <option value="night">Night</option>
-                    <option value="all_time">Anytime</option>
+                    <option value="anytime">Anytime</option>
                   </select>
                 </div>
 
