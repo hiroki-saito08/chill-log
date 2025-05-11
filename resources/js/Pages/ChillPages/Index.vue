@@ -25,7 +25,7 @@ function searchPosts() {
 
 <template>
   <Head title="Chill-log" />
-  <div class="bg-light min-vh-100">
+  <div class="bg-light min-vh-100 top-page">
     <Header />
 
     <!-- 検索フォーム -->
@@ -48,7 +48,7 @@ function searchPosts() {
       </button>
     </div>
 
-    <div class="container custom-container">
+    <div class="container">
 
       <div class="section">
         <h3 class="mb-4">🏆 Popular Chill Spots</h3>
@@ -64,20 +64,3 @@ function searchPosts() {
     <Footer />
   </div>
 </template>
-
-
-<style>
-
-  .container {
-    margin-top: 60px;
-    margin-bottom: 60px;
-  }
-
-  .search-wrapper {
-    max-width: 800px;
-    text-align: center;
-    margin: 0 auto;
-    margin-top: 40px;
-    margin-bottom: 40px;
-  }
-</style>
