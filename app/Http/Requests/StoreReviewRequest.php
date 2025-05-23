@@ -25,7 +25,6 @@ class StoreReviewRequest extends FormRequest
     {
         return [
             'post_id' => ['required', 'exists:posts,id'],
-            'rating_overall' => ['required', 'integer', 'between:1,5'],
             'rating_silence' => ['required', 'integer', 'between:1,5'],
             'rating_relax' => ['required', 'integer', 'between:1,5'],
             'rating_safety' => ['required', 'integer', 'between:1,5'],
