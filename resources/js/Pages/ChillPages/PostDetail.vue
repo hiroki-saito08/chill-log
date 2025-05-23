@@ -291,24 +291,6 @@ const formatDate = (dateStr) => {
           </ul>
         </div>
 
-        <!-- 各レビュー -->
-        <div
-          class="review-box"
-          v-for="review in post.reviews"
-          :key="review.id"
-        >
-          <div class="review-header">
-            <strong>{{ review.user.name }}</strong> - {{ formatDate(review.created_at) }}
-          </div>
-          <ul class="review-scores">
-            <li>Overall: {{ stars(review.rating_overall) }}</li>
-            <li>Relax: {{ stars(review.rating_relax) }}</li>
-            <li>Safety: {{ stars(review.rating_safety) }}</li>
-            <li>Silence: {{ stars(review.rating_silence) }}</li>
-          </ul>
-          <p class="review-text">{{ review.comment }}</p>
-        </div>
-
         <!-- レビューフォーム -->
         <div class="review-form" v-show="showReviewForm" id="reviewForm">
           <div class="form-group" v-for="field in ['rating_relax', 'rating_safety', 'rating_silence']" :key="field">
@@ -334,6 +316,24 @@ const formatDate = (dateStr) => {
           <p v-if="reviewForm.errors.comment" class="text-danger">
             {{ reviewForm.errors.comment }}
           </p>
+        </div>
+
+        <!-- 各レビュー -->
+        <div
+          class="review-box"
+          v-for="review in post.reviews"
+          :key="review.id"
+        >
+          <div class="review-header">
+            <strong>{{ review.user.name }}</strong> - {{ formatDate(review.created_at) }}
+          </div>
+          <ul class="review-scores">
+            <li>Overall: {{ stars(review.rating_overall) }}</li>
+            <li>Relax: {{ stars(review.rating_relax) }}</li>
+            <li>Safety: {{ stars(review.rating_safety) }}</li>
+            <li>Silence: {{ stars(review.rating_silence) }}</li>
+          </ul>
+          <p class="review-text">{{ review.comment }}</p>
         </div>
       </div>
     </div>
@@ -538,7 +538,11 @@ const formatDate = (dateStr) => {
 }
 
 .modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+  max-width: 800px;
   padding: 2rem;
+  margin: 0 auto;
 }
 
 .form-container {
@@ -616,8 +620,21 @@ const formatDate = (dateStr) => {
   }
 
   .review-section {
-    margin-top: 60px;
+    margin-top: 40px;
     background: #f4f4f4;
+  }
+
+  /* モーダル */
+  .modal-content {
+    width: 90%;
+    padding: 10px;
+  }
+
+  .form-container {
+    background: none;
+    padding: 0px;
+    border-radius: 0;
+    box-shadow: none;
   }
 }
 </style>
