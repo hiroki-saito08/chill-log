@@ -17,6 +17,13 @@ class ReviewController extends Controller
         $validated = $request->validated();
         $validated['user_id'] = auth()->id();
 
+        // 平均を計算して rating_overall に追加
+        $validated['rating_overall'] = round((
+            $validated['rating_relax'] +
+            $validated['rating_safety'] +
+            $validated['rating_silence']
+        ) / 3, 1);
+
         Review::create($validated);
 
         return redirect()->back()->with('message', 'Review stored successfully!');

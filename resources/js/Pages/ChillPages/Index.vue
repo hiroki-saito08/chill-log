@@ -66,12 +66,12 @@ function searchPosts() {
 </template>
 
 <style>
-  .container {
+  .top-page .container {
     margin-top: 60px;
     margin-bottom: 60px;
   }
 
-  .section {
+  .top-page .section {
     background: #f4f4f4;
     padding: 30px;
     border-left: 10px solid #88B04B;
@@ -79,7 +79,7 @@ function searchPosts() {
     margin-bottom: 40px;
   }
 
-  .section:last-child {
+  .top-page .section:last-child {
     margin-bottom: 0;
   }
 
@@ -92,13 +92,13 @@ function searchPosts() {
   }
 
 @media (max-width: 768px) {
-  .container {
+  .top-page .container {
     margin-top: 0;
     margin-bottom: 0;
     border-radius: 0;
   }
 
-  .section {
+  .top-page .section {
     background: none;
     padding: 0;
     border-left: none;
