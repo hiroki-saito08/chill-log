@@ -64,3 +64,52 @@ function searchPosts() {
     <Footer />
   </div>
 </template>
+
+<style>
+  .container {
+    margin-top: 60px;
+    margin-bottom: 60px;
+  }
+
+  .section {
+    background: #f4f4f4;
+    padding: 30px;
+    border-left: 10px solid #88B04B;
+    border-radius: 10px;
+    margin-bottom: 40px;
+  }
+
+  .section:last-child {
+    margin-bottom: 0;
+  }
+
+  .search-wrapper {
+    max-width: 800px;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+
+@media (max-width: 768px) {
+  .container {
+    margin-top: 0;
+    margin-bottom: 0;
+    border-radius: 0;
+  }
+
+  .section {
+    background: none;
+    padding: 0;
+    border-left: none;
+    border-radius: 0;
+    margin-bottom: 60px;
+  }
+
+  .search-wrapper {
+    padding: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+</style>

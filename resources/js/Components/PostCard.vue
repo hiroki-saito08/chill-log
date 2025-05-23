@@ -33,6 +33,8 @@ defineProps({
 }
 
 .post-card {
+  width: 100%;
+  max-width: 100%;
   background: white;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -63,6 +65,8 @@ defineProps({
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .post-info {
@@ -79,6 +83,23 @@ defineProps({
 .post-description {
   color: #666;
   font-size: 14px;
+  line-height: 1.6;
+
 }
 
+@media (max-width: 768px) {
+  .post-link {
+    flex-direction: column;
+  }
+
+  .post-thumbnail-wrapper {
+    width: 100%;
+    height: auto;
+  }
+
+  .post-thumbnail {
+    height: auto;
+    max-height: 200px;
+  }
+}
 </style>
