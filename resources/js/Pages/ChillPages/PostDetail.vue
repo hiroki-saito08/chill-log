@@ -230,7 +230,7 @@ const formatDate = (dateStr) => {
                   <label for="location_name">Location (Address)</label>
                   <div class="address-container">
                     <input type="text" id="location_name" v-model="editForm.location_name" placeholder="e.g., Shibuya, Tokyo">
-                    <button class="map-button" @click="openMap()">Select from Map</button>
+                    <!-- <button class="map-button" @click="openMap()">Select from Map</button> -->
                   </div>
                 </div>
 
