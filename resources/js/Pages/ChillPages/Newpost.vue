@@ -161,4 +161,20 @@ const submitPost = () => {
 .btn-success:hover {
   background: #76A03A;
 }
+
+@media (max-width: 768px) {
+  .section {
+    background: none;
+    padding: 0;
+    border-left: none;
+  }
+
+  .form-container {
+    background: #f9f9f9;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
 </style>
