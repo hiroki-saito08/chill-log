@@ -47,7 +47,6 @@ function closeEditModal() {
   editForm.reset()
 }
 function submitEdit() {
-  console.log(editForm)
   editForm.post(route('posts.update', post.value.id), {
     forceFormData: true,
     onSuccess: () => {
@@ -91,9 +90,10 @@ const submitReview = () => {
     reviewForm.put(route('reviews.update', post.value.my_review.id), {
       onSuccess: () => {
         toggleReviewForm();
+        toast.value.triggerToast('Review updated successfully');
       },
       onError: (errors) => {
-        console.error('Validation failed:', errors);
+        toast.value.triggerToast(errors, 'error');
       }
     });
   } else {
@@ -101,9 +101,10 @@ const submitReview = () => {
       onSuccess: () => {
         toggleReviewForm();
         reviewForm.reset();
+        toast.value.triggerToast('Review stored successfully');
       },
       onError: (errors) => {
-        console.error('Validation failed:', errors);
+        toast.value.triggerToast(errors, 'error');
       }
     });
   }

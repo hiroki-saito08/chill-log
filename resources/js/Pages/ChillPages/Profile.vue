@@ -8,6 +8,7 @@ const showModal = ref(false)
 const toast = ref(null)
 
 const form = useForm({
+  name: user.name,
   bio: user.bio ?? '',
   clear_bio: false,
   profile_image: null,
@@ -82,6 +83,18 @@ function closeModal() {
           </div>
           <div class="modal-body">
             <form @submit.prevent="submit" enctype="multipart/form-data">
+              <div class="mb-3">
+                <label for="name">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  v-model="form.name"
+                  placeholder="Enter your name"
+                  class="form-control"
+                />
+                <div v-if="form.errors.name" class="text-danger mt-1">{{ form.errors.name }}</div>
+              </div>
+
               <div class="mb-3">
                 <label class="form-label">Bio</label>
                 <textarea v-model="form.bio" class="form-control" rows="3"></textarea>

@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Helpers\NgWordFilter;
 
 class PostController extends Controller
 {
@@ -64,6 +65,16 @@ class PostController extends Controller
    */
   public function store(PostRequest $request)
   {
+    // NGワードチェック
+    $checkFields = ['title', 'category', 'location_name', 'description'];
+    foreach ($checkFields as $field) {
+      $value = $request->input($field);
+
+      if (filled($value) && NgWordFilter::containsNgWord($value)) {
+        return back()->withErrors([$field => 'Contains inappropriate language.']);
+      }
+    }
+
     $post = $this->postService->createPost(Auth::user(), $request->validated());
     return redirect()->route('posts.show', ['post' => $post->id]);
   }
@@ -73,6 +84,16 @@ class PostController extends Controller
    */
   public function update(PostRequest $request, Post $post)
   {
+    // NGワードチェック
+    $checkFields = ['title', 'category', 'location_name', 'description'];
+    foreach ($checkFields as $field) {
+      $value = $request->input($field);
+
+      if (filled($value) && NgWordFilter::containsNgWord($value)) {
+        return back()->withErrors([$field => 'Contains inappropriate language.']);
+      }
+    }
+
     $this->authorize('update', $post);
     $post = $this->postService->updatePost($post, $request->validated());
 
