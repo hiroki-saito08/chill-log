@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Services\PostService;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -58,7 +59,10 @@ class PostController extends Controller
       : false;
 
     return Inertia::render('ChillPages/PostDetail', [
-      'post' => $post,
+      'post' => [
+        ...$post->toArray(),
+        'visit_time' => json_decode($post->visit_time),
+      ],
       'previous' => $previous,
       'next' => $next,
     ]);
@@ -86,7 +90,7 @@ class PostController extends Controller
   /**
    * 投稿を更新
    */
-  public function update(PostRequest $request, Post $post)
+  public function update(UpdatePostRequest $request, Post $post)
   {
     // NGワードチェック
     $checkFields = ['title', 'category', 'location_name', 'description'];

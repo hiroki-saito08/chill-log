@@ -11,7 +11,7 @@ const newPost = useForm({
   latitude: '',
   longitude: '',
   description: '',
-  visit_time: '',
+  visit_time: [],
   status: 'public',
   images: [],
 });
@@ -30,6 +30,7 @@ const submitPost = () => {
     forceFormData: true,
     onSuccess: () => {
       console.log('Post store successfully');
+      newPost.reset();
     },
     onError: (errors) => {
       toast.value.triggerToast(errors, 'error');
@@ -70,14 +71,30 @@ const submitPost = () => {
       </div>
 
       <div class="form-group">
-        <label for="visit-time">Recommended Visit Time</label>
-        <select id="visit-time" v-model="newPost.visit_time">
-          <option value="morning">Morning</option>
-          <option value="afternoon">Afternoon</option>
-          <option value="evening">Evening</option>
-          <option value="night">Night</option>
-          <option value="anytime">Anytime</option>
-        </select>
+        <label class="form-label mb-2">Recommended Visit Time</label>
+        <div class="d-flex flex-wrap gap-2">
+          <div
+            v-for="option in ['morning', 'afternoon', 'evening', 'night', 'anytime']"
+            :key="option"
+            class="form-check-inline"
+          >
+            <input
+              class="btn-check"
+              type="checkbox"
+              :value="option"
+              v-model="newPost.visit_time"
+              :id="`time-${option}`"
+              autocomplete="off"
+            />
+            <label
+              class="btn btn-outline-secondary"
+              :class="{ active: newPost.visit_time.includes(option) }"
+              :for="`time-${option}`"
+            >
+              {{ option }}
+            </label>
+          </div>
+        </div>
       </div>
 
       <div class="form-group">
