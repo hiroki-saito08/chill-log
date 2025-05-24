@@ -58,7 +58,7 @@ function closeModal() {
           <div class="col-4 fw-bold text-start">Email:</div>
           <div class="col-8 text-start">{{ user.email }}</div>
         </div>
-        <div class="row mb-2">
+        <div class="row mb-2 bio-text">
           <div class="col-4 fw-bold text-start">Bio:</div>
           <div class="col-8 text-start">{{ user.bio }}</div>
         </div>
@@ -164,6 +164,10 @@ function closeModal() {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.bio-text {
+  white-space: pre-line;
 }
 
 /* モーダルの背景 */

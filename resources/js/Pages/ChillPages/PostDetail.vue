@@ -1,12 +1,17 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { router, usePage, useForm } from '@inertiajs/vue3';
+import { Link, router, usePage, useForm } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
 import Footer from '@/Components/Footer.vue';
 import ShareMenu from '@/Components/ShareMenu.vue';
 import Toast from '@/Components/Toast.vue'
 
 const post = computed(() => usePage().props.post);
+const props = defineProps({
+  previous: Object,
+  next: Object,
+});
+
 const user = usePage().props.auth.user
 const toast = ref(null)
 
@@ -348,6 +353,19 @@ const formatDate = (dateStr) => {
           <p class="review-text">{{ review.comment }}</p>
         </div>
       </div>
+
+      <div class="d-flex justify-content-between mt-5">
+        <div v-if="previous">
+          <Link :href="route('posts.show', previous.id)" class="btn btn-outline-secondary">
+            ← Previous
+          </Link>
+        </div>
+        <div v-if="next">
+          <Link :href="route('posts.show', next.id)" class="btn btn-outline-secondary ms-auto">
+            Next →
+          </Link>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -614,6 +632,12 @@ const formatDate = (dateStr) => {
 
 .btn-success:hover {
   background: #76A03A;
+}
+
+.btn-outline-secondary {
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 8px;
 }
 
 @media (max-width: 768px) {
