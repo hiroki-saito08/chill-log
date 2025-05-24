@@ -7,7 +7,8 @@ import PostCard from '@/Components/PostCard.vue';
 
 const props = defineProps({
   posts: Object,
-  popularPosts: Object
+  popularPosts: Object,
+  categories: Array
 });
 
 const filters = ref({
@@ -48,10 +49,9 @@ function searchPosts() {
       />
       <select v-model="filters.category" class="form-select mb-3">
         <option value="">All Categories</option>
-        <option value="Park">Park</option>
-        <option value="Cafe">Cafe</option>
-        <option value="Beach">Beach</option>
-        <option value="Other">Other</option>
+        <option v-for="option in categories" :key="option" :value="option">
+          {{ option }}
+        </option>
       </select>
       <button @click="searchPosts" class="btn btn-success w-100">
         Search

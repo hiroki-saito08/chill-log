@@ -10,6 +10,7 @@ const post = computed(() => usePage().props.post);
 const props = defineProps({
   previous: Object,
   next: Object,
+  categories: Array
 });
 
 const user = usePage().props.auth.user
@@ -260,11 +261,9 @@ const formatDate = (dateStr) => {
                   <div class="form-group">
                     <label for="category">Category</label>
                     <select id="category" v-model="editForm.category">
-                      <option value="cafe">Cafe</option>
-                      <option value="park">Park</option>
-                      <option value="beach">Beach</option>
-                      <option value="Sauna">Sauna</option>
-                      <option value="other">Other</option>
+                      <option v-for="option in categories" :key="option" :value="option">
+                        {{ option }}
+                      </option>
                     </select>
                   </div>
 

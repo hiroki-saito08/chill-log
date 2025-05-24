@@ -7,6 +7,10 @@ import Newpost from '@/Pages/ChillPages/Newpost.vue';
 import Myposts from '@/Pages/ChillPages/Myposts.vue';
 import Favorites from '@/Pages/ChillPages/Favorites.vue';
 
+const props = defineProps({
+  categories: Array
+});
+
 const activeSection = ref('profile-section');
 
 const navigate = (section) => {
@@ -28,7 +32,7 @@ const navigate = (section) => {
 
       <main class="mypage-content">
         <Profile v-if="activeSection === 'profile-section'" />
-        <Newpost v-if="activeSection === 'new-post-section'" />
+        <Newpost v-if="activeSection === 'new-post-section'" :categories="categories"/>
         <Myposts v-if="activeSection === 'my-posts-section'" />
         <Favorites v-if="activeSection === 'favorite-section'" />
       </main>

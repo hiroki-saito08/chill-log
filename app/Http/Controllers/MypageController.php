@@ -22,7 +22,10 @@ class MypageController extends Controller
      */
     public function index()
     {
-        return Inertia::render('ChillPages/Mypage', $this->mypageService->getMypageData());
+        return Inertia::render('ChillPages/Mypage', [
+            ...$this->mypageService->getMypageData(),
+            'categories' => config('categories')
+        ]);
     }
 
     // 各ユーザーの詳細画面

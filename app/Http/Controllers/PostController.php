@@ -27,7 +27,8 @@ class PostController extends Controller
   {
     return Inertia::render('ChillPages/Index', [
       'popularPosts' => $this->postService->getPopularPosts(),
-      'posts' => $this->postService->getNewPosts()
+      'posts' => $this->postService->getNewPosts(),
+      'categories' => config('categories')
     ]);
   }
 
@@ -65,6 +66,7 @@ class PostController extends Controller
       ],
       'previous' => $previous,
       'next' => $next,
+      'categories' => config('categories')
     ]);
   }
 
