@@ -26,6 +26,10 @@ class MypageService
 
   public function updateProfile($user, $data)
   {
+    if (!empty($data['name'])) {
+      $user->name = $data['name'];
+    }
+
     if (!empty($data['clear_bio'])) {
       $user->bio = '';
     } elseif (!empty($data['bio'])) {

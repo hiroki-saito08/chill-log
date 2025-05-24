@@ -24,7 +24,9 @@ class UpdateProfileRequest extends FormRequest
     public function rules()
     {
         return [
+            'name' => ['nullable', 'string', 'max:50'],
             'bio' => ['nullable', 'string', 'max:500'],
+            'clear_bio' => ['boolean'],
             'new_password' => ['nullable', 'confirmed', 'min:6'],
             'profile_image' => ['nullable', 'image', 'max:2048'], // 2MBまで
         ];
