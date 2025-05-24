@@ -24,7 +24,17 @@ function searchPosts() {
 </script>
 
 <template>
-  <Head title="Chill-log" />
+  <!-- SEO -->
+  <Head>
+    <title>Chill-log | Find Your Chill Spot</title>
+    <meta name="description" content="Chill-log is a place to share and discover relaxing spots around you. Parks, cafes, beaches and more – find your perfect chill." />
+    <meta property="og:title" content="Chill-log | Find Your Chill Spot" />
+    <meta property="og:description" content="Share and explore relaxing places like parks, cafes, and beaches in your area." />
+    <meta property="og:image" content="/default-ogp.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://chill-log.com/" />
+  </Head>
+
   <div class="bg-light min-vh-100 top-page">
     <Header />
 
