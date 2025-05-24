@@ -12,13 +12,13 @@ class MypageRepository
     return Post::where('user_id', $userId)
       ->with(['images', 'reviews'])
       ->latest()
-      ->get();
+      ->paginate(6);
   }
 
   public function getUserFavorites($userId)
   {
     return Favorite::where('user_id', $userId)
       ->with('post.images')
-      ->get();
+      ->paginate(6);
   }
 }
