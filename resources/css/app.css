@@ -49,3 +49,36 @@ h2 {
   text-align: center;
   margin-bottom: 1rem;
 }
+
+.edit-btn{
+  background-color: #88B04B;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background: #dc3545;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin-top: 0;
+    margin-bottom: 0;
+    border-radius: 0;
+  }
+
+  .section {
+    background: none;
+    padding: 0;
+    border-left: none;
+    border-radius: 0;
+  }
+}

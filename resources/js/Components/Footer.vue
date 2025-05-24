@@ -60,4 +60,17 @@
   opacity: 0.7;
   margin-top: 10px;
 }
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .footer-nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
 </style>

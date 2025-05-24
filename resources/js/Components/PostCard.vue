@@ -14,6 +14,11 @@
         <p class="post-description">{{ post.description?.slice(0, 100) }}...</p>
       </div>
     </Link>
+
+    <!--　スロットでアクションボタンを任意表示 -->
+    <div class="post-actions">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
@@ -65,8 +70,7 @@ defineProps({
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-radius: 10px;
 }
 
 .post-info {
@@ -84,7 +88,19 @@ defineProps({
   color: #666;
   font-size: 14px;
   line-height: 1.6;
+}
 
+.post-actions:empty {
+  display: none;
+  padding: 0;
+  margin: 0;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 1rem 1rem;
+  gap: 10px;
 }
 
 @media (max-width: 768px) {

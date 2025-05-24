@@ -43,7 +43,7 @@ class PostService
       $query->where('category', $request->category);
     }
 
-    return $query->latest()->paginate(10);
+    return $query->latest()->paginate(8);
   }
 
   public function getAllPosts()

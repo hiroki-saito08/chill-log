@@ -89,4 +89,33 @@ const navigate = (section) => {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
+
+@media (max-width: 768px) {
+
+  .mypage-main-container {
+    display: block;
+  }
+
+  .mypage-content-container {
+    display: block;
+    flex-direction: column;
+  }
+
+  .mypage-sidebar {
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+  }
+
+  .mypage-content {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    box-shadow: none;
+    text-align: center;
+  }
+}
+
 </style>

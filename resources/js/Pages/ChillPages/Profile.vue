@@ -40,7 +40,7 @@ function closeModal() {
 <template>
   <Toast ref="toast" />
 
-  <div>
+  <div class="profile">
     <h3>Profile</h3>
       <div v-if="user.profile_image" class="text-center mt-5">
         <img :src="`/storage/${user.profile_image}`" alt="Profile Image" class="profile-pic" />
@@ -129,10 +129,6 @@ function closeModal() {
   text-align: center;
 }
 
-.public-section {
-  margin-bottom: 50px;
-}
-
 .password-section {
   margin-top: 15px;
   margin-bottom: 30px;
@@ -164,7 +160,29 @@ function closeModal() {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 1050;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  max-width: 800px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    width: 100%;
+    padding: 1.5rem;
+    max-height: 90vh;
+  }
 }
 </style>

@@ -79,6 +79,7 @@ onUnmounted(() => {
   color: #6C7A89;
   font-weight: bold;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  min-width: 150px;
 }
 
 .user-menu a:hover {
@@ -102,5 +103,18 @@ onUnmounted(() => {
   background-color: #6C7A89;
   color: white;
   border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  .user-menu {
+    top: 60px;
+    right: 10px;
+    width: 160px;
+    font-size: 14px;
+  }
+
+  .menu-toggle {
+    font-size: 28px;
+  }
 }
 </style>
