@@ -24,7 +24,7 @@ function openEditModal() {
   editForm.latitude = post.value.latitude
   editForm.longitude = post.value.longitude
   editForm.description = post.value.description
-  editForm.visit_time = post.value.visit_time
+  editForm.visit_time = post.value.visit_time ?? []
   showEditModal.value = true
 }
 
@@ -35,7 +35,7 @@ const editForm = useForm({
   latitude: '',
   longitude: '',
   description: '',
-  visit_time: '',
+  visit_time: post.visit_time ?? [],
   status: 'public',
   images: [],
 })
@@ -207,8 +207,11 @@ const formatDate = (dateStr) => {
           <p>
             <span class="fw-bold">・ Address:</span> {{ post.location_name }}
           </p>
-          <p>
-            <span class="fw-bold"> ・ Best time:</span> {{ post.visit_time }}
+          <p v-if="post.visit_time?.length">
+            <span class="fw-bold">・ Recommended Time: </span>
+            <span v-for="(time, index) in post.visit_time" :key="index" class="badge bg-secondary me-2">
+              {{ time }}
+            </span>
           </p>
           <p>
             <span class="fw-bold"> ・ description:</span> {{ post.description }}
@@ -273,14 +276,30 @@ const formatDate = (dateStr) => {
                   </div>
 
                   <div class="form-group">
-                    <label for="visit-time">Recommended Visit Time</label>
-                    <select id="visit-time" v-model="editForm.visit_time">
-                      <option value="morning">Morning</option>
-                      <option value="afternoon">Afternoon</option>
-                      <option value="evening">Evening</option>
-                      <option value="night">Night</option>
-                      <option value="anytime">Anytime</option>
-                    </select>
+                    <label class="form-label mb-2">Recommended Visit Time</label>
+                    <div class="d-flex flex-wrap gap-2">
+                      <div
+                        v-for="option in ['morning', 'afternoon', 'evening', 'night', 'anytime']"
+                        :key="option"
+                        class="form-check-inline"
+                      >
+                        <input
+                          class="btn-check"
+                          type="checkbox"
+                          :value="option"
+                          v-model="editForm.visit_time"
+                          :id="`time-${option}`"
+                          autocomplete="off"
+                        />
+                        <label
+                          class="btn btn-outline-secondary"
+                          :class="{ active: editForm.visit_time.includes(option) }"
+                          :for="`time-${option}`"
+                        >
+                          {{ option }}
+                        </label>
+                      </div>
+                    </div>
                   </div>
 
                   <div class="form-group">
