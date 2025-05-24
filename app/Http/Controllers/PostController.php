@@ -50,13 +50,17 @@ class PostController extends Controller
   {
     $user = auth()->user();
     $post = $this->postService->getPostById($id);
+    $previous = Post::where('status', 'public')->where('id', '<', $id)->orderBy('id', 'desc')->first();
+    $next = Post::where('status', 'public')->where('id', '>', $id)->orderBy('id')->first();
 
     $post->is_favorited = $user
       ? $user->favorites->pluck('post_id')->contains($post->id)
       : false;
 
     return Inertia::render('ChillPages/PostDetail', [
-      'post' => $post
+      'post' => $post,
+      'previous' => $previous,
+      'next' => $next,
     ]);
   }
 
