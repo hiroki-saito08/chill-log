@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Services\MypageService;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Helpers\NgWordFilter;
+use App\Models\User;
 
 class MypageController extends Controller
 {
@@ -22,6 +23,17 @@ class MypageController extends Controller
     public function index()
     {
         return Inertia::render('ChillPages/Mypage', $this->mypageService->getMypageData());
+    }
+
+    // 各ユーザーの詳細画面
+    public function show($id)
+    {
+        $user = User::with('posts.images')->findOrFail($id);
+
+        return Inertia::render('ChillPages/UserProfile', [
+            'user' => $user,
+            'posts' => $user->posts()->with('images', 'reviews')->latest()->paginate(6),
+        ]);
     }
 
     public function update(UpdateProfileRequest $request)

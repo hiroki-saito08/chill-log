@@ -7,6 +7,7 @@
           :src="`/storage/${post.images[0].image_path}`"
           alt="Spot image"
           class="post-thumbnail"
+          @error="(e) => e.target.src = '/images/default.jpg'"
         />
       </div>
       <div class="post-info">

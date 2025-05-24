@@ -179,7 +179,27 @@ const formatDate = (dateStr) => {
               :src="`/storage/${image.image_path}`"
               alt="Post Image"
               class="post-image img-fluid w-100 rounded"
+              @error="(e) => e.target.src = '/images/default.jpg'"
             />
+          </div>
+        </div>
+
+        <!-- 投稿者プロフィールセクション -->
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <Link :href="route('users.show', post.user.id)">
+            <img
+              :src="post.user.profile_image ? `/storage/${post.user.profile_image}` : '/images/default.jpg'"
+              @error="(e) => e.target.src = '/images/default.jpg'"
+              alt="Profile image"
+              class="rounded-circle"
+              style="width: 60px; height: 60px; object-fit: cover;"
+            />
+          </Link>
+
+          <div>
+            <Link :href="route('users.show', post.user.id)" class="fw-bold text-decoration-none text-dark">
+              {{ post.user.name }}
+            </Link>
           </div>
         </div>
 
@@ -194,6 +214,7 @@ const formatDate = (dateStr) => {
             <span class="fw-bold"> ・ description:</span> {{ post.description }}
           </p>
         </div>
+
         <!-- <div class="map-area">Map Placeholder</div> -->
         <div class="buttons">
           <button class="btn" @click="toggleFavorite">
@@ -342,7 +363,25 @@ const formatDate = (dateStr) => {
           :key="review.id"
         >
           <div class="review-header">
-            <strong>{{ review.user.name }}</strong> - {{ formatDate(review.created_at) }}
+            <!-- 投稿者プロフィールセクション -->
+            <div class="d-flex align-items-center gap-3 mb-4">
+              <Link :href="route('users.show', review.user.id)">
+                <img
+                  :src="review.user.profile_image ? `/storage/${review.user.profile_image}` : '/images/default.jpg'"
+                  @error="(e) => e.target.src = '/images/default.jpg'"
+                  alt="Profile image"
+                  class="rounded-circle"
+                  style="width: 60px; height: 60px; object-fit: cover;"
+                />
+              </Link>
+
+              <div>
+                <Link :href="route('users.show', review.user.id)" class="fw-bold text-decoration-none text-dark">
+                  {{ review.user.name }}
+                </Link>
+              </div>
+            </div>
+            <p>{{ formatDate(review.created_at) }}</p>
           </div>
           <ul class="review-scores">
             <li>Overall: {{ stars(review.rating_overall) }}</li>
