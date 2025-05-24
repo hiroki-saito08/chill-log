@@ -2,12 +2,15 @@
 import { ref, computed } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 import PostCard from '@/Components/PostCard.vue';
+import Pagination from '@/Components/Pagination.vue';
 
 const posts = computed(() => usePage().props.posts);
 
 const sortOption = ref('newest');
 const sortedPosts = computed(() => {
-  return [...posts.value].sort((a, b) => {
+  if (!posts.value?.data) return [];
+
+  return [...posts.value.data].sort((a, b) => {
     return sortOption.value === 'newest'
       ? new Date(b.created_at) - new Date(a.created_at)
       : new Date(a.created_at) - new Date(b.created_at);
@@ -29,7 +32,7 @@ const deletePost = (id) => {
   <section id="my-posts-section" class="section">
     <h2>My Posts</h2>
 
-    <div v-if="posts.length === 0">
+    <div v-if="posts.data.length === 0">
       No Posts
     </div>
     <div v-else>
@@ -46,6 +49,9 @@ const deletePost = (id) => {
           <button class="delete-btn" @click="deletePost(post.post_id)">Delete</button>
         </div>
       </PostCard>
+
+      <!-- ページネーション -->
+      <Pagination :links="posts.links" />
     </div>
   </section>
 </template>
