@@ -51,7 +51,11 @@ const deletePost = (id) => {
       </PostCard>
 
       <!-- ページネーション -->
-      <Pagination :links="posts.links" />
+      <Pagination
+        :links="posts.links"
+        routeName="mypage"
+        :extraParams="{ section: 'my-posts-section' }"
+      />
     </div>
   </section>
 </template>

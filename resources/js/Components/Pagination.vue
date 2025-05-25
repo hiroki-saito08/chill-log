@@ -1,10 +1,12 @@
 <script setup>
-import { Link } from '@inertiajs/vue3'
+import { router } from '@inertiajs/vue3'
 
 const props = defineProps({
-  links: {
-    type: Array,
-    required: true
+  links: Array,
+  routeName: String, // ex: 'mypage' or 'posts.index'
+  extraParams: {
+    type: Object,
+    default: () => ({}) // ex: { section: 'my-posts-section' }
   }
 })
 
@@ -12,6 +14,17 @@ function formatLabel(label) {
   if (/previous/i.test(label)) return '«'
   if (/next/i.test(label)) return '»'
   return label
+}
+
+function goToPage(url) {
+  const page = new URL(url).searchParams.get('page')
+  const params = { ...props.extraParams, page }
+
+  if (props.routeName) {
+    router.get(route(props.routeName), params, { preserveScroll: true })
+  } else {
+    router.visit(url)
+  }
 }
 </script>
 
@@ -23,9 +36,9 @@ function formatLabel(label) {
         :key="link.label"
         :class="['page-item', { active: link.active, disabled: !link.url }]"
       >
-        <Link
+        <button
           v-if="link.url"
-          :href="link.url"
+          @click.prevent="goToPage(link.url)"
           class="page-link"
           v-html="formatLabel(link.label)"
         />
