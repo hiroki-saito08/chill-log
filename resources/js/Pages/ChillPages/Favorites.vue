@@ -28,7 +28,11 @@ const deletePost = (postId) => {
       </PostCard>
 
       <!-- ページネーション -->
-      <Pagination :links="favorites.links" />
+      <Pagination
+        :links="favorites.links"
+        routeName="mypage"
+        :extraParams="{ section: 'favorite-section' }"
+      />
     </div>
   </section>
 </template>

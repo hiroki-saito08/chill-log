@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { router } from '@inertiajs/vue3'
 import Header from '@/Components/Header.vue';
 import Footer from '@/Components/Footer.vue';
 import Profile from '@/Pages/ChillPages/Profile.vue';
@@ -11,11 +12,17 @@ const props = defineProps({
   categories: Array
 });
 
-const activeSection = ref('profile-section');
+const section = new URLSearchParams(window.location.search).get('section')
+const activeSection = ref(section || 'profile-section')
 
 const navigate = (section) => {
-  activeSection.value = section;
-};
+  router.get(route('mypage'), {
+    section,
+    page: 1
+  }, {
+    preserveScroll: true
+  })
+}
 </script>
 
 <template>
