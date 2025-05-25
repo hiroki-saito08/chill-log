@@ -27,10 +27,6 @@ It is built as a full-stack single-page application using Laravel 9, Vue 3, and 
 -   File Storage: Laravel filesystem (public disk)
 -   Mail: SMTP (configurable for production with Xserver)
 
-## Screenshots
-
-_(You can add screenshots or a demo link here later)_
-
 ## Local Development Setup
 
 ```bash
