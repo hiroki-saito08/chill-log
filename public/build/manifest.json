@@ -15,54 +15,54 @@
     "file": "assets/Toast-cb35b65b.css",
     "src": "Toast.css"
   },
-  "_ApplicationLogo-a189ef40.js": {
-    "file": "assets/ApplicationLogo-a189ef40.js",
+  "_ApplicationLogo-4f628b72.js": {
+    "file": "assets/ApplicationLogo-4f628b72.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "resources/js/app.js"
     ]
   },
-  "_Footer-c4f381de.js": {
+  "_Footer-0c9005fa.js": {
     "css": [
       "assets/Footer-0f814ee7.css"
     ],
-    "file": "assets/Footer-c4f381de.js",
+    "file": "assets/Footer-0c9005fa.js",
     "imports": [
       "resources/js/app.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ]
   },
-  "_Pagination-89452204.js": {
+  "_Pagination-09138295.js": {
     "css": [
       "assets/Pagination-4559a449.css"
     ],
-    "file": "assets/Pagination-89452204.js",
+    "file": "assets/Pagination-09138295.js",
     "imports": [
       "resources/js/app.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ]
   },
-  "_PostCard-9123ac91.js": {
+  "_PostCard-3586e696.js": {
     "css": [
       "assets/PostCard-dc1a7c58.css"
     ],
-    "file": "assets/PostCard-9123ac91.js",
+    "file": "assets/PostCard-3586e696.js",
     "imports": [
       "resources/js/app.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ]
   },
-  "_PrimaryButton-5c44e889.js": {
-    "file": "assets/PrimaryButton-5c44e889.js",
+  "_PrimaryButton-09667efb.js": {
+    "file": "assets/PrimaryButton-09667efb.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_Toast-36deffb8.js": {
+  "_Toast-abe69caa.js": {
     "css": [
       "assets/Toast-cb35b65b.css"
     ],
-    "file": "assets/Toast-36deffb8.js",
+    "file": "assets/Toast-abe69caa.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "resources/js/app.js"
@@ -80,11 +80,11 @@
     "css": [
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/ConfirmPassword-ae02316b.js",
+    "file": "assets/ConfirmPassword-fab73b51.js",
     "imports": [
       "resources/js/app.js",
-      "_ApplicationLogo-a189ef40.js",
-      "_PrimaryButton-5c44e889.js",
+      "_ApplicationLogo-4f628b72.js",
+      "_PrimaryButton-09667efb.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
@@ -99,10 +99,10 @@
       "assets/ForgotPassword-f144863f.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/ForgotPassword-38920608.js",
+    "file": "assets/ForgotPassword-1d51545b.js",
     "imports": [
       "resources/js/app.js",
-      "_Footer-c4f381de.js",
+      "_Footer-0c9005fa.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
@@ -117,10 +117,10 @@
       "assets/Login-92dc8943.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/Login-7e19fa02.js",
+    "file": "assets/Login-b55bc59a.js",
     "imports": [
       "resources/js/app.js",
-      "_Footer-c4f381de.js",
+      "_Footer-0c9005fa.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
@@ -135,10 +135,10 @@
       "assets/Register-419967d2.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/Register-dff84b3c.js",
+    "file": "assets/Register-8cacb86d.js",
     "imports": [
       "resources/js/app.js",
-      "_Footer-c4f381de.js",
+      "_Footer-0c9005fa.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
@@ -153,11 +153,11 @@
       "assets/ResetPassword-1b759b87.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/ResetPassword-2217ea53.js",
+    "file": "assets/ResetPassword-0411fb25.js",
     "imports": [
       "resources/js/app.js",
-      "_Footer-c4f381de.js",
-      "_PrimaryButton-5c44e889.js",
+      "_Footer-0c9005fa.js",
+      "_PrimaryButton-09667efb.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
@@ -172,11 +172,11 @@
       "assets/VerifyEmail-0b4de3ca.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/VerifyEmail-29e9f57a.js",
+    "file": "assets/VerifyEmail-3c0d1c25.js",
     "imports": [
       "resources/js/app.js",
-      "_Footer-c4f381de.js",
-      "_PrimaryButton-5c44e889.js",
+      "_Footer-0c9005fa.js",
+      "_PrimaryButton-09667efb.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
@@ -191,9 +191,9 @@
       "assets/About-a4c32d60.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/About-97c572e3.js",
+    "file": "assets/About-537dbaf8.js",
     "imports": [
-      "_Footer-c4f381de.js",
+      "_Footer-0c9005fa.js",
       "resources/js/app.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
@@ -209,9 +209,9 @@
       "assets/About-a4c32d60.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/Contact-00151277.js",
+    "file": "assets/Contact-778d6597.js",
     "imports": [
-      "_Footer-c4f381de.js",
+      "_Footer-0c9005fa.js",
       "resources/js/app.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
@@ -222,11 +222,11 @@
     "css": [
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/Favorites-16cef091.js",
+    "file": "assets/Favorites-7d07cb2d.js",
     "imports": [
       "resources/js/app.js",
-      "_PostCard-9123ac91.js",
-      "_Pagination-89452204.js",
+      "_PostCard-3586e696.js",
+      "_Pagination-09138295.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
@@ -241,11 +241,11 @@
       "assets/Index-c93b6326.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/Index-31414bad.js",
+    "file": "assets/Index-58aeeb06.js",
     "imports": [
       "resources/js/app.js",
-      "_Footer-c4f381de.js",
-      "_PostCard-9123ac91.js",
+      "_Footer-0c9005fa.js",
+      "_PostCard-3586e696.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
@@ -260,18 +260,18 @@
       "assets/Mypage-c0216717.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/Mypage-9ed17fcd.js",
+    "file": "assets/Mypage-ff396b82.js",
     "imports": [
       "resources/js/app.js",
-      "_Footer-c4f381de.js",
+      "_Footer-0c9005fa.js",
       "resources/js/Pages/ChillPages/Profile.vue",
       "resources/js/Pages/ChillPages/Newpost.vue",
       "resources/js/Pages/ChillPages/Myposts.vue",
       "resources/js/Pages/ChillPages/Favorites.vue",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_Toast-36deffb8.js",
-      "_PostCard-9123ac91.js",
-      "_Pagination-89452204.js"
+      "_Toast-abe69caa.js",
+      "_PostCard-3586e696.js",
+      "_Pagination-09138295.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/ChillPages/Mypage.vue"
@@ -285,29 +285,29 @@
       "assets/Myposts-d6a90c4b.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/Myposts-e5220b23.js",
+    "file": "assets/Myposts-f6e20fb3.js",
     "imports": [
       "resources/js/app.js",
-      "_PostCard-9123ac91.js",
-      "_Pagination-89452204.js",
+      "_PostCard-3586e696.js",
+      "_Pagination-09138295.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/ChillPages/Myposts.vue"
   },
   "resources/js/Pages/ChillPages/Newpost.css": {
-    "file": "assets/Newpost-54a336a5.css",
+    "file": "assets/Newpost-cd89c74c.css",
     "src": "resources/js/Pages/ChillPages/Newpost.css"
   },
   "resources/js/Pages/ChillPages/Newpost.vue": {
     "css": [
-      "assets/Newpost-54a336a5.css",
+      "assets/Newpost-cd89c74c.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/Newpost-96d069da.js",
+    "file": "assets/Newpost-613a7ea5.js",
     "imports": [
       "resources/js/app.js",
-      "_Toast-36deffb8.js",
+      "_Toast-abe69caa.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
@@ -322,12 +322,12 @@
       "assets/PostDetail-0cc4f235.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/PostDetail-7ea23eb5.js",
+    "file": "assets/PostDetail-7661f30c.js",
     "imports": [
       "resources/js/app.js",
-      "_Footer-c4f381de.js",
+      "_Footer-0c9005fa.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_Toast-36deffb8.js"
+      "_Toast-abe69caa.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/ChillPages/PostDetail.vue"
@@ -341,12 +341,12 @@
       "assets/Posts-caa9d747.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/Posts-af8487cc.js",
+    "file": "assets/Posts-026ca5b4.js",
     "imports": [
       "resources/js/app.js",
-      "_Footer-c4f381de.js",
-      "_PostCard-9123ac91.js",
-      "_Pagination-89452204.js",
+      "_Footer-0c9005fa.js",
+      "_PostCard-3586e696.js",
+      "_Pagination-09138295.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
@@ -361,9 +361,9 @@
       "assets/About-a4c32d60.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/Privacy-9fd580ae.js",
+    "file": "assets/Privacy-3b5ce120.js",
     "imports": [
-      "_Footer-c4f381de.js",
+      "_Footer-0c9005fa.js",
       "resources/js/app.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
@@ -379,10 +379,10 @@
       "assets/Profile-8699ef96.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/Profile-3dc068a0.js",
+    "file": "assets/Profile-dc5e1607.js",
     "imports": [
       "resources/js/app.js",
-      "_Toast-36deffb8.js",
+      "_Toast-abe69caa.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
@@ -392,12 +392,12 @@
     "css": [
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/UserProfile-21953b45.js",
+    "file": "assets/UserProfile-564c1aca.js",
     "imports": [
       "resources/js/app.js",
-      "_PostCard-9123ac91.js",
-      "_Pagination-89452204.js",
-      "_Footer-c4f381de.js",
+      "_PostCard-3586e696.js",
+      "_Pagination-09138295.js",
+      "_Footer-0c9005fa.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
@@ -407,9 +407,9 @@
     "css": [
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/Dashboard-7106d7b2.js",
+    "file": "assets/Dashboard-0d1bdceb.js",
     "imports": [
-      "_ApplicationLogo-a189ef40.js",
+      "_ApplicationLogo-4f628b72.js",
       "resources/js/app.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
@@ -425,7 +425,7 @@
       "assets/Welcome-665689a9.css",
       "assets/app-a7a66324.css"
     ],
-    "file": "assets/Welcome-82ba722b.js",
+    "file": "assets/Welcome-c1a9e130.js",
     "imports": [
       "resources/js/app.js"
     ],
@@ -463,7 +463,7 @@
       "resources/js/Pages/Dashboard.vue",
       "resources/js/Pages/Welcome.vue"
     ],
-    "file": "assets/app-9e071959.js",
+    "file": "assets/app-c9dcb1db.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
