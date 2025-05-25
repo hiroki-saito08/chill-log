@@ -729,5 +729,17 @@ const formatDate = (dateStr) => {
     border-radius: 0;
     box-shadow: none;
   }
+
+  .spot-header {
+    display: block;
+    margin-top: 20px;
+  }
+
+  .category {
+    max-width: 100px;
+    text-align: center;
+    margin-left: auto;
+    margin-top: 20px;
+  }
 }
 </style>

@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 
+body {
+  overflow-x: hidden;
+}
+
 .container {
   max-width: 1000px;
   margin: 0 auto;
