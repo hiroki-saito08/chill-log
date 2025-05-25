@@ -36,10 +36,10 @@ const submitLogin = () => {
           <span v-if="form.errors.password" class="error">{{ form.errors.password }}</span>
         </div>
 
-        <div class="form-group remember-me">
+        <!-- <div class="form-group remember-me">
           <input type="checkbox" id="remember" v-model="form.remember">
           <label for="remember">Remember Me</label>
-        </div>
+        </div> -->
 
         <button type="submit" class="btn" :disabled="form.processing">Login</button>
       </form>
