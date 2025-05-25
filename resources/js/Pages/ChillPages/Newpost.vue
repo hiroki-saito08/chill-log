@@ -3,6 +3,10 @@ import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue'
 import Toast from '@/Components/Toast.vue'
 
+const props = defineProps({
+  categories: Array
+});
+
 const toast = ref(null)
 const newPost = useForm({
   title: '',
@@ -11,7 +15,7 @@ const newPost = useForm({
   latitude: '',
   longitude: '',
   description: '',
-  visit_time: '',
+  visit_time: [],
   status: 'public',
   images: [],
 });
@@ -30,6 +34,7 @@ const submitPost = () => {
     forceFormData: true,
     onSuccess: () => {
       console.log('Post store successfully');
+      newPost.reset();
     },
     onError: (errors) => {
       toast.value.triggerToast(errors, 'error');
@@ -53,11 +58,9 @@ const submitPost = () => {
       <div class="form-group">
         <label for="category">Category</label>
         <select id="category" v-model="newPost.category">
-          <option value="cafe">Cafe</option>
-          <option value="park">Park</option>
-          <option value="beach">Beach</option>
-          <option value="Sauna">Sauna</option>
-          <option value="other">Other</option>
+          <option v-for="option in categories" :key="option" :value="option">
+            {{ option }}
+          </option>
         </select>
       </div>
 
@@ -70,14 +73,30 @@ const submitPost = () => {
       </div>
 
       <div class="form-group">
-        <label for="visit-time">Recommended Visit Time</label>
-        <select id="visit-time" v-model="newPost.visit_time">
-          <option value="morning">Morning</option>
-          <option value="afternoon">Afternoon</option>
-          <option value="evening">Evening</option>
-          <option value="night">Night</option>
-          <option value="anytime">Anytime</option>
-        </select>
+        <label class="form-label mb-2">Recommended Visit Time</label>
+        <div class="d-flex flex-wrap gap-2">
+          <div
+            v-for="option in ['morning', 'afternoon', 'evening', 'night', 'anytime']"
+            :key="option"
+            class="form-check-inline"
+          >
+            <input
+              class="btn-check"
+              type="checkbox"
+              :value="option"
+              v-model="newPost.visit_time"
+              :id="`time-${option}`"
+              autocomplete="off"
+            />
+            <label
+              class="btn btn-outline-secondary"
+              :class="{ active: newPost.visit_time.includes(option) }"
+              :for="`time-${option}`"
+            >
+              {{ option }}
+            </label>
+          </div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -161,4 +180,20 @@ const submitPost = () => {
 .btn-success:hover {
   background: #76A03A;
 }
+
+@media (max-width: 768px) {
+  .section {
+    background: none;
+    padding: 0;
+    border-left: none;
+  }
+
+  .form-container {
+    background: #f9f9f9;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
 </style>

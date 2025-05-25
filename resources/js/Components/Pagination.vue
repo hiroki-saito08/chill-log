@@ -1,23 +1,66 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3'
 
 const props = defineProps({
-  links: Array
+  links: {
+    type: Array,
+    required: true
+  }
 })
 
-const links = props.links
-
+function formatLabel(label) {
+  if (/previous/i.test(label)) return '«'
+  if (/next/i.test(label)) return '»'
+  return label
+}
 </script>
+
 <template>
-  <div v-if="links.length > 3">
-    <div class="flex flex-wrap -mb-1 justify-center">
-      <template v-for="(link, p) in links" :key="p">
-        <div v-if="p === 0" class="mr-1 mb-1 px-4 py-3" />
-        <div v-else-if="p === links.length -1" class="mr-1 mb-1 px-4 py-3" />
-        <div v-else-if="link.url === null" class="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded" v-html="link.label" />
-        <Link v-else class="mr-1 mb-1 px-4 py-3 text-sm leading-4 border rounded hover:bg-yellow-400 focus:border-indigo-500 focus:text-indigo-500" :class="{ 'bg-blue-700 text-white hover:bg-blue-600': link.active }" :href="link.url" v-html="link.label">
-        </Link>
-      </template>
-    </div>
+  <div class="pagination-wrapper">
+    <ul class="pagination">
+      <li
+        v-for="link in links"
+        :key="link.label"
+        :class="['page-item', { active: link.active, disabled: !link.url }]"
+      >
+        <Link
+          v-if="link.url"
+          :href="link.url"
+          class="page-link"
+          v-html="formatLabel(link.label)"
+        />
+        <span v-else class="page-link" v-html="formatLabel(link.label)"></span>
+      </li>
+    </ul>
   </div>
 </template>
+
+<style scoped>
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.pagination .page-item {
+  margin: 0 5px;
+}
+
+.pagination .page-link {
+  padding: 8px 12px;
+  background: #6C7A89;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.pagination .page-item.active .page-link {
+  background: #88B04B;
+}
+
+.pagination .page-item.disabled .page-link {
+  background: #ccc;
+  cursor: not-allowed;
+}
+</style>

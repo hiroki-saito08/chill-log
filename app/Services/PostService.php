@@ -43,7 +43,7 @@ class PostService
       $query->where('category', $request->category);
     }
 
-    return $query->latest()->paginate(10);
+    return $query->latest()->paginate(8);
   }
 
   public function getAllPosts()
@@ -59,6 +59,9 @@ class PostService
   public function createPost($user, array $data)
   {
     $data['user_id'] = $user->id;
+    if (!empty($data['visit_time'])) {
+      $data['visit_time'] = json_encode($data['visit_time']);
+    }
 
     // 投稿を保存
     $post = $this->postRepository->createPost($data);
@@ -80,6 +83,9 @@ class PostService
 
   public function updatePost(Post $post, array $data)
   {
+    if (!empty($data['visit_time'])) {
+      $data['visit_time'] = json_encode($data['visit_time']);
+    }
     // 投稿を保存
     $post->update([
       'title' => $data['title'],

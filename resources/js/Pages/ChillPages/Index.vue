@@ -7,7 +7,8 @@ import PostCard from '@/Components/PostCard.vue';
 
 const props = defineProps({
   posts: Object,
-  popularPosts: Object
+  popularPosts: Object,
+  categories: Array
 });
 
 const filters = ref({
@@ -24,7 +25,17 @@ function searchPosts() {
 </script>
 
 <template>
-  <Head title="Chill-log" />
+  <!-- SEO -->
+  <Head>
+    <title>Chill-log | Find Your Chill Spot</title>
+    <meta name="description" content="Chill-log is a place to share and discover relaxing spots around you. Parks, cafes, beaches and more – find your perfect chill." />
+    <meta property="og:title" content="Chill-log | Find Your Chill Spot" />
+    <meta property="og:description" content="Share and explore relaxing places like parks, cafes, and beaches in your area." />
+    <meta property="og:image" content="/default-ogp.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://chill-log.com/" />
+  </Head>
+
   <div class="bg-light min-vh-100 top-page">
     <Header />
 
@@ -38,10 +49,9 @@ function searchPosts() {
       />
       <select v-model="filters.category" class="form-select mb-3">
         <option value="">All Categories</option>
-        <option value="Park">Park</option>
-        <option value="Cafe">Cafe</option>
-        <option value="Beach">Beach</option>
-        <option value="Other">Other</option>
+        <option v-for="option in categories" :key="option" :value="option">
+          {{ option }}
+        </option>
       </select>
       <button @click="searchPosts" class="btn btn-success w-100">
         Search
@@ -64,3 +74,52 @@ function searchPosts() {
     <Footer />
   </div>
 </template>
+
+<style>
+  .top-page .container {
+    margin-top: 60px;
+    margin-bottom: 60px;
+  }
+
+  .top-page .section {
+    background: #f4f4f4;
+    padding: 30px;
+    border-left: 10px solid #88B04B;
+    border-radius: 10px;
+    margin-bottom: 40px;
+  }
+
+  .top-page .section:last-child {
+    margin-bottom: 0;
+  }
+
+  .search-wrapper {
+    max-width: 800px;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+
+@media (max-width: 768px) {
+  .top-page .container {
+    margin-top: 0;
+    margin-bottom: 0;
+    border-radius: 0;
+  }
+
+  .top-page .section {
+    background: none;
+    padding: 0;
+    border-left: none;
+    border-radius: 0;
+    margin-bottom: 60px;
+  }
+
+  .search-wrapper {
+    padding: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+</style>

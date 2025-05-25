@@ -1,15 +1,19 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
+import PostCard from '@/Components/PostCard.vue';
+import Pagination from '@/Components/Pagination.vue';
 
 const posts = computed(() => usePage().props.posts);
 
 const sortOption = ref('newest');
 const sortedPosts = computed(() => {
-  return [...posts.value].sort((a, b) => {
+  if (!posts.value?.data) return [];
+
+  return [...posts.value.data].sort((a, b) => {
     return sortOption.value === 'newest'
-      ? new Date(b.date) - new Date(a.date)
-      : new Date(a.date) - new Date(b.date);
+      ? new Date(b.created_at) - new Date(a.created_at)
+      : new Date(a.created_at) - new Date(b.created_at);
   });
 });
 
@@ -28,7 +32,7 @@ const deletePost = (id) => {
   <section id="my-posts-section" class="section">
     <h2>My Posts</h2>
 
-    <div v-if="posts.length === 0">
+    <div v-if="posts.data.length === 0">
       No Posts
     </div>
     <div v-else>
@@ -39,28 +43,15 @@ const deletePost = (id) => {
         </select>
       </div>
 
-      <div class="post-list">
-        <div v-for="post in sortedPosts" :key="post.id" class="post-card">
-          <div class="col-4 d-flex align-items-center justify-content-center">
-            <img
-              v-if="post.images.length"
-              :src="`/storage/${post.images[0].image_path}`"
-              alt="Post Image"
-              class="img-fluid rounded"
-              style="height: 120px; object-fit: cover;"
-            />
-            <div v-else class="text-muted small">No Image</div>
-          </div>
-          <div class="post-info">
-            <h3>{{ post.title }}</h3>
-            <p class="post-date">{{ post.description }}</p>
-          </div>
-          <div class="post-actions">
-            <button class="edit-btn" @click="editPost(post.id)">Edit</button>
-            <button class="delete-btn" @click="deletePost(post.id)">Delete</button>
-          </div>
+      <PostCard v-for="post in sortedPosts" :key="post.id" :post="post">
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-primary" @click="editPost(post)">Edit</button>
+          <button class="delete-btn" @click="deletePost(post.post_id)">Delete</button>
         </div>
-      </div>
+      </PostCard>
+
+      <!-- ページネーション -->
+      <Pagination :links="posts.links" />
     </div>
   </section>
 </template>
@@ -83,69 +74,5 @@ h2 {
   font-size: 14px;
   border-radius: 5px;
   border: 1px solid #ccc;
-}
-
-/* 投稿リスト */
-.post-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* 投稿カード */
-.post-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.post-image {
-  width: 50px;
-  height: 50px;
-  border-radius: 5px;
-  object-fit: cover;
-}
-
-.post-info {
-  flex-grow: 1;
-  padding-left: 15px;
-}
-
-.post-info h3 {
-  margin: 0;
-  font-size: 16px;
-}
-
-.post-date {
-  font-size: 14px;
-  color: gray;
-}
-
-/* ボタン */
-.post-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.edit-btn{
-  background-color: #88B04B;
-  color: white;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.delete-btn {
-  background: #dc3545;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
 </style>

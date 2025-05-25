@@ -1,12 +1,18 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { router, usePage, useForm } from '@inertiajs/vue3';
+import { Link, router, usePage, useForm } from '@inertiajs/vue3';
 import Header from '@/Components/Header.vue';
 import Footer from '@/Components/Footer.vue';
 import ShareMenu from '@/Components/ShareMenu.vue';
 import Toast from '@/Components/Toast.vue'
 
 const post = computed(() => usePage().props.post);
+const props = defineProps({
+  previous: Object,
+  next: Object,
+  categories: Array
+});
+
 const user = usePage().props.auth.user
 const toast = ref(null)
 
@@ -19,7 +25,7 @@ function openEditModal() {
   editForm.latitude = post.value.latitude
   editForm.longitude = post.value.longitude
   editForm.description = post.value.description
-  editForm.visit_time = post.value.visit_time
+  editForm.visit_time = post.value.visit_time ?? []
   showEditModal.value = true
 }
 
@@ -30,7 +36,7 @@ const editForm = useForm({
   latitude: '',
   longitude: '',
   description: '',
-  visit_time: '',
+  visit_time: post.visit_time ?? [],
   status: 'public',
   images: [],
 })
@@ -47,7 +53,6 @@ function closeEditModal() {
   editForm.reset()
 }
 function submitEdit() {
-  console.log(editForm)
   editForm.post(route('posts.update', post.value.id), {
     forceFormData: true,
     onSuccess: () => {
@@ -91,9 +96,10 @@ const submitReview = () => {
     reviewForm.put(route('reviews.update', post.value.my_review.id), {
       onSuccess: () => {
         toggleReviewForm();
+        toast.value.triggerToast('Review updated successfully');
       },
       onError: (errors) => {
-        console.error('Validation failed:', errors);
+        toast.value.triggerToast(errors, 'error');
       }
     });
   } else {
@@ -101,9 +107,10 @@ const submitReview = () => {
       onSuccess: () => {
         toggleReviewForm();
         reviewForm.reset();
+        toast.value.triggerToast('Review stored successfully');
       },
       onError: (errors) => {
-        console.error('Validation failed:', errors);
+        toast.value.triggerToast(errors, 'error');
       }
     });
   }
@@ -140,171 +147,281 @@ const formatDate = (dateStr) => {
 </script>
 
 <template>
+  <!-- SEO -->
+  <Head>
+    <title>{{ post.title }} | Chill-log</title>
+    <meta name="description" :content="post.description.slice(0, 100)" />
+    <meta property="og:title" :content="post.title" />
+    <meta property="og:description" :content="post.description.slice(0, 100)" />
+    <meta property="og:image" :content="`/storage/${post.images[0]?.image_path}`" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" :content="`https://chill-log.com/posts/${post.id}`" />
+  </Head>
+
   <Toast ref="toast" />
 
   <Header />
 
-  <div class="container">
-    <div class="section">
-      <div class="spot-header">
-        <h2>{{ post.title }}</h2>
-        <div class="category">{{ post.category }}</div>
-      </div>
+  <div class="post-detail">
+    <div class="container">
+      <div class="section">
+        <div class="spot-header">
+          <h2>{{ post.title }}</h2>
+          <div class="category">{{ post.category }}</div>
+        </div>
 
-      <div class="mb-4">
-        <div
-          v-for="image in post.images"
-          :key="image.id"
-          class="mb-3"
-        >
-          <img
-            :src="`/storage/${image.image_path}`"
-            alt="Post Image"
-            class="img-fluid w-100 rounded"
-          />
+        <div class="mb-4">
+          <div
+            v-for="image in post.images"
+            :key="image.id"
+            class="mb-3"
+          >
+            <img
+              :src="`/storage/${image.image_path}`"
+              alt="Post Image"
+              class="post-image img-fluid w-100 rounded"
+              @error="(e) => e.target.src = '/images/default.jpg'"
+            />
+          </div>
+        </div>
+
+        <!-- 投稿者プロフィールセクション -->
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <Link :href="route('users.show', post.user.id)">
+            <img
+              :src="post.user.profile_image ? `/storage/${post.user.profile_image}` : '/images/default.jpg'"
+              @error="(e) => e.target.src = '/images/default.jpg'"
+              alt="Profile image"
+              class="rounded-circle"
+              style="width: 60px; height: 60px; object-fit: cover;"
+            />
+          </Link>
+
+          <div>
+            <Link :href="route('users.show', post.user.id)" class="fw-bold text-decoration-none text-dark">
+              {{ post.user.name }}
+            </Link>
+          </div>
+        </div>
+
+        <div class="spot-meta">
+          <p>
+            <span class="fw-bold">・ Address:</span> {{ post.location_name }}
+          </p>
+          <p v-if="post.visit_time?.length">
+            <span class="fw-bold">・ Recommended Time: </span>
+            <span v-for="(time, index) in post.visit_time" :key="index" class="badge bg-secondary me-2">
+              {{ time }}
+            </span>
+          </p>
+          <p>
+            <span class="fw-bold"> ・ description:</span> {{ post.description }}
+          </p>
+        </div>
+
+        <!-- <div class="map-area">Map Placeholder</div> -->
+        <div class="buttons">
+          <button class="btn" @click="toggleFavorite">
+            {{ isFavorited ? '★' : '☆' }}
+          </button>
+
+          <ShareMenu />
+        </div>
+
+        <!-- 編集ボタン（本人だけ見える） -->
+        <div v-if="user && user.id === post.user_id" class="text-end mt-3">
+          <button class="btn" @click="openEditModal()">
+            Edit
+          </button>
+        </div>
+        <div v-else class="review-button-wrapper">
+          <button class="btn" @click="toggleReviewForm">
+            {{ isReviewed ? 'Edit Review' : 'Leave a Review' }}
+          </button>
         </div>
       </div>
 
-      <div class="spot-meta">
-        <p>
-          <span class="fw-bold">・ Address:</span> {{ post.location_name }}
-        </p>
-        <p>
-          <span class="fw-bold"> ・ Best time:</span> {{ post.visit_time }}
-        </p>
-        <p>
-          <span class="fw-bold"> ・ description:</span> {{ post.description }}
-        </p>
-      </div>
-      <!-- <div class="map-area">Map Placeholder</div> -->
-      <div class="buttons">
-        <button class="btn" @click="toggleFavorite">
-          {{ isFavorited ? '★' : '☆' }}
-        </button>
+      <!-- 編集モーダル -->
+      <div v-if="showEditModal" class="modal-backdrop-custom">
+        <div class="modal d-block" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Edit Post</h5>
+                <button type="button" class="btn-close" @click="closeEditModal"></button>
+              </div>
+              <div class="modal-body">
 
-        <ShareMenu />
-      </div>
-
-      <!-- 編集ボタン（本人だけ見える） -->
-      <div v-if="user && user.id === post.user_id" class="text-end mt-3">
-        <button class="btn" @click="openEditModal()">
-          Edit
-        </button>
-      </div>
-      <div v-else class="review-button-wrapper">
-        <button class="btn" @click="toggleReviewForm">
-          {{ isReviewed ? 'Edit Review' : 'Leave a Review' }}
-        </button>
-      </div>
-    </div>
-
-    <!-- 編集モーダル -->
-    <div v-if="showEditModal" class="modal-backdrop-custom">
-      <div class="modal d-block" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Edit Post</h5>
-              <button type="button" class="btn-close" @click="closeEditModal"></button>
-            </div>
-            <div class="modal-body">
-
-              <div class="form-container">
-                <div class="form-group">
-                  <label for="title">Title</label>
-                  <input type="text" id="title" v-model="editForm.title" placeholder="e.g., Quiet Park">
-                </div>
-
-                <div class="form-group">
-                  <label for="category">Category</label>
-                  <select id="category" v-model="editForm.category">
-                    <option value="cafe">Cafe</option>
-                    <option value="park">Park</option>
-                    <option value="beach">Beach</option>
-                    <option value="Sauna">Sauna</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="location_name">Location (Address)</label>
-                  <div class="address-container">
-                    <input type="text" id="location_name" v-model="editForm.location_name" placeholder="e.g., Shibuya, Tokyo">
-                    <button class="map-button" @click="openMap()">Select from Map</button>
+                <div class="form-container">
+                  <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" v-model="editForm.title" placeholder="e.g., Quiet Park">
                   </div>
-                </div>
 
-                <div class="form-group">
-                  <label for="visit-time">Recommended Visit Time</label>
-                  <select id="visit-time" v-model="editForm.visit_time">
-                    <option value="morning">Morning</option>
-                    <option value="afternoon">Afternoon</option>
-                    <option value="evening">Evening</option>
-                    <option value="night">Night</option>
-                    <option value="anytime">Anytime</option>
-                  </select>
-                </div>
+                  <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" v-model="editForm.category">
+                      <option v-for="option in categories" :key="option" :value="option">
+                        {{ option }}
+                      </option>
+                    </select>
+                  </div>
 
-                <div class="form-group">
-                  <label for="description">Description</label>
-                  <textarea id="description" v-model="editForm.description" placeholder="Describe the charm of this spot"></textarea>
-                </div>
+                  <div class="form-group">
+                    <label for="location_name">Location (Address)</label>
+                    <div class="address-container">
+                      <input type="text" id="location_name" v-model="editForm.location_name" placeholder="e.g., Shibuya, Tokyo">
+                    </div>
+                  </div>
 
-                <div class="form-group">
-                  <label for="image-upload">Image Upload (Max:2MB)</label>
-                  <input type="file" id="image-upload" @change="handleFileUpload">
-                </div>
-                <div class="buttons mt-4">
-                  <button type="button" class="btn cancel-btn" @click="closeEditModal">Cancel</button>
-                  <button class="btn" @click="submitEdit">Save Changes</button>
+                  <div class="form-group">
+                    <label class="form-label mb-2">Recommended Visit Time</label>
+                    <div class="d-flex flex-wrap gap-2">
+                      <div
+                        v-for="option in ['morning', 'afternoon', 'evening', 'night', 'anytime']"
+                        :key="option"
+                        class="form-check-inline"
+                      >
+                        <input
+                          class="btn-check"
+                          type="checkbox"
+                          :value="option"
+                          v-model="editForm.visit_time"
+                          :id="`time-${option}`"
+                          autocomplete="off"
+                        />
+                        <label
+                          class="btn btn-outline-secondary"
+                          :class="{ active: editForm.visit_time.includes(option) }"
+                          :for="`time-${option}`"
+                        >
+                          {{ option }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" v-model="editForm.description" placeholder="Describe the charm of this spot"></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="image-upload">Image Upload (Max:2MB)</label>
+                    <input type="file" id="image-upload" @change="handleFileUpload">
+                  </div>
+                  <div class="buttons mt-4">
+                    <button type="button" class="btn cancel-btn" @click="closeEditModal">Cancel</button>
+                    <button class="btn" @click="submitEdit">Save Changes</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- レビューセクション -->
-    <div class="section review-section">
-      <h3>Reviews</h3>
-      <p v-if="!post.reviews.length">No reviews yet.</p>
+      <!-- レビューセクション -->
+      <div class="section review-section">
+        <h3>Reviews</h3>
 
-      <p class="review-summary" v-else-if="averageRatings">
-        Overall: {{ stars(averageRatings.overall) }} ({{ averageRatings.overall.toFixed(1) }}) 【
-        Relax: {{ stars(averageRatings.relax) }} ・
-        Safety: {{ stars(averageRatings.safety) }} ・
-        Silence: {{ stars(averageRatings.silence) }} 】
-      </p>
+        <!-- 平均評価 -->
+        <p v-if="!post.reviews.length" class="text-muted">No reviews yet.</p>
 
-      <div class="review" v-for="review in post.reviews" :key="review.id">
-        <div class="review-header"> {{ review.user.name }} - {{ formatDate(review.created_at) }}</div>
-        <p>Overall {{ stars(review.rating_overall) }} 【 Relax: {{ stars(review.rating_relax) }} ・ Safety: {{ stars(review.rating_safety) }} ・ Silence: {{ stars(review.rating_silence) }} 】 </p>
-        <p class="review-text">{{ review.comment }}</p>
+        <div v-else-if="averageRatings" class="rating-summary-card">
+          <div class="overall-rating">
+            <div class="label">Overall</div>
+
+            <div class="stars">
+              {{ stars(averageRatings.overall) }}
+            </div>
+            <div class="score">
+              {{ averageRatings.overall.toFixed(1) }}
+            </div>
+          </div>
+
+          <ul class="sub-ratings">
+            <li><strong>Relax</strong>: {{ stars(averageRatings.relax) }}</li>
+            <li><strong>Safety</strong>: {{ stars(averageRatings.safety) }}</li>
+            <li><strong>Silence</strong>: {{ stars(averageRatings.silence) }}</li>
+          </ul>
+        </div>
+
+        <!-- レビューフォーム -->
+        <div class="review-form" v-show="showReviewForm" id="reviewForm">
+          <div class="form-group" v-for="field in ['rating_relax', 'rating_safety', 'rating_silence']" :key="field">
+            <label>
+              {{ field.replace('rating_', '').charAt(0).toUpperCase() + field.replace('rating_', '').slice(1) }}
+            </label>
+            <select v-model="reviewForm[field]">
+              <option :value="5">⭐⭐⭐⭐⭐</option>
+              <option :value="4">⭐⭐⭐⭐</option>
+              <option :value="3">⭐⭐⭐</option>
+              <option :value="2">⭐⭐</option>
+              <option :value="1">⭐</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Comment</label>
+            <textarea v-model="reviewForm.comment" rows="4" placeholder="Write your review...(max 500 characters)"></textarea>
+          </div>
+          <p>{{ reviewForm.comment.length }} / 500 characters</p>
+
+          <button class="btn" @click="submitReview">Submit</button>
+          <p v-if="reviewForm.errors.comment" class="text-danger">
+            {{ reviewForm.errors.comment }}
+          </p>
+        </div>
+
+        <!-- 各レビュー -->
+        <div
+          class="review-box"
+          v-for="review in post.reviews"
+          :key="review.id"
+        >
+          <div class="review-header">
+            <!-- 投稿者プロフィールセクション -->
+            <div class="d-flex align-items-center gap-3 mb-4">
+              <Link :href="route('users.show', review.user.id)">
+                <img
+                  :src="review.user.profile_image ? `/storage/${review.user.profile_image}` : '/images/default.jpg'"
+                  @error="(e) => e.target.src = '/images/default.jpg'"
+                  alt="Profile image"
+                  class="rounded-circle"
+                  style="width: 60px; height: 60px; object-fit: cover;"
+                />
+              </Link>
+
+              <div>
+                <Link :href="route('users.show', review.user.id)" class="fw-bold text-decoration-none text-dark">
+                  {{ review.user.name }}
+                </Link>
+              </div>
+            </div>
+            <p>{{ formatDate(review.created_at) }}</p>
+          </div>
+          <ul class="review-scores">
+            <li>Overall: {{ stars(review.rating_overall) }}</li>
+            <li>Relax: {{ stars(review.rating_relax) }}</li>
+            <li>Safety: {{ stars(review.rating_safety) }}</li>
+            <li>Silence: {{ stars(review.rating_silence) }}</li>
+          </ul>
+          <p class="review-text">{{ review.comment }}</p>
+        </div>
       </div>
 
-      <!-- レビューフォーム -->
-      <div class="review-form" v-show="showReviewForm" id="reviewForm">
-        <div class="form-group" v-for="field in ['rating_overall', 'rating_relax', 'rating_safety', 'rating_silence']" :key="field">
-          <label>{{ field.replace('rating_', '').charAt(0).toUpperCase() + field.replace('rating_', '').slice(1) }}</label>
-          <select v-model="reviewForm[field]">
-            <option :value="5">⭐⭐⭐⭐⭐</option>
-            <option :value="4">⭐⭐⭐⭐</option>
-            <option :value="3">⭐⭐⭐</option>
-            <option :value="2">⭐⭐</option>
-            <option :value="1">⭐</option>
-          </select>
+      <div class="d-flex justify-content-between mt-5">
+        <div v-if="previous">
+          <Link :href="route('posts.show', previous.id)" class="btn btn-outline-secondary">
+            ← Previous
+          </Link>
         </div>
-        <div class="form-group">
-          <label>Comment</label>
-          <textarea v-model="reviewForm.comment" rows="4" placeholder="Write your review...(max 500 characters)"></textarea>
+        <div v-if="next">
+          <Link :href="route('posts.show', next.id)" class="btn btn-outline-secondary ms-auto">
+            Next →
+          </Link>
         </div>
-        <p>{{ reviewForm.comment.length }} / 500 characters</p>
-
-        <button class="btn" @click="submitReview">Submit</button>
-        <p v-if="reviewForm.errors.comment" class="text-danger">
-          {{ reviewForm.errors.comment }}
-        </p>
       </div>
     </div>
   </div>
@@ -313,24 +430,25 @@ const formatDate = (dateStr) => {
 </template>
 
 <style scoped>
-.container {
-  max-width: 1000px;
-  margin: 0 auto;
+.post-detail .container {
+  padding: 40px;
   margin-top: 40px;
   margin-bottom: 40px;
-  background: white;
-  padding: 40px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.section {
+.post-detail .section {
   background: #f4f4f4;
   padding: 30px;
   border-left: 10px solid #88B04B;
   border-radius: 10px;
   margin-bottom: 40px;
 }
+
+.post-detail .post-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
 
 .spot-header {
   display: flex;
@@ -394,26 +512,61 @@ const formatDate = (dateStr) => {
   flex-wrap: wrap;
 }
 
+/* レビューセクション */
 .review-button-wrapper {
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
 }
 
-.review-section {
-  margin-top: 40px;
+.rating-summary-card {
+  background: #f8f9fa;
+  border: 2px solid #88B04B;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 30px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-.review-summary {
-  margin-top: 10px;
-  font-size: 16px;
+.overall-rating {
+  margin-bottom: 10px;
+}
+
+.overall-rating .stars {
+  font-size: 24px;
+  color: #FFC107;
+}
+
+.overall-rating .score {
+  font-size: 28px;
+  font-weight: bold;
   color: #333;
 }
 
-.review {
+.overall-rating .label {
+  font-size: 16px;
+  color: #88B04B;
+  font-weight: 600;
+}
+
+.sub-ratings {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: #666;
+}
+
+.review-box {
   background: #fff;
-  padding: 15px;
-  margin-top: 10px;
+  padding: 20px 30px 20px 30px;
+  margin-top: 20px;
   border-radius: 10px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   line-height: 1.6;
@@ -472,7 +625,11 @@ const formatDate = (dateStr) => {
 }
 
 .modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+  max-width: 800px;
   padding: 2rem;
+  margin: 0 auto;
 }
 
 .form-container {
@@ -532,5 +689,45 @@ const formatDate = (dateStr) => {
 
 .btn-success:hover {
   background: #76A03A;
+}
+
+.btn-outline-secondary {
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .post-detail .container {
+    padding: 15px;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .post-detail .section {
+    background: none;
+    padding: 0;
+    border-left: none;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+
+  .review-section {
+    margin-top: 40px;
+    background: #f4f4f4;
+  }
+
+  /* モーダル */
+  .modal-content {
+    width: 90%;
+    padding: 10px;
+  }
+
+  .form-container {
+    background: none;
+    padding: 0px;
+    border-radius: 0;
+    box-shadow: none;
+  }
 }
 </style>

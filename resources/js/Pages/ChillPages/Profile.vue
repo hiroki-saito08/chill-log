@@ -8,6 +8,7 @@ const showModal = ref(false)
 const toast = ref(null)
 
 const form = useForm({
+  name: user.name,
   bio: user.bio ?? '',
   clear_bio: false,
   profile_image: null,
@@ -40,7 +41,7 @@ function closeModal() {
 <template>
   <Toast ref="toast" />
 
-  <div>
+  <div class="profile">
     <h3>Profile</h3>
       <div v-if="user.profile_image" class="text-center mt-5">
         <img :src="`/storage/${user.profile_image}`" alt="Profile Image" class="profile-pic" />
@@ -57,7 +58,7 @@ function closeModal() {
           <div class="col-4 fw-bold text-start">Email:</div>
           <div class="col-8 text-start">{{ user.email }}</div>
         </div>
-        <div class="row mb-2">
+        <div class="row mb-2 bio-text">
           <div class="col-4 fw-bold text-start">Bio:</div>
           <div class="col-8 text-start">{{ user.bio }}</div>
         </div>
@@ -82,6 +83,18 @@ function closeModal() {
           </div>
           <div class="modal-body">
             <form @submit.prevent="submit" enctype="multipart/form-data">
+              <div class="mb-3">
+                <label for="name">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  v-model="form.name"
+                  placeholder="Enter your name"
+                  class="form-control"
+                />
+                <div v-if="form.errors.name" class="text-danger mt-1">{{ form.errors.name }}</div>
+              </div>
+
               <div class="mb-3">
                 <label class="form-label">Bio</label>
                 <textarea v-model="form.bio" class="form-control" rows="3"></textarea>
@@ -129,10 +142,6 @@ function closeModal() {
   text-align: center;
 }
 
-.public-section {
-  margin-bottom: 50px;
-}
-
 .password-section {
   margin-top: 15px;
   margin-bottom: 30px;
@@ -157,6 +166,10 @@ function closeModal() {
   cursor: pointer;
 }
 
+.bio-text {
+  white-space: pre-line;
+}
+
 /* モーダルの背景 */
 .modal-backdrop-custom {
   position: fixed;
@@ -164,7 +177,29 @@ function closeModal() {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 1050;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  max-width: 800px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    width: 100%;
+    padding: 1.5rem;
+    max-height: 90vh;
+  }
 }
 </style>

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Services\PostService;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Helpers\NgWordFilter;
 
 class PostController extends Controller
 {
@@ -25,7 +27,8 @@ class PostController extends Controller
   {
     return Inertia::render('ChillPages/Index', [
       'popularPosts' => $this->postService->getPopularPosts(),
-      'posts' => $this->postService->getNewPosts()
+      'posts' => $this->postService->getNewPosts(),
+      'categories' => config('categories')
     ]);
   }
 
@@ -49,13 +52,21 @@ class PostController extends Controller
   {
     $user = auth()->user();
     $post = $this->postService->getPostById($id);
+    $previous = Post::where('status', 'public')->where('id', '<', $id)->orderBy('id', 'desc')->first();
+    $next = Post::where('status', 'public')->where('id', '>', $id)->orderBy('id')->first();
 
     $post->is_favorited = $user
       ? $user->favorites->pluck('post_id')->contains($post->id)
       : false;
 
     return Inertia::render('ChillPages/PostDetail', [
-      'post' => $post
+      'post' => [
+        ...$post->toArray(),
+        'visit_time' => json_decode($post->visit_time),
+      ],
+      'previous' => $previous,
+      'next' => $next,
+      'categories' => config('categories')
     ]);
   }
 
@@ -64,6 +75,16 @@ class PostController extends Controller
    */
   public function store(PostRequest $request)
   {
+    // NGワードチェック
+    $checkFields = ['title', 'category', 'location_name', 'description'];
+    foreach ($checkFields as $field) {
+      $value = $request->input($field);
+
+      if (filled($value) && NgWordFilter::containsNgWord($value)) {
+        return back()->withErrors([$field => 'Contains inappropriate language.']);
+      }
+    }
+
     $post = $this->postService->createPost(Auth::user(), $request->validated());
     return redirect()->route('posts.show', ['post' => $post->id]);
   }
@@ -71,8 +92,18 @@ class PostController extends Controller
   /**
    * 投稿を更新
    */
-  public function update(PostRequest $request, Post $post)
+  public function update(UpdatePostRequest $request, Post $post)
   {
+    // NGワードチェック
+    $checkFields = ['title', 'category', 'location_name', 'description'];
+    foreach ($checkFields as $field) {
+      $value = $request->input($field);
+
+      if (filled($value) && NgWordFilter::containsNgWord($value)) {
+        return back()->withErrors([$field => 'Contains inappropriate language.']);
+      }
+    }
+
     $this->authorize('update', $post);
     $post = $this->postService->updatePost($post, $request->validated());
 

@@ -1,4 +1,5 @@
 <script setup>
+import { Link } from '@inertiajs/vue3';
 </script>
 
 <template>
@@ -6,9 +7,9 @@
     <div class="footer-content">
       <a :href="route('home')" class="text-white text-decoration-none fs-4">Chill-log</a>
       <nav class="footer-nav">
-        <a href="#" class="footer-link">About</a>
-        <a href="#" class="footer-link">Contact</a>
-        <a href="#" class="footer-link">Privacy Policy</a>
+        <Link :href="route('about')" class="footer-link">About</Link>
+        <Link :href="route('contact')" class="footer-link">Contact</Link>
+        <Link :href="route('privacy')" class="footer-link">Privacy Policy</Link>
       </nav>
     </div>
     <div class="footer-bottom text-center">
@@ -59,5 +60,18 @@
   font-size: 0.875rem;
   opacity: 0.7;
   margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .footer-nav {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 </style>

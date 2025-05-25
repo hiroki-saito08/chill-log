@@ -7,6 +7,7 @@
           :src="`/storage/${post.images[0].image_path}`"
           alt="Spot image"
           class="post-thumbnail"
+          @error="(e) => e.target.src = '/images/default.jpg'"
         />
       </div>
       <div class="post-info">
@@ -14,6 +15,11 @@
         <p class="post-description">{{ post.description?.slice(0, 100) }}...</p>
       </div>
     </Link>
+
+    <!--　スロットでアクションボタンを任意表示 -->
+    <div class="post-actions">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
@@ -33,6 +39,8 @@ defineProps({
 }
 
 .post-card {
+  width: 100%;
+  max-width: 100%;
   background: white;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -63,6 +71,7 @@ defineProps({
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 10px;
 }
 
 .post-info {
@@ -79,6 +88,35 @@ defineProps({
 .post-description {
   color: #666;
   font-size: 14px;
+  line-height: 1.6;
 }
 
+.post-actions:empty {
+  display: none;
+  padding: 0;
+  margin: 0;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 1rem 1rem;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .post-link {
+    flex-direction: column;
+  }
+
+  .post-thumbnail-wrapper {
+    width: 100%;
+    height: auto;
+  }
+
+  .post-thumbnail {
+    height: auto;
+    max-height: 200px;
+  }
+}
 </style>
