@@ -128,6 +128,8 @@ const submitPost = () => {
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  max-width: 800px;
 }
 
 .form-group {
@@ -148,19 +150,7 @@ const submitPost = () => {
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
-}
-
-.map-button {
-  margin-top: 10px;
-  padding: 8px 15px;
-  background: #6C7A89;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  display: block;
-  width: 100%;
-  text-align: center;
+  box-sizing: border-box;
 }
 
 .btn-success {
