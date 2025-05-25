@@ -150,9 +150,9 @@ const formatDate = (dateStr) => {
   <!-- SEO -->
   <Head>
     <title>{{ post.title }} | Chill-log</title>
-    <meta name="description" :content="post.description.slice(0, 100)" />
+    <meta name="description" :content="(post.description ?? '').slice(0, 100)" />
     <meta property="og:title" :content="post.title" />
-    <meta property="og:description" :content="post.description.slice(0, 100)" />
+    <meta property="og:description" :content="(post.description ?? '').slice(0, 100)" />
     <meta property="og:image" :content="`/storage/${post.images[0]?.image_path}`" />
     <meta property="og:type" content="article" />
     <meta property="og:url" :content="`https://chill-log.com/posts/${post.id}`" />
