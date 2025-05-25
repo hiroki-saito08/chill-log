@@ -46,12 +46,16 @@ const deletePost = (id) => {
       <PostCard v-for="post in sortedPosts" :key="post.id" :post="post">
         <div class="d-flex gap-2">
           <button class="btn btn-sm btn-outline-primary" @click="editPost(post)">Edit</button>
-          <button class="delete-btn" @click="deletePost(post.post_id)">Delete</button>
+          <button class="delete-btn" @click="deletePost(post.id)">Delete</button>
         </div>
       </PostCard>
 
       <!-- ページネーション -->
-      <Pagination :links="posts.links" />
+      <Pagination
+        :links="posts.links"
+        routeName="mypage"
+        :extraParams="{ section: 'my-posts-section' }"
+      />
     </div>
   </section>
 </template>

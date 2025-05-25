@@ -83,9 +83,10 @@ class PostService
 
   public function updatePost(Post $post, array $data)
   {
-    if (!empty($data['visit_time'])) {
-      $data['visit_time'] = json_encode($data['visit_time']);
-    }
+    $data['visit_time'] = !empty($data['visit_time'] ?? null)
+      ? json_encode($data['visit_time'])
+      : null;
+
     // 投稿を保存
     $post->update([
       'title' => $data['title'],
