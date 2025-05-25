@@ -16,6 +16,11 @@ Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show')
 Route::post('/posts', [PostController::class, 'store'])->name('posts.store'); // 投稿作成
 Route::get('/users/{id}', [MypageController::class, 'show'])->name('users.show'); //各ユーザー画面
 
+// その他静的ぺーじ
+Route::get('/about', fn() => Inertia::render('ChillPages/About'))->name('about');
+Route::get('/contact', fn() => Inertia::render('ChillPages/Contact'))->name('contact');
+Route::get('/privacy', fn() => Inertia::render('ChillPages/Privacy'))->name('privacy');
+
 // 認証ユーザーのみアクセス可能なルート
 Route::middleware(['auth', 'verified'])->group(function () {
     // マイページ関連
