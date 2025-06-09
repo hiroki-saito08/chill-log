@@ -1,4 +1,4 @@
-# Chill-log
+# Chill-log 
 
 Chill-log is a social web application for discovering and sharing relaxing places such as scenic spots, quiet cafes, and hidden retreats.  
 It is built as a full-stack single-page application using Laravel 9, Vue 3, and Inertia.js, with a responsive and modern Bootstrap-based UI optimized for both mobile and desktop.
